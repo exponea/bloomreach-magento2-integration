@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="head.additional">
+            <block class="Magento\Framework\View\Element\Template" name="bloomreach.engagement.connector.tracking"
+                   before="-" template="Bloomreach_EngagementConnector::tracking/main.phtml">
+                <arguments>
+                    <argument name="config_view_model" xsi:type="object">
+                        Bloomreach\EngagementConnector\ViewModel\Tracking\Config
+                    </argument>
+                </arguments>
+                <block class="Magento\Framework\View\Element\Template" name="bloomreach.engagement.connector.sdk.script"
+                       template="Bloomreach_EngagementConnector::tracking/script.phtml" before="-">
+                    <arguments>
+                        <argument name="config_view_model" xsi:type="object">
+                            Bloomreach\EngagementConnector\ViewModel\Tracking\Config
+                        </argument>
+                        <argument name="cache_lifetime" xsi:type="number">86400</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Framework\View\Element\Template"
+                       name="bloomreach.engagement.connector.customer.identification"
+                       template="Bloomreach_EngagementConnector::tracking/customer_identification.phtml"
+                       after="bloomreach.engagement.connector.customer.identification">
+                    <arguments>
+                        <argument name="cache_lifetime" xsi:type="number">86400</argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

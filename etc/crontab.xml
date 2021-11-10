@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="bloomreach_engagement">
+        <job name="bloomreach_add_to_export_queue"
+             instance="Bloomreach\EngagementConnector\Cron\AddToExportQueueRunner"
+             method="execute"
+        >
+            <config_path>bloomreach_engagement/bloomreach_engagement_cron/bloomreach_add_to_export_queue_cron</config_path>
+        </job>
+        <job name="bloomreach_run_export"
+             instance="Bloomreach\EngagementConnector\Cron\ExportRunner"
+             method="execute"
+        >
+            <config_path>bloomreach_engagement/bloomreach_engagement_cron/bloomreach_run_export_cron</config_path>
+        </job>
+    </group>
+    <group id="bloomreach_engagement_cleaner">
+        <job name="bloomreach_clean_export_queue"
+             instance="Bloomreach\EngagementConnector\Cron\CleanExportQueueRunner"
+             method="execute"
+        >
+            <config_path>bloomreach_engagement/bloomreach_engagement_cron/bloomreach_clean_export_queue_cron</config_path>
+        </job>
+        <job name="bloomreach_clean_csv"
+             instance="Bloomreach\EngagementConnector\Cron\CleanCsvRunner"
+             method="execute"
+        >
+            <config_path>bloomreach_engagement/bloomreach_engagement_cron/bloomreach_clean_csv_cron</config_path>
+        </job>
+    </group>
+</config>

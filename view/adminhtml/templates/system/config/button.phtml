@@ -1,0 +1,29 @@
+<?php
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+/** @var \Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\Button $block */
+
+$isEnabled = $block->getIsEnabled();
+$messageContainer = $block->escapeHtmlAttr($block->getHtmlId() . '_message');
+?>
+<div class="actions">
+    <div class="<?= /* @noEscape */ $messageContainer; ?>"></div>
+    <button type="button" id="<?= $block->escapeHtmlAttr($block->getHtmlId()); ?>"
+        <?= !$isEnabled ? 'disabled' : ''; ?>>
+        <span><?= $block->escapeHtml($block->getButtonLabel()); ?></span>
+    </button>
+</div>
+<script type="text/x-magento-init">
+    {
+        "#<?= $block->escapeHtml($block->getHtmlId()) ?>": {
+            "Bloomreach_EngagementConnector/js/system/config/button/send-ajax-request": {
+                "ajaxUrl": "<?= $block->escapeUrl($block->getButtonUrl()); ?>",
+                "isEnabled": "<?= /* @noEscape */ $isEnabled; ?>",
+                "buttonId": "<?= $block->escapeHtml($block->getHtmlId()); ?>",
+                "messageContainer": "<?= /* @noEscape */ $messageContainer; ?>"
+            }
+        }
+    }
+</script>

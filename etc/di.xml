@@ -1,0 +1,664 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Bloomreach\EngagementConnector\Model\DataMapping\Config\Data\FieldMappingConfigDataInterface"
+                type="Bloomreach\EngagementConnector\Model\DataMapping\Config\Data\FieldMappingConfigData"/>
+    <preference for="Bloomreach\EngagementConnector\Api\Data\ExportEntityInterface"
+                type="Bloomreach\EngagementConnector\Model\ExportEntityModel"/>
+    <preference for="Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface"
+                type="Bloomreach\EngagementConnector\Model\ExportQueueModel"/>
+    <preference for="Bloomreach\EngagementConnector\Api\SaveExportEntityInterface"
+                type="Bloomreach\EngagementConnector\Service\ExportEntity\Save"/>
+    <preference for="Bloomreach\EngagementConnector\Api\SaveExportQueueInterface"
+                type="Bloomreach\EngagementConnector\Service\ExportQueue\Save"/>
+    <preference for="Bloomreach\EngagementConnector\Model\Export\File\FileGeneratorInterface"
+                type="Bloomreach\EngagementConnector\Model\Export\File\CsvGenerator"/>
+    <preference for="Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface"
+                type="Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver"/>
+    <preference for="Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExportInterface"
+                type="Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExport"/>
+    <preference for="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurationResultInterface"
+                type="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurationResult"/>
+    <!-- Creates the custom logger -->
+    <virtualType name="Bloomreach\EngagementConnector\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/bloomreach/engagement_connector.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Bloomreach\EngagementConnector\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="error" xsi:type="object">Bloomreach\EngagementConnector\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Entity Mappers -->
+    <type name="Bloomreach\EngagementConnector\Model\DataMapping\DataMapperFactory">
+        <arguments>
+            <argument name="dataMappers" xsi:type="array">
+                <item name="catalog_product" xsi:type="string">
+                    Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\ProductMapperResolver
+                </item>
+                <item name="catalog_product_variants" xsi:type="string">
+                    Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\ProductVariantsMapperResolver
+                </item>
+                <item name="customer" xsi:type="string">
+                    Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Customer
+                </item>
+                <item name="purchase" xsi:type="string">
+                    Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Order
+                </item>
+                <item name="purchase_item" xsi:type="string">
+                    Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\OrderItem
+                </item>
+                <item name="view_item" xsi:type="string">
+                    Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\ViewItemEvent
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Product type mappers -->
+    <type name="Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\ProductMapperResolver">
+        <arguments>
+            <argument name="dataMappers" xsi:type="array">
+                <item name="default" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Product\DefaultType
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Mapping field value renderer -->
+    <type name="Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRendererResolver">
+        <arguments>
+            <argument name="fieldValueRenderers" xsi:type="array">
+                <item name="catalog_product" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductTypeRendererResolver
+                    </item>
+                    <item name="status" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Boolean
+                    </item>
+                    <item name="image" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Image
+                    </item>
+                    <item name="url" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Url
+                    </item>
+                    <item name="short_description" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Text
+                    </item>
+                    <item name="description" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Text
+                    </item>
+                    <item name="rating" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Rating
+                    </item>
+                    <item name="ratings_count" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Rating
+                    </item>
+                    <item name="category_level_1" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_1_url" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_level_2" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_2_url" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_level_3" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_3_url" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_path" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="categories_ids" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="created_at" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Timestamp
+                    </item>
+                    <item name="final_price" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\FinalPrice
+                    </item>
+                    <item name="discount_percentage" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\DiscountPercentage
+                    </item>
+                    <item name="discount_value" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Discount
+                    </item>
+                    <item name="sale" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\OnSale
+                    </item>
+                    <item name="stock_level" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\StockLevel
+                    </item>
+                </item>
+                <item name="catalog_product_variants" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductTypeRendererResolver
+                    </item>
+                    <item name="status" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Boolean
+                    </item>
+                    <item name="rating" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Rating
+                    </item>
+                    <item name="ratings_count" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Rating
+                    </item>
+                    <item name="category_level_1" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_1_url" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_level_2" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_2_url" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_level_3" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_3_url" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_path" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="categories_ids" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="created_at" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Timestamp
+                    </item>
+                    <item name="product_id" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductId
+                    </item>
+                    <item name="product_sku" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductSku
+                    </item>
+                    <item name="stock_level" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\StockLevel
+                    </item>
+                    <item name="image" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Image
+                    </item>
+                    <item name="final_price" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\FinalPrice
+                    </item>
+                    <item name="discount_percentage" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\DiscountPercentage
+                    </item>
+                    <item name="discount_value" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Discount
+                    </item>
+                    <item name="sale" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\OnSale
+                    </item>
+                    <item name="short_description" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Text
+                    </item>
+                    <item name="description" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Text
+                    </item>
+                    <item name="url" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Url
+                    </item>
+                </item>
+                <item name="customer" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Customer\DefaultRenderer
+                    </item>
+                    <item name="country" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Customer\Country
+                    </item>
+                    <item name="region" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Customer\Region
+                    </item>
+                    <item name="company" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Customer\Company
+                    </item>
+                    <item name="telephone" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Customer\Telephone
+                    </item>
+                </item>
+                <item name="purchase" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultRenderer
+                    </item>
+                    <item name="timestamp" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Timestamp
+                    </item>
+                    <item name="product_ids" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ProductIds
+                    </item>
+                    <item name="product_list" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ProductList
+                    </item>
+                    <item name="variant_ids" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\VariantIds
+                    </item>
+                    <item name="variant_list" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\VariantList
+                    </item>
+                    <item name="shipping_country" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ShippingCountry
+                    </item>
+                    <item name="region" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ShippingAddressField
+                    </item>
+                    <item name="city" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ShippingAddressField
+                    </item>
+                    <item name="base_grand_total" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue
+                    </item>
+                    <item name="grand_total" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue
+                    </item>
+                    <item name="base_discount_amount" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\PositiveFloatValue
+                    </item>
+                </item>
+                <item name="purchase_item" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultRenderer
+                    </item>
+                    <item name="customer_email" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OrderField
+                    </item>
+                    <item name="customer_id" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OrderField
+                    </item>
+                    <item name="timestamp" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Timestamp
+                    </item>
+                    <item name="increment_id" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OrderField
+                    </item>
+                    <item name="status" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OrderField
+                    </item>
+                    <item name="name" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Name
+                    </item>
+                    <item name="order_currency_code" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OrderField
+                    </item>
+                    <item name="manufacturer" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\ProductField
+                    </item>
+                    <item name="total_price" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\TotalPrice
+                    </item>
+                    <item name="total_price_local_currency" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\TotalPriceLocalCurrency
+                    </item>
+                    <item name="base_price" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue
+                    </item>
+                    <item name="price" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue
+                    </item>
+                    <item name="base_original_price" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue
+                    </item>
+                    <item name="original_price" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue
+                    </item>
+                    <item name="base_discount_amount" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\DiscountAmount
+                    </item>
+                    <item name="variant_id" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\VariantId
+                    </item>
+                    <item name="category_level_1" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Category
+                    </item>
+                    <item name="category_level_2" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Category
+                    </item>
+                    <item name="category_level_3" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Category
+                    </item>
+                    <item name="category_path" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Category
+                    </item>
+                </item>
+                <item name="view_item" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\ProductTypeRendererResolver
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Product type mapping field value renderer -->
+    <type name="Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductTypeRendererResolver">
+        <arguments>
+            <argument name="fieldValueRenderers" xsi:type="array">
+                <item name="default" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\DefaultRenderer
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\ProductTypeRendererResolver"
+                 type="Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductTypeRendererResolver">
+        <arguments>
+            <argument name="fieldValueRenderers" xsi:type="array">
+                <item name="default" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\DefaultRenderer
+                    </item>
+                    <item name="category_level_1" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_level_2" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_level_3" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_path" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="categories_ids" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="category_id" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
+                    </item>
+                    <item name="domain" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Event\Domain
+                    </item>
+                    <item name="language" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Event\Language
+                    </item>
+                    <item name="local_currency" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Event\LocalCurrency
+                    </item>
+                    <item name="location" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Url
+                    </item>
+                    <item name="base_final_price" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\BaseFinalPrice
+                    </item>
+                    <item name="price_local_currency" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\PriceLocalCurrency
+                    </item>
+                    <item name="original_price_local_currency" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\OriginalPriceLocalCurrency
+                    </item>
+                    <item name="discount_percentage" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\DiscountPercentage
+                    </item>
+                    <item name="discount_value" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\DiscountValue
+                    </item>
+                    <item name="stock_level" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\StockLevel
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Bloomreach\EngagementConnector\Model\DataMapping\Config\Reader"
+                 type="Magento\Framework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="converter" xsi:type="object">
+                Bloomreach\EngagementConnector\Model\DataMapping\Config\Converter
+            </argument>
+            <argument name="schemaLocator" xsi:type="object">
+                Bloomreach\EngagementConnector\Model\DataMapping\Config\SchemaLocator
+            </argument>
+            <argument name="fileName" xsi:type="string">bloomreach_entity_mapping.xml</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Bloomreach\EngagementConnector\Model\DataMapping\Config\Data"
+                 type="Magento\Framework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">
+                Bloomreach\EngagementConnector\Model\DataMapping\Config\Reader
+            </argument>
+            <argument name="cacheId" xsi:type="string">bloomreach_entity_mapping_storage</argument>
+        </arguments>
+    </virtualType>
+    <type name="Bloomreach\EngagementConnector\Model\DataMapping\ConfigResolver">
+        <arguments>
+            <argument name="dataStorage" xsi:type="object">
+                Bloomreach\EngagementConnector\Model\DataMapping\Config\Data
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\DataMapping\MappingProcessor">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <!-- Console command  -->
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="bloomreach_export-start"
+                      xsi:type="object">Bloomreach\EngagementConnector\Console\Command\StartExport</item>
+                <item name="bloomreach_add-to-export-queue"
+                      xsi:type="object">Bloomreach\EngagementConnector\Console\Command\AddToExportQueue</item>
+                <item name="bloomreach_generate-export-files"
+                      xsi:type="object">Bloomreach\EngagementConnector\Console\Command\GenerateExportFileForExportQueue</item>
+                <item name="bloomreach_clean-export-queue"
+                      xsi:type="object">Bloomreach\EngagementConnector\Console\Command\CleanExportQueueCommand</item>
+                <item name="bloomreach_clean-csv-files"
+                      xsi:type="object">Bloomreach\EngagementConnector\Console\Command\CleanCsvFilesCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Export\Entity\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="catalog_product" xsi:type="string">
+                    Magento\Catalog\Model\ResourceModel\Product\Collection
+                </item>
+                <item name="catalog_product_variants" xsi:type="string">
+                    Bloomreach\EngagementConnector\Model\Product\ProductVariantsCollection
+                </item>
+                <item name="customer" xsi:type="string">
+                    Magento\Customer\Model\ResourceModel\Customer\Collection
+                </item>
+                <item name="purchase" xsi:type="string">
+                    Magento\Sales\Model\ResourceModel\Order\Collection
+                </item>
+                <item name="purchase_item" xsi:type="string">
+                    Magento\Sales\Model\ResourceModel\Order\Item\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Export\File\DirectoryProvider">
+        <arguments>
+            <argument name="baseDirectory" xsi:type="string">bloomreach</argument>
+            <argument name="entityDirectories" xsi:type="array">
+                <item name="catalog_product" xsi:type="string">catalog_product</item>
+                <item name="catalog_product_variants" xsi:type="string">catalog_product_variants</item>
+                <item name="customer" xsi:type="string">customer</item>
+                <item name="purchase" xsi:type="string">purchase</item>
+                <item name="purchase_item" xsi:type="string">purchase_item</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\DataProvider\EntityType">
+        <arguments>
+            <argument name="entityTypes" xsi:type="array">
+                <item name="catalog_product" xsi:type="string">catalog_product</item>
+                <item name="catalog_product_variants" xsi:type="string">catalog_product_variants</item>
+                <item name="customer" xsi:type="string">customer</item>
+                <item name="purchase" xsi:type="string">purchase</item>
+                <item name="purchase_item" xsi:type="string">purchase_item</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver">
+        <arguments>
+            <argument name="transporters" xsi:type="array">
+                <item name="csv_export" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\Export\Transporter\InitialExport\DefaultTransporter
+                    </item>
+                </item>
+                <item name="event" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\Export\Transporter\Event\DefaultEventTransporter
+                    </item>
+                    <item name="customer" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\Export\Transporter\Event\UpdateCustomer
+                    </item>
+                    <item name="catalog_product" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\Export\Transporter\Event\UpdateCatalogItem
+                    </item>
+                    <item name="catalog_product_variants" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\Export\Transporter\Event\UpdateCatalogItem
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExport">
+        <arguments>
+            <argument name="entitiesToExport" xsi:type="array">
+                <item name="catalog_product" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\InitialExport\Entity\Product
+                </item>
+                <item name="catalog_product_variants" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\InitialExport\Entity\ProductVariants
+                </item>
+                <item name="customer" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\InitialExport\Entity\Customer
+                </item>
+                <item name="purchase" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\InitialExport\Entity\Order
+                </item>
+                <item name="purchase_item" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\InitialExport\Entity\OrderItem
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurateEntityExport">
+        <arguments>
+            <argument name="entitiesToPreconfigurate" xsi:type="array">
+                <item name="catalog_product" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Product
+                </item>
+                <item name="catalog_product_variants" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\ProductVariants
+                </item>
+                <item name="customer" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Customer
+                </item>
+                <item name="purchase" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Order
+                </item>
+                <item name="purchase_item" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\OrderItem
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\Import\RunInitialImport">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Export\Entity\AddToExport">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Export\SenderProcessor">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Export\QueueProcessor">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Product">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Customer">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Order">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Service\Export\ExportGuestCustomer">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Service\Export\PrepareOrderDataService">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Service\Export\PrepareOrderItemsDataService">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Service\Integration\ImportIdResolver">
+        <arguments>
+            <argument name="importIdsConfigPath" xsi:type="array">
+                <item name="catalog_product" xsi:type="string">bloomreach_engagement/general/catalog_import_id</item>
+                <item name="catalog_product_variants" xsi:type="string">bloomreach_engagement/general/variants_import_id</item>
+                <item name="customer" xsi:type="string">bloomreach_engagement/general/customer_import_id</item>
+                <item name="purchase" xsi:type="string">bloomreach_engagement/general/order_import_id</item>
+                <item name="purchase_item" xsi:type="string">bloomreach_engagement/general/order_importline_item_id</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Console\Command\GenerateExportFileForExportQueue">
+        <arguments>
+            <argument name="saveExportQueue" xsi:type="object">
+                Bloomreach\EngagementConnector\Service\ExportQueue\Save\Proxy
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Product\CategoryDataResolver">
+        <arguments>
+            <argument name="categoryRepository" xsi:type="object">
+                Magento\Catalog\Api\CategoryRepositoryInterface\Proxy
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Event\ViewItem\Configurable">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+</config>

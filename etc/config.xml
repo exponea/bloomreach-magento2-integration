@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <bloomreach_engagement>
+            <general>
+                <enabled>0</enabled>
+                <api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <enable_realtime_data_synchronization>0</enable_realtime_data_synchronization>
+            </general>
+            <frontend_tracking>
+                <enable_js_sdk>0</enable_js_sdk>
+                <enable_purchase>0</enable_purchase>
+                <enable_product_view>0</enable_product_view>
+            </frontend_tracking>
+            <bloomreach_engagement_cron>
+                <clean_export_queue>10</clean_export_queue>
+                <clear_old_csv>10</clear_old_csv>
+                <bloomreach_add_to_export_queue_cron>*/15 * * * *</bloomreach_add_to_export_queue_cron>
+                <bloomreach_run_export_cron>*/15 * * * *</bloomreach_run_export_cron>
+                <bloomreach_clean_export_queue_cron>0 0 * * *</bloomreach_clean_export_queue_cron>
+                <bloomreach_clean_csv_cron>0 0 * * *</bloomreach_clean_csv_cron>
+            </bloomreach_engagement_cron>
+        </bloomreach_engagement>
+    </default>
+</config>

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="bloomreach_export_queue" resource="default" engine="innodb"
+           comment="Table that stores data to send to the Bloomreach">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
+                comment="Entity ID"/>
+        <column xsi:type="varchar" name="entity_type" nullable="false" comment="Entity type"/>
+        <column xsi:type="varchar" name="api_type" nullable="false" comment="Api type"/>
+        <column xsi:type="smallint" name="status" padding="5" default="1" unsigned="true" nullable="false" identity="false"
+                comment="Sending status" />
+        <column xsi:type="int" name="retries" padding="5" default="0" unsigned="true" nullable="false" identity="false"
+                comment="Number of sending attempts"/>
+        <column xsi:type="varchar" name="registered" nullable="true" comment="Customer identifier"/>
+        <column xsi:type="mediumtext" name="body" nullable="false" comment="Body of sending"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Updated at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+    <table name="bloomreach_export_entity" resource="default" engine="innodb"
+           comment="Table that stores entities for sending to Bloomreach">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
+                comment="Entity ID"/>
+        <column xsi:type="int" name="export_entity_id" unsigned="true" nullable="false"
+                comment="Export Entity ID"/>
+        <column xsi:type="varchar" name="entity_type" nullable="false" comment="Entity type"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="BLOOMREACH_EXPORT_ENTITIES_ENTITY_ID_ENTITY_TYPE">
+            <column name="export_entity_id"/>
+            <column name="entity_type"/>
+        </constraint>
+    </table>
+</schema>

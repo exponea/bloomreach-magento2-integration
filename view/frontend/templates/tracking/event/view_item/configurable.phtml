@@ -1,0 +1,20 @@
+<?php
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$ajaxUrl = $block->getUrl('bloomreach_engagement/event_viewitem/configurable');
+?>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Bloomreach_EngagementConnector/js/tracking/product/configurable": {
+                "ajaxUrl": "<?= $block->escapeUrl($ajaxUrl); ?>"
+            }
+        }
+    }
+</script>

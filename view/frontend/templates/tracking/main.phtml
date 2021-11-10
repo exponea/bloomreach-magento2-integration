@@ -1,0 +1,16 @@
+<?php
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+
+use Bloomreach\EngagementConnector\ViewModel\Tracking\Config as ConfigViewModel;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var ConfigViewModel $configViewModel */
+$configViewModel = $block->getData('config_view_model');
+
+if ($configViewModel && $configViewModel->isEnabled()) {
+    echo $block->getChildHtml();
+}

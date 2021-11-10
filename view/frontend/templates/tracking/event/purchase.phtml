@@ -1,0 +1,19 @@
+<?php
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+
+use Bloomreach\EngagementConnector\Block\Tracking\Event;
+
+/** @var Event $block */
+?>
+<script>
+    require([
+        'Bloomreach_EngagementConnector/js/tracking/event-sender'
+    ], function(eventSender) {
+        'use strict';
+        var eventList = <?= $block->getJsLayout(); ?>;
+        eventSender.sendListOfEvents(eventList);
+    });
+</script>

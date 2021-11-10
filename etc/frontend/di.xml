@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Customer\CustomerData\Customer">
+        <plugin name="bloomreach.engagement.connector.customer.data.plugin"
+                type="Bloomreach\EngagementConnector\Plugin\Customer\CustomerData\AddRegisteredData"/>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Plugin\Customer\CustomerData\AddRegisteredData">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Tracking\Event\CheckoutSuccess\Purchase">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+</config>

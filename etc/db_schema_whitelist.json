@@ -1,0 +1,29 @@
+{
+    "bloomreach_export_queue": {
+        "column": {
+            "entity_id": true,
+            "entity_type": true,
+            "status": true,
+            "retries": true,
+            "body": true,
+            "created_at": true,
+            "updated_at": true,
+            "api_type": true,
+            "registered": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "bloomreach_export_entity": {
+        "column": {
+            "entity_id": true,
+            "export_entity_id": true,
+            "entity_type": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "BLOOMREACH_EXPORT_ENTITY_EXPORT_ENTITY_ID_ENTITY_TYPE": true
+        }
+    }
+}

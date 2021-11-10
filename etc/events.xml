@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="customer_save_after">
+        <observer name="bloomreach_engagementconnector_customer_save"
+                  instance="Bloomreach\EngagementConnector\Observer\CustomerEntitySave" />
+    </event>
+    <event name="checkout_submit_all_after">
+        <observer name="bloomreach_engagementconnector_order_save"
+                  instance="Bloomreach\EngagementConnector\Observer\OrderEntitySave" />
+    </event>
+    <event name="catalog_product_save_commit_after">
+        <observer name="bloomreach_engagementconnector_product_save"
+                  instance="Bloomreach\EngagementConnector\Observer\ProductEntitySave" />
+    </event>
+</config>
