@@ -51,14 +51,6 @@
                         <field id="enable">1</field>
                     </depends>
                 </field>
-                <field id="enable_realtime_data_synchronization" translate="label" type="select" sortOrder="130" showInDefault="1">
-                    <label>Enable Real Time Data Synchronization</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Enables real time data synchronisation</comment>
-                    <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
-                    </depends>
-                </field>
             </group>
             <group id="imports" translate="label" type="text" sortOrder="300" showInDefault="1">
                 <label>Imports</label>
@@ -75,7 +67,7 @@
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
-                <field id="customer_import_id" translate="label" type="text" sortOrder="330" showInDefault="1">
+                <field id="customer_import_id" translate="label" type="text" sortOrder="310" showInDefault="1">
                     <label>Customer import id</label>
                     <comment>Import ID for Customer data can be found in your Engagement project in the Customer import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
                     <config_path>bloomreach_engagement/general/customer_import_id</config_path>
@@ -83,7 +75,7 @@
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
-                <field id="order_import_id" translate="label" type="text" sortOrder="340" showInDefault="1">
+                <field id="order_import_id" translate="label" type="text" sortOrder="320" showInDefault="1">
                     <label>Purchase Feed Import ID</label>
                     <comment>Import ID for Purchase feed can be found in your Engagement project in the Purchase feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
                     <config_path>bloomreach_engagement/general/order_import_id</config_path>
@@ -91,7 +83,7 @@
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
-                <field id="order_importline_item_id" translate="label" type="text" sortOrder="350" showInDefault="1">
+                <field id="order_importline_item_id" translate="label" type="text" sortOrder="330" showInDefault="1">
                     <label>Purchase Item Import ID</label>
                     <comment>Import ID for Purchase Item feed can be found in your Engagement project in the Purchase Item feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
                     <config_path>bloomreach_engagement/general/order_importline_item_id</config_path>
@@ -99,7 +91,7 @@
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
-                <field id="catalog_import_id" translate="label" type="text" sortOrder="310" showInDefault="1">
+                <field id="catalog_import_id" translate="label" type="text" sortOrder="340" showInDefault="1">
                     <label>Products Feed Import ID</label>
                     <comment>Import ID for Products feed can be found in your Engagement project in the Products feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
                     <config_path>bloomreach_engagement/general/catalog_import_id</config_path>
@@ -107,7 +99,7 @@
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
-                <field id="variants_import_id" translate="label" type="text" sortOrder="320" showInDefault="1">
+                <field id="variants_import_id" translate="label" type="text" sortOrder="350" showInDefault="1">
                     <label>Variants Feed Import ID</label>
                     <comment>Import ID for Variants feed can be found in your Engagement project in the Variants feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
                     <config_path>bloomreach_engagement/general/variants_import_id</config_path>
