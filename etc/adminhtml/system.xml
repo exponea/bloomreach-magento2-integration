@@ -18,20 +18,20 @@
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1">
                 <label>General</label>
                 <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1">
-                    <label>Enable Integration</label>
+                    <label>Enable Engagement Integration</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Enables Magento - Bloomreach Integration</comment>
+                    <comment>Enables Magento &lt;-&gt; Engagement integration</comment>
                 </field>
                 <field id="api_target" translate="label" type="text" sortOrder="20" showInDefault="1">
                     <label>API Target</label>
-                    <comment>Bloomreach application API domain, e.g. api.exponea.com</comment>
+                    <comment>Engagement application API Base URL which can be found in Project Settings. e.g. https://api-engagement.bloomreach.com</comment>
                     <depends>
                         <field id="enable">1</field>
                     </depends>
                 </field>
                 <field id="api_key_id" translate="label" type="text" sortOrder="30" showInDefault="1">
                     <label>API Key ID</label>
-                    <comment><![CDATA[Only PRIVATE API key allowed. <a href="https://docs.exponea.com/reference/authentication#private-api-access" target="_blank">Learn more.</a>]]></comment>
+                    <comment><![CDATA[Engagement API <a href="https://docs.exponea.com/reference/authentication#private-api-access" target="_blank">Private access type</a> credentials.]]></comment>
                     <depends>
                         <field id="enable">1</field>
                     </depends>
@@ -39,24 +39,16 @@
                 <field id="api_secret" translate="label" type="obscure" sortOrder="40" showInDefault="1">
                     <label>API Secret</label>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-                    <comment>The second part of credentials for Private API access (used for backend tracking-v2 and initiating imports)</comment>
+                    <comment>Secret part of the API credentials. You shall rotate this secret as required.</comment>
                     <depends>
                         <field id="enable">1</field>
                     </depends>
                 </field>
                 <field id="project_token_id" translate="label" type="text" sortOrder="50" showInDefault="1">
-                    <label>Token (Project ID)</label>
-                    <comment><![CDATA[Project identifier, token value for JS SDK and project token for Private API access. <a href="https://docs.exponea.com/reference/authentication" target="_blank">Learn more.</a>]]></comment>
+                    <label>Project Token</label>
+                    <comment><![CDATA[Engagement project identifier. A token value for JS SDK and for API access, which can be found in Project Settings. e.g. 2d0be12a-4b0c-12ec-87da-86c198934217]]></comment>
                     <depends>
                         <field id="enable">1</field>
-                    </depends>
-                </field>
-                <field id="enable_realtime_data_synchronization" translate="label" type="select" sortOrder="130" showInDefault="1">
-                    <label>Enable Real Time Data Synchronization</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Enables real time data synchronisation</comment>
-                    <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
             </group>
@@ -66,61 +58,61 @@
                     <field id="bloomreach_engagement/general/enable">1</field>
                 </depends>
                 <field id="preconfigurate_initial_import" translate="label" sortOrder="305" showInDefault="1">
-                    <label>Preconfigurate Initial import</label>
-                    <button_label>Preconfigurate Initial import</button_label>
+                    <label>Generate dummy import files</label>
+                    <button_label>Generate dummy import files</button_label>
                     <button_url>bloomreach_engagement/import/RunInitialImportReconfiguration</button_url>
                     <frontend_model>Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\PreconfigurateImportButton</frontend_model>
-                    <comment>By clicking on this button, a dummy CSV file will be created for the initial import. It contains one row for each import types.</comment>
+                    <comment>Generates a list of dummy CSV files that can be used for setting up Imports and Catalogs with data mapping in the Engagement project. It contains one row for each import type. We recommend to secure the folder with HTTP Basic Auth and/or firewall with IP whitelist on the web server level as additional security measures.</comment>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
-                <field id="catalog_import_id" translate="label" type="text" sortOrder="310" showInDefault="1">
-                    <label>Catalog import Id</label>
-                    <comment>Contains import ID for products</comment>
-                    <config_path>bloomreach_engagement/general/catalog_import_id</config_path>
-                    <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
-                    </depends>
-                </field>
-                <field id="variants_import_id" translate="label" type="text" sortOrder="320" showInDefault="1">
-                    <label>Variants import Id</label>
-                    <comment>Contains import id for product variants</comment>
-                    <config_path>bloomreach_engagement/general/variants_import_id</config_path>
-                    <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
-                    </depends>
-                </field>
-                <field id="customer_import_id" translate="label" type="text" sortOrder="330" showInDefault="1">
+                <field id="customer_import_id" translate="label" type="text" sortOrder="310" showInDefault="1">
                     <label>Customer import id</label>
-                    <comment>Contains import id for customer data</comment>
+                    <comment>Import ID for Customer data can be found in your Engagement project in the Customer import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
                     <config_path>bloomreach_engagement/general/customer_import_id</config_path>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
-                <field id="order_import_id" translate="label" type="text" sortOrder="340" showInDefault="1">
-                    <label>Orders import id</label>
-                    <comment>For event purchase - initial import for orders</comment>
+                <field id="order_import_id" translate="label" type="text" sortOrder="320" showInDefault="1">
+                    <label>Purchase Feed Import ID</label>
+                    <comment>Import ID for Purchase feed can be found in your Engagement project in the Purchase feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
                     <config_path>bloomreach_engagement/general/order_import_id</config_path>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
-                <field id="order_importline_item_id" translate="label" type="text" sortOrder="350" showInDefault="1">
-                    <label>Orders (line item) import id</label>
-                    <comment>Orders (line item) import id - initial import for order line items</comment>
+                <field id="order_importline_item_id" translate="label" type="text" sortOrder="330" showInDefault="1">
+                    <label>Purchase Item Import ID</label>
+                    <comment>Import ID for Purchase Item feed can be found in your Engagement project in the Purchase Item feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
                     <config_path>bloomreach_engagement/general/order_importline_item_id</config_path>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
+                <field id="catalog_import_id" translate="label" type="text" sortOrder="340" showInDefault="1">
+                    <label>Products Feed Import ID</label>
+                    <comment>Import ID for Products feed can be found in your Engagement project in the Products feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
+                    <config_path>bloomreach_engagement/general/catalog_import_id</config_path>
+                    <depends>
+                        <field id="bloomreach_engagement/general/enable">1</field>
+                    </depends>
+                </field>
+                <field id="variants_import_id" translate="label" type="text" sortOrder="350" showInDefault="1">
+                    <label>Variants Feed Import ID</label>
+                    <comment>Import ID for Variants feed can be found in your Engagement project in the Variants feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
+                    <config_path>bloomreach_engagement/general/variants_import_id</config_path>
+                    <depends>
+                        <field id="bloomreach_engagement/general/enable">1</field>
+                    </depends>
+                </field>
                 <field id="runinitial_import" translate="label" sortOrder="360" showInDefault="1">
-                    <label>Run Initial import</label>
-                    <button_label>Run Initial import</button_label>
+                    <label>Run Initial imports</label>
+                    <button_label>Run Initial imports</button_label>
                     <button_url>bloomreach_engagement/import/RunInitialImport</button_url>
                     <frontend_model>Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\Button</frontend_model>
-                    <comment>By click on this button initial import will be started. Check import status in the Bloomreach import page.</comment>
+                    <comment>By click on this button initial imports for all data feeds will be started. Check import status on the Engagement import page.</comment>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
@@ -132,16 +124,16 @@
                     <field id="bloomreach_engagement/general/enable">1</field>
                 </depends>
                 <field id="catalog_id" translate="label" type="text" sortOrder="410" showInDefault="1">
-                    <label>Catalog ID</label>
-                    <comment>Contains the ID of product catalog on the Bloomreach</comment>
+                    <label>Products Catalog ID</label>
+                    <comment>Catalog ID for Products catalog can be found in your Engagement project on the Products catalog page in the URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
                     <config_path>bloomreach_engagement/general/catalog_id</config_path>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
                 <field id="variants_id" translate="label" type="text" sortOrder="420" showInDefault="1">
-                    <label>Variants ID</label>
-                    <comment>Contains the ID of product variants on the Bloomreach</comment>
+                    <label>Variants Catalog ID</label>
+                    <comment>Catalog ID for Variants catalog can be found in your Engagement project on the Variants catalog page in the URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
                     <config_path>bloomreach_engagement/general/variants_id</config_path>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
@@ -151,14 +143,14 @@
             <group id="frontend_tracking" translate="label" type="text" sortOrder="500" showInDefault="1">
                 <label>Frontend Tracking</label>
                 <field id="enable_js_sdk" translate="label" type="select" sortOrder="140" showInDefault="1">
-                    <label>Enable Exponea JS SDK</label>
+                    <label>Enable JS SDK</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Inject Exponea JS SDK to the store front</comment>
+                    <comment>Injects Bloomreach Engagement JS SDK to the default store front on every page.</comment>
                 </field>
                 <field id="enable_purchase" translate="label" type="select" sortOrder="140" showInDefault="1">
                     <label>Order Tracking</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Enable order tracking</comment>
+                    <comment>Enable event order and order_item tracking on Thank you page.</comment>
                     <depends>
                         <field id="enable_js_sdk">1</field>
                     </depends>
@@ -166,7 +158,15 @@
                 <field id="enable_product_view" translate="label" type="select" sortOrder="140" showInDefault="1">
                     <label>View Item Tracking</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Enable view item tracking</comment>
+                    <comment>Enable event view_item tracking on product detail page.</comment>
+                    <depends>
+                        <field id="enable_js_sdk">1</field>
+                    </depends>
+                </field>
+                <field id="enable_cart_update" translate="label" type="select" sortOrder="140" showInDefault="1">
+                    <label>Cart Update Tracking</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable event cart_update tracking on any shopping cart contents changes.</comment>
                     <depends>
                         <field id="enable_js_sdk">1</field>
                     </depends>
@@ -176,36 +176,36 @@
                 <label>Cron Settings</label>
                 <field id="bloomreach_add_to_export_queue_cron" translate="label" type="text" sortOrder="10" showInDefault="1">
                     <label>Cron job settings to export queue</label>
-                    <comment>Fill the value in the cron string format ex. 5 * * * *</comment>
+                    <comment>Fill the value in the cron string format ex. */15 * * * *</comment>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
                 <field id="bloomreach_run_export_cron" translate="label" type="text" sortOrder="20" showInDefault="1">
                     <label>Cron job settings to export data to the Bloomreach</label>
-                    <comment>Fill the value in the cron string format ex. 5 * * * *</comment>
+                    <comment>Fill the value in the cron string format ex. */15 * * * *</comment>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
                 <field id="bloomreach_clean_csv_cron" translate="label" type="text" sortOrder="30" showInDefault="1">
-                    <label>Cron job settings to remove old csv files </label>
-                    <comment>Fill the value in the cron string format ex. 5 * * * *</comment>
+                    <label>Cron job settings to remove old CSV files </label>
+                    <comment>Fill the value in the cron string format ex. 0 0 * * *</comment>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
                 <field id="clear_old_csv" translate="label" type="text" sortOrder="40" showInDefault="1">
-                    <label>Remove old csv files after:</label>
+                    <label>Remove old CSV files after:</label>
                     <validate>validate-greater-than-zero validate-number</validate>
-                    <comment>Determine number of days, the old csv files will be removed</comment>
+                    <comment>Determine number of days, the old CSV files will be removed</comment>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
                 <field id="bloomreach_clean_export_queue_cron" translate="label" type="text" sortOrder="50" showInDefault="1">
                     <label>Cron job settings to clean export queue data in database </label>
-                    <comment>Fill the value in the cron string format ex. 5 * * * *</comment>
+                    <comment>Fill the value in the cron string format ex. 0 0 * * *</comment>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
