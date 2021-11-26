@@ -5,26 +5,32 @@ This is a module for integration with the [Bloomreach service](https://www.bloom
 ## Database modification
 
 ### Created Tables
+
 - `bloomreach_export_queue` - contains a queue of prepared data waiting to be exported.
 - `bloomreach_export_entity` - contains the identifiers of the entities to be added to the export queue.
 
 ## Additional Data
 
 ### Logger
+
 - `<project_dir>/var/log/bloomreach/engagement_connector.log`
 
 ### Data Mapping
+
 - `Bloomreach\EngagementConnector\Model\DataMapping\DataMapperResolver` - responsible for map Magento entity data to the Bloomreach data. Returns `Magento\Framework\DataObject`;
 
 #### Configuration File
+
 - `bloomreach_entity_mapping.xml` - allows you to configure field mapping
 
 ##### Nodes
+
 - `entity_type` - entity type to map;
 - `bloomereach_code` - the name of the key on the Bloomreach side;
-- `field` - field to map with `bloomreach_code`. 
+- `field` - field to map with `bloomreach_code`.
 
-#### How to add entity to the Mapping:
+#### How to add entity to the Mapping
+
 1. Add entity configuration to the `bloomreach_entity_mapping.xml`.
 ```xml
 <entity_type entity="custom_entity">
@@ -71,6 +77,7 @@ This is a module for integration with the [Bloomreach service](https://www.bloom
 - Use `Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRendererResolver` in the mapper class to get field value.
 
 #### How to change the mapper for a specific product type
+
 1. Create a class that implements `Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\DataMapperInterface`
 2. Pass your Mapper to the `Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\ProductMapperResolver` via `di.xml` and specify `productTypeId` as the name of the argument
 ```xml
@@ -86,6 +93,7 @@ This is a module for integration with the [Bloomreach service](https://www.bloom
 ```
 
 #### How to add custom logic for field rendering
+
 1. Create a class that implements `Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface`
 2. Pass your Renderer to the `Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRendererResolver` via `di.xml` and specify the `entity_type` and `field` code as name of items:
 ```xml
@@ -103,6 +111,7 @@ This is a module for integration with the [Bloomreach service](https://www.bloom
 ```
 
 #### How to add custom logic for field rendering for specific product type
+
 1. Create a class that implements `Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface`
 2. Pass your Renderer to the `Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductTypeRendererResolver` via `di.xml` and specify the `productTypeId` and `field` code as name of items:
 ```xml
@@ -118,7 +127,9 @@ This is a module for integration with the [Bloomreach service](https://www.bloom
     </arguments>
 </type>
 ```
+
 #### How to add custom logic for field rendering for all products type
+
 1. Create a class that implements `Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface`
 2. Pass your Renderer to the `Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRendererResolver` via `di.xml` and specify the `entity_type` and `field` code as name of items:
 ```xml
@@ -135,22 +146,43 @@ This is a module for integration with the [Bloomreach service](https://www.bloom
 </type>
 ```
 
-#### How to skip a field or bloomreach_code from a map
-1. Add `disabled` equal `true` to `field` or `bloomreach_code` that you do not want to map
+#### How to add a new field to entity mapping
+
+1. Create `bloomreach_entity_mapping.xml` in file in your module.
+2. Add a new `bloomreach_code` node to `entity_type` that you want to extend
 ```xml
 <entity_type entity="catalog_product">
-    <bloomreach_code code="entity_id" disabled="true">
-        <field code="entity_id" />
+    <bloomreach_code code="custom_code">
+        <field code="custom_field" />
     </bloomreach_code>
-    <bloomreach_code code="updated_at">
-        <field code="updated_at" disabled="true" />
+</entity_type>
+```
+
+#### How to exclude `bloomreach_code` from mapping
+
+1. Create `bloomreach_entity_mapping.xml` in file in your module.
+2. Add `disabled` equal `true` to `bloomreach_code` that you want to exclude from mapping
+```xml
+<entity_type entity="catalog_product">
+    <bloomreach_code code="entity_id" disabled="true" />
+</entity_type>
+```
+
+#### How to change a mapping field:
+
+1. Create `bloomreach_entity_mapping.xml` in file in your module.
+2. Add a `field` node to `bloomreach_code` node that you want to change
+```xml
+<entity_type entity="catalog_product">
+    <bloomreach_code code="title">
+        <field code="custom_field" />
     </bloomreach_code>
 </entity_type>
 ```
 
 ### Observers
 
-``Bloomreach\EngagementConnector\Observer\CustomerEntitySave`` the event ``customer_save_after`` 
+``Bloomreach\EngagementConnector\Observer\CustomerEntitySave`` the event ``customer_save_after``
 Get customer entity after save.
 
 ``Bloomreach\EngagementConnector\Observer\OrderEntitySave`` the event ``checkout_submit_all_after``
@@ -161,18 +193,18 @@ Get product entity after save
 
 ### Services
 
-``Bloomreach\EngagementConnector\Service\Export\PrepareCustomerDataService`` Preparing customer entity data after save, 
+``Bloomreach\EngagementConnector\Service\Export\PrepareCustomerDataService`` Preparing customer entity data after save,
 and push it to the mapper.
 
-``Bloomreach\EngagementConnector\Service\Export\PrepareOrderDataService`` Preparing order entity data after save and 
+``Bloomreach\EngagementConnector\Service\Export\PrepareOrderDataService`` Preparing order entity data after save and
 push it to the mapper.
 
-``Bloomreach\EngagementConnector\Service\Export\PrepareProductDataService`` Prepare product entity data and push it to 
+``Bloomreach\EngagementConnector\Service\Export\PrepareProductDataService`` Prepare product entity data and push it to
 the mapper.
 
 ### API
 
-Start the API import: ``Bloomreach\EngagementConnector\Service\Integration\StartApiImportService`` class can be used to 
+Start the API import: ``Bloomreach\EngagementConnector\Service\Integration\StartApiImportService`` class can be used to
 start the import by API call. The method receives the import ID and path to the csv file with data. Also, the parameter
 ``test_connection`` can be used to testing.
 
@@ -211,6 +243,7 @@ Where:
 
 
 ## Cron
+
 - `bloomreach_add_to_export_queue` - prepares entities waiting to be exported and adds them to the export queue.
 - `bloomreach_run_export` - exports data from the export queue to the Bloomreach service.
 
@@ -222,6 +255,7 @@ Where:
 - `Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver` - sends data to a specific endpoint, for a specific entity type, to the Bloomreach.
 
 #### How to change the directory where the export file is located?
+
 1. Pass directory name to the `Bloomreach\EngagementConnector\Model\Export\File\DirectoryProvider` via `di.xml` and specify the `entity_type` as name of items:
 ```xml
 <type name="Bloomreach\EngagementConnector\Model\Export\File\DirectoryProvider">
@@ -234,6 +268,7 @@ Where:
 ```
 
 #### How to add new entity to the export:
+
 1. Add your entity type to the Entity Provider:
 ```xml
 <type name="Bloomreach\EngagementConnector\Model\DataProvider\EntityType">
@@ -275,6 +310,7 @@ Where:
 6. Use a `Bloomreach\EngagementConnector\Model\Export\Entity\AddToExport` class to add your entity id to the export.
 
 #### How to add data to the export if you cannot create a collection for your entity?
+
 1. Create Data Mapping for the new entity.
 2. Use a `Bloomreach\EngagementConnector\Model\Export\Queue\AddDataToExportQueue` class to add your entity to the export queue
 3. Create class that implements `Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface`.
@@ -294,6 +330,7 @@ Where:
 ```
 
 #### How to add your entity to the export preconfiguration:
+
 1. Create a class that implements `Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurateEntityExportInterface`
 2. Pass your class to the `Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurateEntityExport` via `di.xml`:
 ```xml
@@ -309,6 +346,7 @@ Where:
 ```
 
 #### How to add your entity to the initial export:
+
 1. Create a class that implements `Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExportInterface`.
 2. Pass your class to the `Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExport` via `di.xml`:
 ```xml
@@ -335,6 +373,7 @@ Where:
 ```
 
 #### How to create an event on Backend:
+
 1. Create a data mapper for your entity type.
 2. Use a `Bloomreach\EngagementConnector\Model\Export\Queue\AddEventToExportQueue` class to add you event to export queue.
 3. **Optional** If you want to use a separate API to send data to the Bloomreach, you can implement other transporter. Pass your transporter class to the `Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver` via `di.xml` and specify the `entity_type` and `api_type` as name of items:
@@ -355,6 +394,7 @@ Where:
 ### Frontend Tracking
 
 #### Event structure:
+
 ```json
 {
   "eventName": "view_item",
@@ -365,7 +405,8 @@ Where:
 }
 ```
 
-#### How to send event:
+#### How to send event
+
 1. Prepare event object:
 ```json
 {
@@ -379,9 +420,10 @@ Where:
 2. Use `Bloomreach_EngagementConnector/js/tracking/event-sender` component to send an event.
 
 #### How to create an event on the Backend side and send after the page loads
+
 1. Create a class that implements `\Bloomreach\EngagementConnector\Model\Tracking\Event\EventsInterface` and `\Magento\Framework\View\Element\Block\ArgumentInterface` interfaces.
-2. Create child block for `bloomreach.engagement.connector.tracking` in the layout. 
-3. Use `Bloomreach\EngagementConnector\Block\Tracking\Event` class for event block. 
+2. Create child block for `bloomreach.engagement.connector.tracking` in the layout.
+3. Use `Bloomreach\EngagementConnector\Block\Tracking\Event` class for event block.
 4. Pass your event class to event block via arguments with name `events`.
 5. Use `Bloomreach_EngagementConnector::tracking/event/default.phtml` template for send event
 ```xml
@@ -397,4 +439,18 @@ Where:
         </arguments>
     </block>
 </referenceBlock>
+```
+
+### How to send event after cart update
+
+1. Create a class that implements `\Bloomreach\EngagementConnector\Model\Tracking\Event\EventsInterface` interface.
+2. Pass your class to the `Bloomreach\EngagementConnector\Model\Tracking\Event\Cart\CartUpdateEventsCollector` class via `di.xml`:
+```xml
+<type name="Bloomreach\EngagementConnector\Model\Tracking\Event\Cart\CartUpdateEventsCollector">
+    <arguments>
+        <argument name="eventsList" xsi:type="array">
+            <item name="cart_update" xsi:type="object">Bloomreach\EngagementConnector\Model\Tracking\Event\Cart\CartUpdate</item>
+        </argument>
+    </arguments>
+</type>
 ```
