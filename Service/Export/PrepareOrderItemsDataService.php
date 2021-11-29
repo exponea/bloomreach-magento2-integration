@@ -62,7 +62,7 @@ class PrepareOrderItemsDataService
     {
         /** @var OrderItemInterface[] $orderItems */
         $orderItems = $order->getAllVisibleItems();
-        $registered = $this->registeredGenerator->execute(
+        $registered = $this->registeredGenerator->generateSerialized(
             $order->getCustomerEmail(),
             $order->getCustomerId() ? (int) $order->getCustomerId() : null
         );

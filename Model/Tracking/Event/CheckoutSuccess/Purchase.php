@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\Tracking\Event\CheckoutSuccess;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\DataMapperResolver;
+use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
 use Bloomreach\EngagementConnector\Model\Tracking\Event\EventsInterface;
 use Bloomreach\EngagementConnector\Model\Tracking\EventBuilderFactory;
 use Magento\Checkout\Model\Session as CheckoutSession;
@@ -46,18 +47,26 @@ class Purchase implements ArgumentInterface, EventsInterface
     private $eventBuilderFactory;
 
     /**
+     * @var RegisteredGenerator
+     */
+    private $registeredGenerator;
+
+    /**
      * @param CheckoutSession $checkoutSession
      * @param DataMapperResolver $dataMapperResolver
      * @param EventBuilderFactory $eventBuilderFactory
+     * @param RegisteredGenerator $registeredGenerator
      */
     public function __construct(
         CheckoutSession $checkoutSession,
         DataMapperResolver $dataMapperResolver,
-        EventBuilderFactory $eventBuilderFactory
+        EventBuilderFactory $eventBuilderFactory,
+        RegisteredGenerator $registeredGenerator
     ) {
         $this->checkoutSession = $checkoutSession;
         $this->dataMapperResolver = $dataMapperResolver;
         $this->eventBuilderFactory = $eventBuilderFactory;
+        $this->registeredGenerator = $registeredGenerator;
     }
 
     /**
@@ -121,16 +130,10 @@ class Purchase implements ArgumentInterface, EventsInterface
      */
     private function deleteUnusedFields(array $data): array
     {
-        if (isset($data['registered'])) {
-            unset($data['registered']);
-        }
+        $this->registeredGenerator->deleteRegisteredData($data);
 
         if (isset($data['timestamp'])) {
             unset($data['timestamp']);
-        }
-
-        if (isset($data['customer_id'])) {
-            unset($data['customer_id']);
         }
 
         return $data;

@@ -1,20 +1,21 @@
 {
-  "name": "bloomreach/bloomreach-engagement-connector-magento",
-  "version": "1.0.0",
-  "description": "N/A",
-  "type": "magento2-module",
-  "require": {
-    "magento/framework": "*"
-  },
-  "license": [
-    "Proprietary"
-  ],
-  "autoload": {
-    "files": [
-      "registration.php"
+    "name": "bloomreach/bloomreach-engagement-connector-magento",
+    "version": "1.0.0",
+    "description": "The module provides the Bloomreach integration with Magento 2.",
+    "type": "magento2-module",
+    "require": {
+        "magento/framework": "*",
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "license": [
+        "Proprietary"
     ],
-    "psr-4": {
-      "Bloomreach\\EngagementConnector\\": ""
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Bloomreach\\EngagementConnector\\": ""
+        }
     }
-  }
 }

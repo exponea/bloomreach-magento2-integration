@@ -27,7 +27,7 @@ This is a module for integration with the [Bloomreach service](https://www.bloom
 
 - `entity_type` - entity type to map;
 - `bloomereach_code` - the name of the key on the Bloomreach side;
-- `field` - field to map with `bloomreach_code`.
+- `field` - field to map with `bloomreach_code`. 
 
 #### How to add entity to the Mapping
 
@@ -182,7 +182,7 @@ This is a module for integration with the [Bloomreach service](https://www.bloom
 
 ### Observers
 
-``Bloomreach\EngagementConnector\Observer\CustomerEntitySave`` the event ``customer_save_after``
+``Bloomreach\EngagementConnector\Observer\CustomerEntitySave`` the event ``customer_save_after`` 
 Get customer entity after save.
 
 ``Bloomreach\EngagementConnector\Observer\OrderEntitySave`` the event ``checkout_submit_all_after``
@@ -193,18 +193,18 @@ Get product entity after save
 
 ### Services
 
-``Bloomreach\EngagementConnector\Service\Export\PrepareCustomerDataService`` Preparing customer entity data after save,
+``Bloomreach\EngagementConnector\Service\Export\PrepareCustomerDataService`` Preparing customer entity data after save, 
 and push it to the mapper.
 
-``Bloomreach\EngagementConnector\Service\Export\PrepareOrderDataService`` Preparing order entity data after save and
+``Bloomreach\EngagementConnector\Service\Export\PrepareOrderDataService`` Preparing order entity data after save and 
 push it to the mapper.
 
-``Bloomreach\EngagementConnector\Service\Export\PrepareProductDataService`` Prepare product entity data and push it to
+``Bloomreach\EngagementConnector\Service\Export\PrepareProductDataService`` Prepare product entity data and push it to 
 the mapper.
 
 ### API
 
-Start the API import: ``Bloomreach\EngagementConnector\Service\Integration\StartApiImportService`` class can be used to
+Start the API import: ``Bloomreach\EngagementConnector\Service\Integration\StartApiImportService`` class can be used to 
 start the import by API call. The method receives the import ID and path to the csv file with data. Also, the parameter
 ``test_connection`` can be used to testing.
 
@@ -422,8 +422,8 @@ Where:
 #### How to create an event on the Backend side and send after the page loads
 
 1. Create a class that implements `\Bloomreach\EngagementConnector\Model\Tracking\Event\EventsInterface` and `\Magento\Framework\View\Element\Block\ArgumentInterface` interfaces.
-2. Create child block for `bloomreach.engagement.connector.tracking` in the layout.
-3. Use `Bloomreach\EngagementConnector\Block\Tracking\Event` class for event block.
+2. Create child block for `bloomreach.engagement.connector.tracking` in the layout. 
+3. Use `Bloomreach\EngagementConnector\Block\Tracking\Event` class for event block. 
 4. Pass your event class to event block via arguments with name `events`.
 5. Use `Bloomreach_EngagementConnector::tracking/event/default.phtml` template for send event
 ```xml

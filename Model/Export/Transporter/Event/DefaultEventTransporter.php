@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\Export\Transporter\Event;
 
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
+use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface;
 use Bloomreach\EngagementConnector\Service\Integration\SendEventRequest;
 use Magento\Framework\Exception\FileSystemException;
@@ -31,15 +32,23 @@ class DefaultEventTransporter implements TransporterInterface
     private $jsonSerializer;
 
     /**
+     * @var RegisteredGenerator
+     */
+    private $registeredGenerator;
+
+    /**
      * @param SendEventRequest $sendEventRequest
      * @param SerializerInterface $jsonSerializer
+     * @param RegisteredGenerator $registeredGenerator
      */
     public function __construct(
         SendEventRequest $sendEventRequest,
-        SerializerInterface $jsonSerializer
+        SerializerInterface $jsonSerializer,
+        RegisteredGenerator $registeredGenerator
     ) {
         $this->sendEventRequest = $sendEventRequest;
         $this->jsonSerializer = $jsonSerializer;
+        $this->registeredGenerator = $registeredGenerator;
     }
 
     /**
@@ -96,16 +105,10 @@ class DefaultEventTransporter implements TransporterInterface
      */
     private function deleteUnusedFields(array &$properties): void
     {
-        if (isset($properties['registered'])) {
-            unset($properties['registered']);
-        }
+        $this->registeredGenerator->deleteRegisteredData($properties);
 
         if (isset($properties['timestamp'])) {
             unset($properties['timestamp']);
-        }
-
-        if (isset($properties['customer_id'])) {
-            unset($properties['customer_id']);
         }
     }
 }

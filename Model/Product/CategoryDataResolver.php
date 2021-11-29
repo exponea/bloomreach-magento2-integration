@@ -17,7 +17,7 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class CategoryDataResolver
 {
-    private const CATEGORY_PATH = 'category_path';
+    private const CATEGORY_PATH = 'categories_path';
 
     private const CATEGORY_LEVEL = 'category_level_';
 
