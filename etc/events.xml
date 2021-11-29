@@ -19,4 +19,8 @@
         <observer name="bloomreach_engagementconnector_product_save"
                   instance="Bloomreach\EngagementConnector\Observer\ProductEntitySave" />
     </event>
+    <event name="catalog_product_delete_after_done">
+        <observer name="bloomreach_engagementconnector_delete_product"
+                  instance="Bloomreach\EngagementConnector\Observer\DeleteProductEntity" />
+    </event>
 </config>

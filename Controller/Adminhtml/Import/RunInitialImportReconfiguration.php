@@ -101,6 +101,6 @@ class RunInitialImportReconfiguration extends Action implements HttpPostActionIn
      */
     private function getMessage(string $entityName, string $message)
     {
-        return sprintf('<div><strong>%s</strong>: %s</div>', $entityName, $message);
+        return sprintf('<div><strong>%s feed dummy URL</strong>: %s</div>', $entityName, $message);
     }
 }

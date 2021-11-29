@@ -11,12 +11,12 @@
             <general>
                 <enabled>0</enabled>
                 <api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
-                <enable_realtime_data_synchronization>0</enable_realtime_data_synchronization>
             </general>
             <frontend_tracking>
                 <enable_js_sdk>0</enable_js_sdk>
                 <enable_purchase>0</enable_purchase>
                 <enable_product_view>0</enable_product_view>
+                <enable_cart_update>0</enable_cart_update>
             </frontend_tracking>
             <bloomreach_engagement_cron>
                 <clean_export_queue>10</clean_export_queue>

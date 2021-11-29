@@ -5,19 +5,24 @@
  */
 declare(strict_types=1);
 
-namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product;
+namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface;
 use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\Model\AbstractModel;
 
 /**
- * The class is responsible for rendering the timestamp field
+ * The class is responsible for rendering the status field
  */
-class Timestamp implements RenderInterface
+class Status implements RenderInterface
 {
     /**
-     * Render the timestamp product value
+     * Default order status
+     */
+    private const DEFAULT_STATUS = 'success';
+
+    /**
+     * Render the order status
      *
      * @param AbstractSimpleObject|AbstractModel $entity
      * @param string $fieldCode
@@ -26,6 +31,6 @@ class Timestamp implements RenderInterface
      */
     public function render($entity, string $fieldCode)
     {
-        return (string) strtotime((string) $entity->getData($fieldCode));
+        return self::DEFAULT_STATUS;
     }
 }

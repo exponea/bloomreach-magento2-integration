@@ -21,4 +21,54 @@
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
         </arguments>
     </type>
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="bloomreach.engagement.connector.cart.data.plugin"
+                type="Bloomreach\EngagementConnector\Plugin\Checkout\CustomerData\AddCartUpdateEvent"/>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Tracking\Event\Cart\CartUpdate">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Tracking\Event\Cart\CartUpdateEventsCollector">
+        <arguments>
+            <argument name="eventsList" xsi:type="array">
+                <item name="cart_update" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\Tracking\Event\Cart\CartUpdate
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Service\Quote\GetQuoteTotals">
+        <arguments>
+            <argument name="cartTotalRepository" xsi:type="object">
+                Magento\Quote\Api\CartTotalRepositoryInterface\Proxy
+            </argument>
+            <argument name="guestCartTotalRepository" xsi:type="object">
+                Magento\Quote\Model\GuestCart\GuestCartTotalRepository\Proxy
+            </argument>
+            <argument name="quoteIdMaskResource" xsi:type="object">
+                Magento\Quote\Model\ResourceModel\Quote\QuoteIdMask\Proxy
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Quote\Model\Quote">
+        <plugin name="bloomreach.engagement.connector.truncate.cart.trigger"
+                type="Bloomreach\EngagementConnector\Plugin\Quote\TriggerCartUpdateEventAfterCartTruncate"/>
+    </type>
+    <type name="Magento\Quote\Model\Quote\Item\Processor">
+        <plugin name="bloomreach.engagement.connector.merge.cart.trigger"
+                type="Bloomreach\EngagementConnector\Plugin\Quote\Item\TriggerCartUpdateEventAfterMerge"/>
+    </type>
+    <type name="Magento\Checkout\Controller\Cart\CouponPost">
+        <plugin name="bloomreach.engagement.connector.coupon.cart.trigger"
+                type="Bloomreach\EngagementConnector\Plugin\Checkout\Controller\TriggerCartUpdateEventAfterCouponCode"/>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Plugin\Checkout\Controller\TriggerCartUpdateEventAfterCouponCode">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">
+                Magento\Checkout\Model\Session\Proxy
+            </argument>
+        </arguments>
+    </type>
 </config>

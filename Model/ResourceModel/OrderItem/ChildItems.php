@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Model\ResourceModel\OrderItem;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Select;
@@ -122,5 +123,21 @@ class ChildItems
         $result = $this->getConnection()->fetchAll($select);
 
         return $result ?: [];
+    }
+
+    /**
+     * Get product id by child Sku
+     *
+     * @param string $productSku
+     *
+     * @return string
+     */
+    public function getProductIdBySku(string $productSku): string
+    {
+        $select = $this->getConnection()->select()->reset();
+        $select->from($this->getConnection()->getTableName('catalog_product_entity'), ['entity_id']);
+        $select->where(ProductInterface::SKU .' = ?', $productSku);
+
+        return (string) $this->getConnection()->fetchOne($select);
     }
 }

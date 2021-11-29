@@ -68,7 +68,7 @@ class Order implements PreconfigurateEntityExportInterface
     {
         /** @var PreconfigurationResultInterface $preconfigurationResult */
         $preconfigurationResult = $this->preconfigurationResultFactory->create();
-        $preconfigurationResult->setEntityName('Order');
+        $preconfigurationResult->setEntityName('Purchase');
         /** @var Collection $collection */
         $collection = $this->collectionFactory->create();
         $collection->setPageSize(1);
@@ -93,7 +93,7 @@ class Order implements PreconfigurateEntityExportInterface
         } catch (Exception $e) {
             $this->logger->error(
                 __(
-                    'An error occurred while generating dummy file for Order entity type. Error: %1',
+                    'An error occurred while generating dummy file for Purchase entity type. Error: %1',
                     $e->getMessage()
                 )
             );
@@ -101,7 +101,7 @@ class Order implements PreconfigurateEntityExportInterface
             $preconfigurationResult->setError(true);
             $preconfigurationResult->setBody(
                 __(
-                    'An error occurred while generating dummy file for Order entity type. ' .
+                    'An error occurred while generating dummy file for Purchase entity type. ' .
                     'Contact technical support.'
                 )->render()
             );

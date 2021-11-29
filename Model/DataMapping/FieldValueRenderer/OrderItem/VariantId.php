@@ -9,6 +9,7 @@ namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Or
 
 use Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface;
 use Bloomreach\EngagementConnector\Model\ResourceModel\OrderItem\ChildItems;
+use Bloomreach\EngagementConnector\Service\Order\OrderItem\GetChildProductId;
 use Magento\Bundle\Model\Product\Type as BundleType;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Api\AbstractSimpleObject;
@@ -26,11 +27,20 @@ class VariantId implements RenderInterface
     private $childItems;
 
     /**
-     * @param ChildItems $childItems
+     * @var GetChildProductId
      */
-    public function __construct(ChildItems $childItems)
-    {
+    private $getChildProductId;
+
+    /**
+     * @param ChildItems $childItems
+     * @param GetChildProductId $getChildProductId
+     */
+    public function __construct(
+        ChildItems $childItems,
+        GetChildProductId $getChildProductId
+    ) {
         $this->childItems = $childItems;
+        $this->getChildProductId = $getChildProductId;
     }
 
     /**
@@ -53,7 +63,9 @@ class VariantId implements RenderInterface
         $childrenItems = $entity->getChildrenItems();
 
         if (!$childrenItems) {
-            return $this->childItems->getChildIds((int) $entity->getItemId());
+            $variantIds = $this->childItems->getChildIds((int) $entity->getItemId());
+
+            return $variantIds ?: [$this->getChildProductId->execute($entity)];
         }
 
         foreach ($childrenItems as $childrenItem) {

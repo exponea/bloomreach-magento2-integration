@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface;
+use Bloomreach\EngagementConnector\Service\Order\OrderItem\GetChildProductId;
+use Magento\Bundle\Model\Product\Type as BundleType;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\Model\AbstractModel;
-use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 
 /**
@@ -18,6 +20,19 @@ use Magento\Sales\Api\Data\OrderItemInterface;
  */
 class VariantIds implements RenderInterface
 {
+    /**
+     * @var GetChildProductId
+     */
+    private $getChildProductId;
+
+    /**
+     * @param GetChildProductId $getChildProductId
+     */
+    public function __construct(GetChildProductId $getChildProductId)
+    {
+        $this->getChildProductId = $getChildProductId;
+    }
+
     /**
      * Render the value of order field
      *
@@ -36,6 +51,10 @@ class VariantIds implements RenderInterface
         foreach ($orderItems as $orderItem) {
             if ($orderItem->getHasChildren()) {
                 $variantIds[] = $this->getChildrenItemIds($orderItem);
+            } elseif (!in_array($orderItem->getProductType(), [Configurable::TYPE_CODE, BundleType::TYPE_CODE])) {
+                $variantIds[] = [$orderItem->getProductId()];
+            } else {
+                $variantIds[] = [$this->getChildProductId->execute($orderItem)];
             }
         }
 

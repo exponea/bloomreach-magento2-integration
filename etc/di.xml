@@ -60,6 +60,9 @@
                 <item name="view_item" xsi:type="string">
                     Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\ViewItemEvent
                 </item>
+                <item name="cart_update" xsi:type="string">
+                    Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\CartUpdateEvent
+                </item>
             </argument>
         </arguments>
     </type>
@@ -120,14 +123,14 @@
                     <item name="category_3_url" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
                     </item>
-                    <item name="category_path" xsi:type="object">
+                    <item name="categories_path" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
                     </item>
                     <item name="categories_ids" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
                     </item>
                     <item name="created_at" xsi:type="object">
-                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Timestamp
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Timestamp
                     </item>
                     <item name="final_price" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\FinalPrice
@@ -176,14 +179,14 @@
                     <item name="category_3_url" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
                     </item>
-                    <item name="category_path" xsi:type="object">
+                    <item name="categories_path" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
                     </item>
                     <item name="categories_ids" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
                     </item>
                     <item name="created_at" xsi:type="object">
-                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Timestamp
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Timestamp
                     </item>
                     <item name="product_id" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductId
@@ -243,6 +246,9 @@
                     <item name="timestamp" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Timestamp
                     </item>
+                    <item name="status" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Status
+                    </item>
                     <item name="product_ids" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ProductIds
                     </item>
@@ -291,7 +297,7 @@
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OrderField
                     </item>
                     <item name="status" xsi:type="object">
-                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OrderField
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Status
                     </item>
                     <item name="name" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Name
@@ -335,13 +341,39 @@
                     <item name="category_level_3" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Category
                     </item>
-                    <item name="category_path" xsi:type="object">
+                    <item name="categories_path" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Category
                     </item>
                 </item>
                 <item name="view_item" xsi:type="array">
                     <item name="default" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\ProductTypeRendererResolver
+                    </item>
+                </item>
+                <item name="cart_update" xsi:type="array">
+                    <item name="default" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultRenderer
+                    </item>
+                    <item name="variant_ids" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Quote\VariantIds
+                    </item>
+                    <item name="variant_list" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Quote\VariantList
+                    </item>
+                    <item name="product_ids" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Quote\ProductIds
+                    </item>
+                    <item name="product_list" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Quote\ProductList
+                    </item>
+                    <item name="total_price" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Quote\TotalPrice
+                    </item>
+                    <item name="total_price_local_currency" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Quote\TotalPriceLocalCurrency
+                    </item>
+                    <item name="total_price_without_tax" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Quote\TotalPriceWithoutTax
                     </item>
                 </item>
             </argument>
@@ -376,7 +408,7 @@
                     <item name="category_level_3" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
                     </item>
-                    <item name="category_path" xsi:type="object">
+                    <item name="categories_path" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category
                     </item>
                     <item name="categories_ids" xsi:type="object">
@@ -430,6 +462,10 @@
                 Bloomreach\EngagementConnector\Model\DataMapping\Config\SchemaLocator
             </argument>
             <argument name="fileName" xsi:type="string">bloomreach_entity_mapping.xml</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/entity_type" xsi:type="string">entity</item>
+                <item name="/config/entity_type/bloomreach_code" xsi:type="string">code</item>
+            </argument>
         </arguments>
     </virtualType>
     <virtualType name="Bloomreach\EngagementConnector\Model\DataMapping\Config\Data"
@@ -536,6 +572,14 @@
                         Bloomreach\EngagementConnector\Model\Export\Transporter\Event\UpdateCatalogItem
                     </item>
                 </item>
+                <item name="delete" xsi:type="array">
+                    <item name="catalog_product" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\Export\Transporter\Delete\DeleteCatalogItem
+                    </item>
+                    <item name="catalog_product_variants" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\Export\Transporter\Delete\DeleteCatalogItem
+                    </item>
+                </item>
             </argument>
         </arguments>
     </type>
@@ -563,12 +607,6 @@
     <type name="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurateEntityExport">
         <arguments>
             <argument name="entitiesToPreconfigurate" xsi:type="array">
-                <item name="catalog_product" xsi:type="object">
-                    Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Product
-                </item>
-                <item name="catalog_product_variants" xsi:type="object">
-                    Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\ProductVariants
-                </item>
                 <item name="customer" xsi:type="object">
                     Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Customer
                 </item>
@@ -577,6 +615,12 @@
                 </item>
                 <item name="purchase_item" xsi:type="object">
                     Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\OrderItem
+                </item>
+                <item name="catalog_product" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Product
+                </item>
+                <item name="catalog_product_variants" xsi:type="object">
+                    Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\ProductVariants
                 </item>
             </argument>
         </arguments>
@@ -657,6 +701,11 @@
         </arguments>
     </type>
     <type name="Bloomreach\EngagementConnector\Controller\Event\ViewItem\Configurable">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Service\Export\DeleteProductEntity">
         <arguments>
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
         </arguments>

@@ -5,7 +5,7 @@
  * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="bloomreach_entity_mapping.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Bloomreach_EngagementConnector:etc/bloomreach_entity_mapping.xsd">
     <entity_type entity="catalog_product">
         <bloomreach_code code="item_id">
             <field code="entity_id"/>
@@ -61,8 +61,8 @@
         <bloomreach_code code="category_3_url">
             <field code="category_3_url"/>
         </bloomreach_code>
-        <bloomreach_code code="category_path">
-            <field code="category_path"/>
+        <bloomreach_code code="categories_path">
+            <field code="categories_path"/>
         </bloomreach_code>
         <bloomreach_code code="categories_ids">
             <field code="categories_ids"/>
@@ -156,8 +156,8 @@
         <bloomreach_code code="category_3_url">
             <field code="category_3_url"/>
         </bloomreach_code>
-        <bloomreach_code code="category_path">
-            <field code="category_path"/>
+        <bloomreach_code code="categories_path">
+            <field code="categories_path"/>
         </bloomreach_code>
         <bloomreach_code code="categories_ids">
             <field code="categories_ids"/>
@@ -197,14 +197,11 @@
         </bloomreach_code>
     </entity_type>
     <entity_type entity="customer">
-        <bloomreach_code code="registered">
+        <bloomreach_code code="email_id">
             <field code="email"/>
         </bloomreach_code>
         <bloomreach_code code="customer_id">
             <field code="entity_id"/>
-        </bloomreach_code>
-        <bloomreach_code code="email_id">
-            <field code="email"/>
         </bloomreach_code>
         <bloomreach_code code="email">
             <field code="email"/>
@@ -235,14 +232,11 @@
         </bloomreach_code>
     </entity_type>
     <entity_type entity="purchase">
-        <bloomreach_code code="registered">
+        <bloomreach_code code="email_id">
             <field code="customer_email"/>
         </bloomreach_code>
         <bloomreach_code code="customer_id">
             <field code="customer_id"/>
-        </bloomreach_code>
-        <bloomreach_code code="customer_id">
-            <field code="customer_id" />
         </bloomreach_code>
         <bloomreach_code code="timestamp">
             <field code="timestamp"/>
@@ -291,7 +285,7 @@
         </bloomreach_code>
     </entity_type>
     <entity_type entity="purchase_item">
-        <bloomreach_code code="registered">
+        <bloomreach_code code="email_id">
             <field code="customer_email"/>
         </bloomreach_code>
         <bloomreach_code code="customer_id">
@@ -330,8 +324,8 @@
         <bloomreach_code code="category_level_3">
             <field code="category_level_3"/>
         </bloomreach_code>
-        <bloomreach_code code="category_path">
-            <field code="category_path"/>
+        <bloomreach_code code="categories_path">
+            <field code="categories_path"/>
         </bloomreach_code>
         <bloomreach_code code="price">
             <field code="base_price"/>
@@ -383,8 +377,8 @@
         <bloomreach_code code="category_level_3">
             <field code="category_level_3" />
         </bloomreach_code>
-        <bloomreach_code code="category_path">
-            <field code="category_path" />
+        <bloomreach_code code="categories_path">
+            <field code="categories_path" />
         </bloomreach_code>
         <bloomreach_code code="categories_ids">
             <field code="categories_ids" />
@@ -424,6 +418,32 @@
         </bloomreach_code>
         <bloomreach_code code="stock_level">
             <field code="stock_level" />
+        </bloomreach_code>
+    </entity_type>
+    <entity_type entity="cart_update">
+        <bloomreach_code code="product_list">
+            <field code="product_list" />
+        </bloomreach_code>
+        <bloomreach_code code="product_ids">
+            <field code="product_ids" />
+        </bloomreach_code>
+        <bloomreach_code code="variant_list">
+            <field code="variant_list" />
+        </bloomreach_code>
+        <bloomreach_code code="variant_ids">
+            <field code="variant_ids" />
+        </bloomreach_code>
+        <bloomreach_code code="total_quantity">
+            <field code="items_qty" />
+        </bloomreach_code>
+        <bloomreach_code code="total_price">
+            <field code="total_price" />
+        </bloomreach_code>
+        <bloomreach_code code="total_price_without_tax">
+            <field code="total_price_without_tax" />
+        </bloomreach_code>
+        <bloomreach_code code="total_price_local_currency">
+            <field code="total_price_local_currency" />
         </bloomreach_code>
     </entity_type>
 </config>

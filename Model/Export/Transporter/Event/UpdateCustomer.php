@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\Export\Transporter\Event;
 
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
+use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface;
 use Bloomreach\EngagementConnector\Service\Integration\UpdateCustomerRequest;
 use Magento\Framework\Exception\FileSystemException;
@@ -31,15 +32,23 @@ class UpdateCustomer implements TransporterInterface
     private $jsonSerializer;
 
     /**
+     * @var RegisteredGenerator
+     */
+    private $registeredGenerator;
+
+    /**
      * @param UpdateCustomerRequest $updateCustomerRequest
      * @param SerializerInterface $jsonSerializer
+     * @param RegisteredGenerator $registeredGenerator
      */
     public function __construct(
         UpdateCustomerRequest $updateCustomerRequest,
-        SerializerInterface $jsonSerializer
+        SerializerInterface $jsonSerializer,
+        RegisteredGenerator $registeredGenerator
     ) {
         $this->updateCustomerRequest = $updateCustomerRequest;
         $this->jsonSerializer = $jsonSerializer;
+        $this->registeredGenerator = $registeredGenerator;
     }
 
     /**
@@ -76,7 +85,7 @@ class UpdateCustomer implements TransporterInterface
         $properties = $this->jsonSerializer->unserialize($exportQueue->getBody());
 
         if (is_array($properties)) {
-            $this->deleteUnusedFields($properties);
+            $this->registeredGenerator->deleteRegisteredData($properties);
         }
 
         return [
@@ -84,23 +93,5 @@ class UpdateCustomer implements TransporterInterface
             'properties' => $properties,
             'update_timestamp' => strtotime($exportQueue->getCreatedAt())
         ];
-    }
-
-    /**
-     * Delete unused fields
-     *
-     * @param array $properties
-     *
-     * @return void
-     */
-    private function deleteUnusedFields(array &$properties): void
-    {
-        if (isset($properties['registered'])) {
-            unset($properties['registered']);
-        }
-
-        if (isset($properties['customer_id'])) {
-            unset($properties['customer_id']);
-        }
     }
 }

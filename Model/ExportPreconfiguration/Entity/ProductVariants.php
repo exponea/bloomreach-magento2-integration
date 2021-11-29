@@ -70,7 +70,7 @@ class ProductVariants implements PreconfigurateEntityExportInterface
     {
         /** @var PreconfigurationResultInterface $result */
         $result = $this->preconfigurationResultFactory->create();
-        $result->setEntityName('Catalog Product Variants');
+        $result->setEntityName('Variants');
         /** @var Collection $collection */
         $collection = $this->collectionFactory->create();
         $collection->addAttributeToFilter(ProductInterface::TYPE_ID, Type::TYPE_SIMPLE);
@@ -96,7 +96,7 @@ class ProductVariants implements PreconfigurateEntityExportInterface
         } catch (Exception $e) {
             $this->logger->error(
                 __(
-                    'An error occurred while generating dummy file for Catalog Product Variants entity type. Error: %1',
+                    'An error occurred while generating dummy file for Variants entity type. Error: %1',
                     $e->getMessage()
                 )
             );
@@ -104,7 +104,7 @@ class ProductVariants implements PreconfigurateEntityExportInterface
             $result->setError(true);
             $result->setBody(
                 __(
-                    'An error occurred while generating dummy file for Catalog Product entity type. ' .
+                    'An error occurred while generating dummy file for Variants entity type. ' .
                     'Contact technical support.'
                 )->render()
             );

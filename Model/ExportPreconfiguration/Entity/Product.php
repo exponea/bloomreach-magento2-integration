@@ -68,7 +68,7 @@ class Product implements PreconfigurateEntityExportInterface
     {
         /** @var PreconfigurationResultInterface $preconfigurationResult */
         $preconfigurationResult = $this->preconfigurationResultFactory->create();
-        $preconfigurationResult->setEntityName('Catalog Product');
+        $preconfigurationResult->setEntityName('Products');
         /** @var Collection $collection */
         $collection = $this->collectionFactory->create();
         $collection->setPageSize(1);
@@ -93,7 +93,7 @@ class Product implements PreconfigurateEntityExportInterface
         } catch (Exception $e) {
             $this->logger->error(
                 __(
-                    'An error occurred while generating dummy file for Catalog Product entity type. Error: %1',
+                    'An error occurred while generating dummy file for Products entity type. Error: %1',
                     $e->getMessage()
                 )
             );
@@ -101,7 +101,7 @@ class Product implements PreconfigurateEntityExportInterface
             $preconfigurationResult->setError(true);
             $preconfigurationResult->setBody(
                 __(
-                    'An error occurred while generating dummy file for Catalog Product entity type. ' .
+                    'An error occurred while generating dummy file for Products entity type. ' .
                     'Contact technical support.'
                 )->render()
             );

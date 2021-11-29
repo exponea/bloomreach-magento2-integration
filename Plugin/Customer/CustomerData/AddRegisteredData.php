@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Plugin\Customer\CustomerData;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
 use Magento\Customer\CustomerData\Customer as Subject;
 use Magento\Customer\Model\Session as CustomerSession;
 
@@ -29,15 +30,23 @@ class AddRegisteredData
     private $configProvider;
 
     /**
+     * @var RegisteredGenerator
+     */
+    private $registeredGenerator;
+
+    /**
      * @param CustomerSession $customerSession
      * @param ConfigProvider $configProvider
+     * @param RegisteredGenerator $registeredGenerator
      */
     public function __construct(
         CustomerSession $customerSession,
-        ConfigProvider $configProvider
+        ConfigProvider $configProvider,
+        RegisteredGenerator $registeredGenerator
     ) {
         $this->customerSession = $customerSession;
         $this->configProvider = $configProvider;
+        $this->registeredGenerator = $registeredGenerator;
     }
 
     /**
@@ -55,13 +64,13 @@ class AddRegisteredData
             return $result;
         }
 
-        $customerId = $this->customerSession->getCustomerId();
+        $customerId = (int) $this->customerSession->getCustomerId();
 
         if ($customerId) {
-            $result['registered'] = [
-                'registered' => $this->customerSession->getCustomer()->getEmail(),
-                'customer_id' => $customerId
-            ];
+            $result['registered'] = $this->registeredGenerator->generate(
+                $this->customerSession->getCustomer()->getEmail(),
+                $customerId
+            );
         }
 
         return $result;

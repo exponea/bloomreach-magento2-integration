@@ -62,7 +62,7 @@ class PrepareOrderDataService
         try {
             $this->addEventToExportQueue->execute(
                 self::ENTITY_TYPE,
-                $this->registeredGenerator->execute(
+                $this->registeredGenerator->generateSerialized(
                     $order->getCustomerEmail(),
                     $order->getCustomerId() ? (int) $order->getCustomerId() : null
                 ),

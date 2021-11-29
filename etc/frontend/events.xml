@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_quote_product_add_after">
+        <observer name="bloomreach_engagementconnector_add_to_cart_trigger"
+                  instance="Bloomreach\EngagementConnector\Observer\CartUpdate\TriggerCartUpdateEvent" />
+    </event>
+    <event name="sales_quote_remove_item">
+        <observer name="bloomreach_engagementconnector_remove_from_cart_trigger"
+                  instance="Bloomreach\EngagementConnector\Observer\CartUpdate\TriggerCartUpdateEvent" />
+    </event>
+    <event name="checkout_cart_update_items_after">
+        <observer name="bloomreach_engagementconnector_update_items_in_cart_trigger"
+                  instance="Bloomreach\EngagementConnector\Observer\CartUpdate\TriggerCartUpdateEvent" />
+    </event>
+</config>

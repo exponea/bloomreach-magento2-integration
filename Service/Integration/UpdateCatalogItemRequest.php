@@ -69,7 +69,7 @@ class UpdateCatalogItemRequest
      */
     public function execute(array $body, string $itemId, string $entityType): Response
     {
-        if (!$body) {
+        if (!$body && static::REQUEST_TYPE !== Request::HTTP_METHOD_DELETE) {
             /** @var Response $response */
             return $this->responseFactory->create([
                 'reason' => __('Nothing to send')
@@ -90,9 +90,7 @@ class UpdateCatalogItemRequest
             $response = $client->request(
                 static::REQUEST_TYPE,
                 $client->getConfig('base_uri'),
-                [
-                    'json' => $body
-                ]
+                $body ? ['json' => $body] : []
             );
         } catch (GuzzleException $exception) {
             /** @var Response $response */

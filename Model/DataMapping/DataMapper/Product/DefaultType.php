@@ -19,7 +19,7 @@ use Magento\Framework\Model\AbstractModel;
  */
 class DefaultType implements DataMapperInterface
 {
-    private const ENTITY_TYPE = 'catalog_product';
+    public const ENTITY_TYPE = 'catalog_product';
 
     /**
      * @var MappingProcessor

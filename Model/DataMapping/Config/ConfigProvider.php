@@ -65,11 +65,6 @@ class ConfigProvider
     public const XPATH_ORDER_IMPORTLINE_ITEM_ID = 'bloomreach_engagement/general/order_importline_item_id';
 
     /**
-     * Enable Real Time Data Synchronization system configuration value XPATH
-     */
-    public const XPATH_ENABLE_DATA_SYNC = 'bloomreach_engagement/general/enable_realtime_data_synchronization';
-
-    /**
      * Enable Exponea JS SDK system configuration value XPATH
      */
     public const XPATH_ENABLE_JS_SDK = 'bloomreach_engagement/frontend_tracking/enable_js_sdk';
@@ -83,6 +78,11 @@ class ConfigProvider
      * Enable Exponea JS SDK system configuration value XPATH
      */
     public const XPATH_ENABLE_PRODUCT_VIEW_TRACKING = 'bloomreach_engagement/frontend_tracking/enable_product_view';
+
+    /**
+     * Enable Exponea JS SDK system configuration value XPATH
+     */
+    public const XPATH_ENABLE_CART_UPDATE_TRACKING = 'bloomreach_engagement/frontend_tracking/enable_cart_update';
 
     /**
      * Catalog Id system configuration value XPATH
@@ -254,21 +254,6 @@ class ConfigProvider
     }
 
     /**
-     * Get is enable data sync system value
-     *
-     * @param string $scopeType
-     * @param int|string $scopeCode
-     *
-     * @return bool
-     */
-    public function isEnableDataSync(
-        string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
-        $scopeCode = null
-    ): bool {
-        return $this->scopeConfig->isSetFlag(self::XPATH_ENABLE_DATA_SYNC, $scopeType, $scopeCode);
-    }
-
-    /**
      * Get Catalog ID
      *
      * @param string $scopeType
@@ -280,7 +265,7 @@ class ConfigProvider
         string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
         $scopeCode = null
     ): string {
-        return $this->scopeConfig->getValue(self::XPATH_CATALOG_ID, $scopeType, $scopeCode);
+        return (string) $this->scopeConfig->getValue(self::XPATH_CATALOG_ID, $scopeType, $scopeCode);
     }
 
     /**
@@ -314,6 +299,21 @@ class ConfigProvider
     }
 
     /**
+     * Checks whether cart update tracking is enabled
+     *
+     * @param string $scopeType
+     * @param int|string $scopeCode
+     *
+     * @return bool
+     */
+    public function isCartUpdateTrackingEnabled(
+        string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
+        $scopeCode = null
+    ): bool {
+        return $this->scopeConfig->isSetFlag(self::XPATH_ENABLE_CART_UPDATE_TRACKING, $scopeType, $scopeCode);
+    }
+
+    /**
      * Checks whether is enabled Js SDK system value
      *
      * @param string $scopeType
@@ -340,6 +340,6 @@ class ConfigProvider
         string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
         $scopeCode = null
     ): string {
-        return $this->scopeConfig->getValue(self::XPATH_CATALOG_VARIANTS_ID, $scopeType, $scopeCode);
+        return (string) $this->scopeConfig->getValue(self::XPATH_CATALOG_VARIANTS_ID, $scopeType, $scopeCode);
     }
 }

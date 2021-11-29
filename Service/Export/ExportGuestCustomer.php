@@ -75,7 +75,7 @@ class ExportGuestCustomer
         try {
             $this->addEventToExportQueue->execute(
                 self::ENTITY_TYPE,
-                $this->registeredGenerator->execute($order->getCustomerEmail(), null),
+                $this->registeredGenerator->generateSerialized($order->getCustomerEmail(), null),
                 $this->createGuestModelByOrder->execute($order)
             );
         } catch (Exception $e) {
