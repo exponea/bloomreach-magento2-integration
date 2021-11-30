@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface;
-use Bloomreach\EngagementConnector\Model\OrderItem\DiscountAmount as OrderItemDiscountAmount;
+use Bloomreach\EngagementConnector\Model\OrderItem\TotalPrice as OrderItemTotalPrice;
 use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\Model\AbstractModel;
 
@@ -18,16 +18,16 @@ use Magento\Framework\Model\AbstractModel;
 class TotalPriceLocalCurrency implements RenderInterface
 {
     /**
-     * @var OrderItemDiscountAmount
+     * @var OrderItemTotalPrice
      */
-    private $discountAmount;
+    private $orderItemTotalPrice;
 
     /**
-     * @param OrderItemDiscountAmount $discountAmount
+     * @param OrderItemTotalPrice $orderItemTotalPrice
      */
-    public function __construct(OrderItemDiscountAmount $discountAmount)
+    public function __construct(OrderItemTotalPrice $orderItemTotalPrice)
     {
-        $this->discountAmount = $discountAmount;
+        $this->orderItemTotalPrice = $orderItemTotalPrice;
     }
 
     /**
@@ -40,9 +40,6 @@ class TotalPriceLocalCurrency implements RenderInterface
      */
     public function render($entity, string $fieldCode)
     {
-        return round(
-            $entity->getRowTotal() - $this->discountAmount->getDiscountAmount($entity) + $entity->getTaxAmount(),
-            2
-        );
+        return $this->orderItemTotalPrice->getTotalPriceLocalCurrency($entity);
     }
 }

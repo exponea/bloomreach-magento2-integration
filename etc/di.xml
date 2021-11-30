@@ -155,6 +155,9 @@
                     <item name="status" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Boolean
                     </item>
+                    <item name="product_active" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ProductVariants\ProductActive
+                    </item>
                     <item name="rating" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Rating
                     </item>
@@ -314,17 +317,17 @@
                     <item name="total_price_local_currency" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\TotalPriceLocalCurrency
                     </item>
-                    <item name="base_price" xsi:type="object">
-                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue
+                    <item name="item_price" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\ItemPrice
                     </item>
-                    <item name="price" xsi:type="object">
-                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue
+                    <item name="item_price_local_currency" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\ItemPriceLocalCurrency
                     </item>
                     <item name="base_original_price" xsi:type="object">
-                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OriginalPrice
                     </item>
                     <item name="original_price" xsi:type="object">
-                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OriginalPrice
                     </item>
                     <item name="base_discount_amount" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\DiscountAmount
@@ -580,6 +583,11 @@
                         Bloomreach\EngagementConnector\Model\Export\Transporter\Delete\DeleteCatalogItem
                     </item>
                 </item>
+                <item name="partial_update" xsi:type="array">
+                    <item name="catalog_product_variants" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\Export\Transporter\Event\PartialCatalogItemUpdate
+                    </item>
+                </item>
             </argument>
         </arguments>
     </type>
@@ -706,6 +714,11 @@
         </arguments>
     </type>
     <type name="Bloomreach\EngagementConnector\Service\Export\DeleteProductEntity">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Service\Export\UpdateProductVariantsStatus">
         <arguments>
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
         </arguments>

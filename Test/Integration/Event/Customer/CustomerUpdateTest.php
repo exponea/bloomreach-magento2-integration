@@ -39,6 +39,7 @@ class CustomerUpdateTest extends TestCase
     /**
      * Customer update event test
      *
+     * @magentoConfigFixture bloomreach_engagement/general/enable 1
      * @magentoAppArea adminhtml
      * @magentoDataFixture Bloomreach_EngagementConnector::Test/Integration/_files/customer.php
      *
@@ -58,6 +59,8 @@ class CustomerUpdateTest extends TestCase
 
         /** @var ExportQueueModel $exportQueueItem */
         $exportQueueItem = $exportQueueCollection->getLastItem();
+
+        $this->assertEquals(true, (bool) $exportQueueItem->getId());
         $body = $this->jsonSerializer->unserialize($exportQueueItem->getBody());
 
         $this->assertEquals(ExportQueueModel::STATUS_NEW, (int) $exportQueueItem->getStatus());

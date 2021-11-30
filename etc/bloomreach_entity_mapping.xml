@@ -111,6 +111,9 @@
         <bloomreach_code code="active">
             <field code="status"/>
         </bloomreach_code>
+        <bloomreach_code code="product_active">
+            <field code="product_active"/>
+        </bloomreach_code>
         <bloomreach_code code="stock_level">
             <field code="stock_level"/>
         </bloomreach_code>
@@ -328,10 +331,10 @@
             <field code="categories_path"/>
         </bloomreach_code>
         <bloomreach_code code="price">
-            <field code="base_price"/>
+            <field code="item_price"/>
         </bloomreach_code>
         <bloomreach_code code="price_local_currency">
-            <field code="price"/>
+            <field code="item_price_local_currency"/>
         </bloomreach_code>
         <bloomreach_code code="original_price">
             <field code="base_original_price"/>

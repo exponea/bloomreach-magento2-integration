@@ -133,6 +133,7 @@ class DiscountAmount
     {
         return $this->calculateDiscountAmount($orderItem, OrderItemInterface::DISCOUNT_AMOUNT);
     }
+
     /**
      * Get discount amount for order item
      *
@@ -143,5 +144,17 @@ class DiscountAmount
     public function getDiscountAmountPerUnit(OrderItemInterface $orderItem): float
     {
         return $this->calculateDiscountAmount($orderItem, OrderItemInterface::DISCOUNT_AMOUNT, true);
+    }
+
+    /**
+     * Get base discount amount for order item
+     *
+     * @param OrderItemInterface $orderItem
+     *
+     * @return float
+     */
+    public function getBaseDiscountAmountPerUnit(OrderItemInterface $orderItem): float
+    {
+        return $this->calculateDiscountAmount($orderItem, OrderItemInterface::BASE_DISCOUNT_AMOUNT, true);
     }
 }

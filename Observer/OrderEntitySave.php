@@ -11,7 +11,6 @@ use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
 use Bloomreach\EngagementConnector\Service\Export\ExportGuestCustomer;
 use Bloomreach\EngagementConnector\Service\Export\PrepareOrderDataService;
 use Bloomreach\EngagementConnector\Service\Export\PrepareOrderItemsDataService;
-use Magento\Framework\Event;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
@@ -68,12 +67,11 @@ class OrderEntitySave implements ObserverInterface
      */
     public function execute(Observer $observer): void
     {
-        /** @var Event $event */
-        $event = $observer->getEvent();
-        /** @var Order $order */
-        $order = $event->getOrder();
-
         if ($this->configProvider->isEnabled()) {
+            $event = $observer->getEvent();
+            /** @var Order $order */
+            $order = $event->getOrder();
+
             $this->exportGuestCustomer->execute($order);
             $this->prepareOrderDataService->execute($order);
             $this->prepareOrderItemsDataService->execute($order);

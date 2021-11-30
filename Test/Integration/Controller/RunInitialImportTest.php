@@ -35,6 +35,21 @@ class RunInitialImportTest extends AbstractBackendController
     private const API_TYPE = 'csv_export';
 
     /**
+     * @var string
+     */
+    public $uri = 'backend/bloomreach_engagement/import/RunInitialImport';
+
+    /**
+     * @var string
+     */
+    public $resource = 'Bloomreach_EngagementConnector::config_bloomreach_engagement';
+
+    /**
+     * @var string
+     */
+    public $httpMethod = HttpRequest::METHOD_POST;
+
+    /**
      * @var SerializerInterface
      */
     private $jsonSerializer;
@@ -141,8 +156,8 @@ class RunInitialImportTest extends AbstractBackendController
      */
     private function dispatchRunInitialImportRequest(): void
     {
-        $this->getRequest()->setMethod(HttpRequest::METHOD_POST);
-        $this->dispatch('backend/bloomreach_engagement/import/RunInitialImport');
+        $this->getRequest()->setMethod($this->httpMethod);
+        $this->dispatch($this->uri);
     }
 
     /**

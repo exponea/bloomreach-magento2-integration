@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Observer;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
 use Bloomreach\EngagementConnector\Service\Export\DeleteProductEntity as DeleteProductEntityService;
+use Bloomreach\EngagementConnector\Service\Export\UpdateProductVariantsStatus;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -23,11 +25,28 @@ class DeleteProductEntity implements ObserverInterface
     private $deleteProductEntity;
 
     /**
-     * @param DeleteProductEntityService $deleteProductEntity
+     * @var UpdateProductVariantsStatus
      */
-    public function __construct(DeleteProductEntityService $deleteProductEntity)
-    {
+    private $updateProductVariantsStatus;
+
+    /**
+     * @var ConfigProvider
+     */
+    private $configProvider;
+
+    /**
+     * @param DeleteProductEntityService $deleteProductEntity
+     * @param UpdateProductVariantsStatus $updateProductVariantsStatus
+     * @param ConfigProvider $configProvider
+     */
+    public function __construct(
+        DeleteProductEntityService $deleteProductEntity,
+        UpdateProductVariantsStatus $updateProductVariantsStatus,
+        ConfigProvider $configProvider
+    ) {
         $this->deleteProductEntity = $deleteProductEntity;
+        $this->updateProductVariantsStatus = $updateProductVariantsStatus;
+        $this->configProvider = $configProvider;
     }
 
     /**
@@ -39,10 +58,13 @@ class DeleteProductEntity implements ObserverInterface
      */
     public function execute(Observer $observer): void
     {
-        $event = $observer->getEvent();
-        /** @var $product Product */
-        $product = $event->getProduct();
+        if ($this->configProvider->isEnabled()) {
+            $event = $observer->getEvent();
+            /** @var $product Product */
+            $product = $event->getProduct();
 
-        $this->deleteProductEntity->execute($product);
+            $this->deleteProductEntity->execute($product);
+            $this->updateProductVariantsStatus->execute($product);
+        }
     }
 }

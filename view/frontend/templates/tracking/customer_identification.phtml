@@ -3,11 +3,21 @@
  * @author Bloomreach
  * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
  */
+
+use Bloomreach\EngagementConnector\ViewModel\Tracking\CheckoutSuccess\RegisteredData;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var RegisteredData $registeredData */
+
+$registeredData = $block->getData('registered_data');
 ?>
 <script type="text/x-magento-init">
  {
      "*": {
-            "Bloomreach_EngagementConnector/js/tracking/customer-identification": {}
+            "Bloomreach_EngagementConnector/js/tracking/customer-identification": {
+                "registered": <?= /* @noEscape */ $registeredData ? $registeredData->getRegisteredData() : '{}'; ?>
+            }
      }
  }
 </script>
