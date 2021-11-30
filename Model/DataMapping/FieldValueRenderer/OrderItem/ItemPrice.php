@@ -13,9 +13,9 @@ use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\Model\AbstractModel;
 
 /**
- * The class is responsible for rendering total price field
+ * The class is responsible for rendering price field
  */
-class TotalPrice implements RenderInterface
+class ItemPrice implements RenderInterface
 {
     /**
      * @var OrderItemTotalPrice
@@ -31,7 +31,7 @@ class TotalPrice implements RenderInterface
     }
 
     /**
-     * Render the value of total price field
+     * Render the value of order item field
      *
      * @param AbstractSimpleObject|AbstractModel $entity
      * @param string $fieldCode
@@ -40,6 +40,6 @@ class TotalPrice implements RenderInterface
      */
     public function render($entity, string $fieldCode)
     {
-        return $this->orderItemTotalPrice->getTotalPriceBaseCurrency($entity);
+        return round($this->orderItemTotalPrice->getTotalPriceBaseCurrency($entity) / $entity->getQtyOrdered(), 2);
     }
 }

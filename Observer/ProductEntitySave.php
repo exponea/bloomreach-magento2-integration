@@ -7,7 +7,10 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Observer;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
 use Bloomreach\EngagementConnector\Service\Export\PrepareProductDataService;
+use Bloomreach\EngagementConnector\Service\Export\UpdateProductVariantsStatus;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -23,11 +26,28 @@ class ProductEntitySave implements ObserverInterface
     private $prepareProductDataService;
 
     /**
-     * @param PrepareProductDataService $prepareProductDataService
+     * @var UpdateProductVariantsStatus
      */
-    public function __construct(PrepareProductDataService $prepareProductDataService)
-    {
+    private $updateProductVariantsStatus;
+
+    /**
+     * @var ConfigProvider
+     */
+    private $configProvider;
+
+    /**
+     * @param PrepareProductDataService $prepareProductDataService
+     * @param UpdateProductVariantsStatus $updateProductVariantsStatus
+     * @param ConfigProvider $configProvider
+     */
+    public function __construct(
+        PrepareProductDataService $prepareProductDataService,
+        UpdateProductVariantsStatus $updateProductVariantsStatus,
+        ConfigProvider $configProvider
+    ) {
         $this->prepareProductDataService = $prepareProductDataService;
+        $this->updateProductVariantsStatus = $updateProductVariantsStatus;
+        $this->configProvider = $configProvider;
     }
 
     /**
@@ -39,10 +59,16 @@ class ProductEntitySave implements ObserverInterface
      */
     public function execute(Observer $observer): void
     {
-        $event = $observer->getEvent();
-        /** @var $product Product */
-        $product = $event->getProduct();
+        if ($this->configProvider->isEnabled()) {
+            $event = $observer->getEvent();
+            /** @var $product Product */
+            $product = $event->getProduct();
 
-        $this->prepareProductDataService->execute($product);
+            $this->prepareProductDataService->execute($product);
+
+            if ($product->getStatus() !== $product->getOrigData(ProductInterface::STATUS)) {
+                $this->updateProductVariantsStatus->execute($product);
+            }
+        }
     }
 }

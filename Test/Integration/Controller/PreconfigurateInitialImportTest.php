@@ -18,6 +18,21 @@ use Magento\TestFramework\TestCase\AbstractBackendController;
 class PreconfigurateInitialImportTest extends AbstractBackendController
 {
     /**
+     * @var string
+     */
+    public $uri = 'backend/bloomreach_engagement/import/RunInitialImportReconfiguration';
+
+    /**
+     * @var string
+     */
+    public $resource = 'Bloomreach_EngagementConnector::config_bloomreach_engagement';
+
+    /**
+     * @var string
+     */
+    public $httpMethod = HttpRequest::METHOD_POST;
+
+    /**
      * @var SerializerInterface
      */
     private $jsonSerializer;
@@ -47,8 +62,8 @@ class PreconfigurateInitialImportTest extends AbstractBackendController
      */
     private function dispatchImportReconfigurationRequest(): void
     {
-        $this->getRequest()->setMethod(HttpRequest::METHOD_POST);
-        $this->dispatch('backend/bloomreach_engagement/import/RunInitialImportReconfiguration');
+        $this->getRequest()->setMethod($this->httpMethod);
+        $this->dispatch($this->uri);
     }
 
     /**

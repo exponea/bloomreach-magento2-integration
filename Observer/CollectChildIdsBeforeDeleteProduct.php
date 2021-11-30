@@ -8,20 +8,20 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Observer;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
-use Bloomreach\EngagementConnector\Service\Export\PrepareCustomerDataService;
-use Magento\Customer\Model\Customer;
+use Bloomreach\EngagementConnector\Model\Product\ChildIdsDataProvider;
+use Magento\Catalog\Model\Product;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
 /**
- * Get customer entity after save
+ * The class is responsible for collecting product child ids before delete
  */
-class CustomerEntitySave implements ObserverInterface
+class CollectChildIdsBeforeDeleteProduct implements ObserverInterface
 {
     /**
-     * @var PrepareCustomerDataService
+     * @var ChildIdsDataProvider
      */
-    private $prepareCustomerDataService;
+    private $childIdsDataProvider;
 
     /**
      * @var ConfigProvider
@@ -29,19 +29,19 @@ class CustomerEntitySave implements ObserverInterface
     private $configProvider;
 
     /**
-     * @param PrepareCustomerDataService $prepareCustomerDataService
+     * @param ChildIdsDataProvider $childIdsDataProvider
      * @param ConfigProvider $configProvider
      */
     public function __construct(
-        PrepareCustomerDataService $prepareCustomerDataService,
+        ChildIdsDataProvider $childIdsDataProvider,
         ConfigProvider $configProvider
     ) {
-        $this->prepareCustomerDataService = $prepareCustomerDataService;
+        $this->childIdsDataProvider = $childIdsDataProvider;
         $this->configProvider = $configProvider;
     }
 
     /**
-     * Get customer entity after save
+     * Collect product child ids before delete product
      *
      * @param Observer $observer
      *
@@ -51,10 +51,10 @@ class CustomerEntitySave implements ObserverInterface
     {
         if ($this->configProvider->isEnabled()) {
             $event = $observer->getEvent();
-            /** @var Customer $customer */
-            $customer = $event->getCustomer();
+            /** @var $product Product */
+            $product = $event->getProduct();
 
-            $this->prepareCustomerDataService->execute($customer);
+            $this->childIdsDataProvider->collectIds($product);
         }
     }
 }

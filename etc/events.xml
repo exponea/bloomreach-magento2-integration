@@ -23,4 +23,8 @@
         <observer name="bloomreach_engagementconnector_delete_product"
                   instance="Bloomreach\EngagementConnector\Observer\DeleteProductEntity" />
     </event>
+    <event name="catalog_product_delete_before">
+        <observer name="bloomreach_engagementconnector_collect_child_ids_before_delete"
+                  instance="Bloomreach\EngagementConnector\Observer\CollectChildIdsBeforeDeleteProduct"/>
+    </event>
 </config>
