@@ -62,22 +62,6 @@ class TotalPrice
     }
 
     /**
-     * Returns order item total in local currency
-     *
-     * @param OrderItemInterface $orderItem
-     *
-     * @return float
-     */
-    private function getItemTotalPriceLocalCurrency(OrderItemInterface $orderItem): float
-    {
-        return $orderItem->getRowTotal()
-            - $orderItem->getDiscountAmount()
-            + $orderItem->getTaxAmount()
-            + $orderItem->getDiscountTaxCompensationAmount()
-            + $this->weeeHelper->getRowWeeeTaxInclTax($orderItem);
-    }
-
-    /**
      * Returns order item total in base currency
      *
      * @param OrderItemInterface $orderItem
@@ -114,5 +98,21 @@ class TotalPrice
             + $orderItem->getBaseTaxAmount()
             + $orderItem->getBaseDiscountTaxCompensationAmount()
             + $this->weeeHelper->getBaseRowWeeeTaxInclTax($orderItem);
+    }
+
+    /**
+     * Returns order item total in local currency
+     *
+     * @param OrderItemInterface $orderItem
+     *
+     * @return float
+     */
+    private function getItemTotalPriceLocalCurrency(OrderItemInterface $orderItem): float
+    {
+        return $orderItem->getRowTotal()
+            - $orderItem->getDiscountAmount()
+            + $orderItem->getTaxAmount()
+            + $orderItem->getDiscountTaxCompensationAmount()
+            + $this->weeeHelper->getRowWeeeTaxInclTax($orderItem);
     }
 }

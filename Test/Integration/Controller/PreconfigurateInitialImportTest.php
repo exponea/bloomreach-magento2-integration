@@ -56,17 +56,6 @@ class PreconfigurateInitialImportTest extends AbstractBackendController
     }
 
     /**
-     * Dispatch RunInitialImportReconfiguration controller
-     *
-     * @return void
-     */
-    private function dispatchImportReconfigurationRequest(): void
-    {
-        $this->getRequest()->setMethod($this->httpMethod);
-        $this->dispatch($this->uri);
-    }
-
-    /**
      * Test set up
      *
      * @return void
@@ -76,5 +65,16 @@ class PreconfigurateInitialImportTest extends AbstractBackendController
     {
         parent::setUp();
         $this->jsonSerializer = $this->_objectManager->create(SerializerInterface::class);
+    }
+
+    /**
+     * Dispatch RunInitialImportReconfiguration controller
+     *
+     * @return void
+     */
+    private function dispatchImportReconfigurationRequest(): void
+    {
+        $this->getRequest()->setMethod($this->httpMethod);
+        $this->dispatch($this->uri);
     }
 }

@@ -150,6 +150,45 @@ class RunInitialImportTest extends AbstractBackendController
     }
 
     /**
+     * Test set up
+     *
+     * @return void
+     * @throws AuthenticationException
+     * @throws FileSystemException
+     * @throws Exception
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->jsonSerializer = $this->_objectManager->create(SerializerInterface::class);
+        $this->initialEntityExportInterface = $this->_objectManager->create(InitialEntityExportInterface::class);
+        $this->exportEntityCollectionFactory = $this->_objectManager->create(ExportEntityCollectionFactory::class);
+        $this->exportQueueCollectionFactory = $this->_objectManager->create(ExportQueueCollectionFactory::class);
+        $this->queueProcessor = $this->_objectManager->create(QueueProcessor::class);
+        $this->exportProcessor = $this->_objectManager->create(ExportProcessor::class);
+        $this->directoryProvider = $this->_objectManager->create(DirectoryProvider::class);
+        $this->file = $this->_objectManager->create(File::class);
+        $this->entityTypes = $this->_objectManager->create(EntityType::class);
+        $this->clearExportEntity();
+        $this->clearExportQueue();
+        $this->clearExportFiles();
+    }
+
+    /**
+     * Clear test data
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->clearExportEntity();
+        $this->clearExportQueue();
+        $this->clearExportFiles();
+    }
+
+    /**
      * Dispatch RunInitialImportReconfiguration controller
      *
      * @return void
@@ -177,31 +216,6 @@ class RunInitialImportTest extends AbstractBackendController
         $fileName = array_pop($pathAsArray);
 
         return strpos($fileName, '.csv') !== false;
-    }
-
-    /**
-     * Test set up
-     *
-     * @return void
-     * @throws AuthenticationException
-     * @throws FileSystemException
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->jsonSerializer = $this->_objectManager->create(SerializerInterface::class);
-        $this->initialEntityExportInterface = $this->_objectManager->create(InitialEntityExportInterface::class);
-        $this->exportEntityCollectionFactory = $this->_objectManager->create(ExportEntityCollectionFactory::class);
-        $this->exportQueueCollectionFactory = $this->_objectManager->create(ExportQueueCollectionFactory::class);
-        $this->queueProcessor = $this->_objectManager->create(QueueProcessor::class);
-        $this->exportProcessor = $this->_objectManager->create(ExportProcessor::class);
-        $this->directoryProvider = $this->_objectManager->create(DirectoryProvider::class);
-        $this->file = $this->_objectManager->create(File::class);
-        $this->entityTypes = $this->_objectManager->create(EntityType::class);
-        $this->clearExportEntity();
-        $this->clearExportQueue();
-        $this->clearExportFiles();
     }
 
     /**
@@ -253,19 +267,5 @@ class RunInitialImportTest extends AbstractBackendController
                 $this->file->deleteFile($filePath);
             }
         }
-    }
-
-    /**
-     * Clear test data
-     *
-     * @return void
-     * @throws Exception
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->clearExportEntity();
-        $this->clearExportQueue();
-        $this->clearExportFiles();
     }
 }
