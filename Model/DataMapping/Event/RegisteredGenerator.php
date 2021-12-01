@@ -32,19 +32,6 @@ class RegisteredGenerator
     }
 
     /**
-     * Generate serialized registered key
-     *
-     * @param string $customerEmail
-     * @param int|null $customerId
-     *
-     * @return string
-     */
-    public function generateSerialized(string $customerEmail, ?int $customerId): string
-    {
-        return $this->jsonSerializer->serialize($this->generate($customerEmail, $customerId));
-    }
-
-    /**
      * Generate registered key
      *
      * @param string $customerEmail
@@ -58,16 +45,16 @@ class RegisteredGenerator
     }
 
     /**
-     * Returns registered
+     * Generate serialized registered key
      *
-     * @param string|null $customerEmail
+     * @param string $customerEmail
      * @param int|null $customerId
      *
-     * @return array
+     * @return string
      */
-    private function getRegistered(?string $customerEmail = null, ?int $customerId = null): array
+    public function generateSerialized(string $customerEmail, ?int $customerId): string
     {
-        return [self::EMAIL_ID => $customerEmail, self::CUSTOMER_ID => $customerId];
+        return $this->jsonSerializer->serialize($this->generate($customerEmail, $customerId));
     }
 
     /**
@@ -86,5 +73,18 @@ class RegisteredGenerator
                 unset($properties[$key]);
             }
         }
+    }
+
+    /**
+     * Returns registered
+     *
+     * @param string|null $customerEmail
+     * @param int|null $customerId
+     *
+     * @return array
+     */
+    private function getRegistered(?string $customerEmail = null, ?int $customerId = null): array
+    {
+        return [self::EMAIL_ID => $customerEmail, self::CUSTOMER_ID => $customerId];
     }
 }

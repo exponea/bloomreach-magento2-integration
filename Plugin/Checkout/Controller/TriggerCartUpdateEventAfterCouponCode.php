@@ -79,30 +79,6 @@ class TriggerCartUpdateEventAfterCouponCode
     }
 
     /**
-     * Returns current quote
-     *
-     * @return CartInterface|null
-     */
-    private function getQuote(): ?CartInterface
-    {
-        try {
-            return $this->checkoutSession->getQuote();
-        } catch (NoSuchEntityException | LocalizedException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * Get olc coupon code
-     *
-     * @return string
-     */
-    private function getOldCouponCode(): string
-    {
-        return (string) $this->oldCouponCode;
-    }
-
-    /**
      * Save old coupon code
      *
      * @param Subject $subject
@@ -120,6 +96,20 @@ class TriggerCartUpdateEventAfterCouponCode
     }
 
     /**
+     * Returns current quote
+     *
+     * @return CartInterface|null
+     */
+    private function getQuote(): ?CartInterface
+    {
+        try {
+            return $this->checkoutSession->getQuote();
+        } catch (NoSuchEntityException | LocalizedException $e) {
+            return null;
+        }
+    }
+
+    /**
      * Set old coupon code
      *
      * @param string|null $couponCode
@@ -129,5 +119,15 @@ class TriggerCartUpdateEventAfterCouponCode
     private function setOldCouponCode(string $couponCode): void
     {
         $this->oldCouponCode = $couponCode;
+    }
+
+    /**
+     * Get olc coupon code
+     *
+     * @return string
+     */
+    private function getOldCouponCode(): string
+    {
+        return (string) $this->oldCouponCode;
     }
 }

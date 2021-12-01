@@ -52,18 +52,6 @@ class OriginalPrice implements RenderInterface
     }
 
     /**
-     * Round price
-     *
-     * @param float $price
-     *
-     * @return float
-     */
-    private function roundPrice(float $price): float
-    {
-        return round($price, 2);
-    }
-
-    /**
      * Calculate bundle item price
      *
      * @param OrderItemInterface $parentItem
@@ -85,5 +73,17 @@ class OriginalPrice implements RenderInterface
         }
 
         return $total;
+    }
+
+    /**
+     * Round price
+     *
+     * @param float $price
+     *
+     * @return float
+     */
+    private function roundPrice(float $price): float
+    {
+        return round($price, 2);
     }
 }

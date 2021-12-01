@@ -102,18 +102,6 @@ class GetProductActiveStatus
     }
 
     /**
-     * Convert boolean value to string
-     *
-     * @param bool $value
-     *
-     * @return string
-     */
-    private function getBoolValue(bool $value = false): string
-    {
-        return strtoupper($value ? self::TRUE : self::FALSE);
-    }
-
-    /**
      * Retrieve parent products ids
      *
      * @param int $childProductId
@@ -127,6 +115,18 @@ class GetProductActiveStatus
         $groupedIds = $this->groupedType->getParentIdsByChild($childProductId);
 
         return array_unique(array_merge($configurableIds, $bundleIds, $groupedIds));
+    }
+
+    /**
+     * Convert boolean value to string
+     *
+     * @param bool $value
+     *
+     * @return string
+     */
+    private function getBoolValue(bool $value = false): string
+    {
+        return strtoupper($value ? self::TRUE : self::FALSE);
     }
 
     /**

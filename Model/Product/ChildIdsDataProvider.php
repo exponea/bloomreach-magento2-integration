@@ -38,20 +38,6 @@ class ChildIdsDataProvider
     }
 
     /**
-     * Retrieve product children ids
-     *
-     * @param ProductInterface $product
-     *
-     * @return array
-     */
-    private function getChildrenIds(ProductInterface $product): array
-    {
-        $childrenIds = $product->getTypeInstance()->getChildrenIds($product->getId());
-
-        return array_merge([], ...$childrenIds);
-    }
-
-    /**
      * Collect product children ids
      *
      * @param ProductInterface $product
@@ -65,5 +51,19 @@ class ChildIdsDataProvider
 
         //Collect ids
         $this->childIds[$product->getId()] = $this->getChildrenIds($product);
+    }
+
+    /**
+     * Retrieve product children ids
+     *
+     * @param ProductInterface $product
+     *
+     * @return array
+     */
+    private function getChildrenIds(ProductInterface $product): array
+    {
+        $childrenIds = $product->getTypeInstance()->getChildrenIds($product->getId());
+
+        return array_merge([], ...$childrenIds);
     }
 }

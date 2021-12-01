@@ -97,26 +97,6 @@ class UpdateProductVariantsStatus
     }
 
     /**
-     * Retrieves product variants collection
-     *
-     * @param ProductInterface $product
-     *
-     * @return array
-     */
-    private function getVariantsCollection(ProductInterface $product): array
-    {
-        $childrenIds = $this->childIdsDataProvider->getIds($product);
-
-        /** @var ProductVariantsCollection $collection */
-        $collection = $this->collectionFactory->create();
-        $collection->addAttributeToSelect([ProductInterface::STATUS, ProductInterface::VISIBILITY]);
-        $collection->addFieldToFilter(ProductInterface::VISIBILITY, Visibility::VISIBILITY_NOT_VISIBLE);
-        $collection->addFieldToFilter('entity_id', ['in' => $childrenIds]);
-
-        return $collection->getItems();
-    }
-
-    /**
      * Add data to export queue
      *
      * @param ProductInterface $product
@@ -156,5 +136,25 @@ class UpdateProductVariantsStatus
             self::ITEM_ID => $product->getId(),
             self::PRODUCT_ACTIVE => $this->getProductActiveStatus->execute($product)
         ];
+    }
+
+    /**
+     * Retrieves product variants collection
+     *
+     * @param ProductInterface $product
+     *
+     * @return array
+     */
+    private function getVariantsCollection(ProductInterface $product): array
+    {
+        $childrenIds = $this->childIdsDataProvider->getIds($product);
+
+        /** @var ProductVariantsCollection $collection */
+        $collection = $this->collectionFactory->create();
+        $collection->addAttributeToSelect([ProductInterface::STATUS, ProductInterface::VISIBILITY]);
+        $collection->addFieldToFilter(ProductInterface::VISIBILITY, Visibility::VISIBILITY_NOT_VISIBLE);
+        $collection->addFieldToFilter('entity_id', ['in' => $childrenIds]);
+
+        return $collection->getItems();
     }
 }
