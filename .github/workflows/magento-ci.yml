@@ -1,7 +1,8 @@
 name: Magento CI
 env:
   GITHUB_TOKEN: ${{ secrets.GIT_ACCESS_TOKEN }}
-  MAGENTO_ACCESS_KEYS: ${{ secrets.MAGENTO_ACCESS_KEYS }}
+  MAGENTO_PUBLIC_ACCESS_KEY: ${{ secrets.MAGENTO_PUBLIC_ACCESS_KEY }}
+  MAGENTO_PRIVATE_ACCESS_KEY: ${{ secrets.MAGENTO_PRIVATE_ACCESS_KEY }}
   DB_DATABASE: magento
   DB_USER: root
   DB_PASSWORD: root
@@ -40,7 +41,7 @@ jobs:
       - name: Setup - Configure Composer
         run: |
           composer config -g github-oauth.github.com ${GITHUB_TOKEN}
-          composer config -g http-basic.repo.magento.com ${MAGENTO_ACCESS_KEYS}
+          composer config -g http-basic.repo.magento.com ${MAGENTO_PUBLIC_ACCESS_KEY} ${MAGENTO_PRIVATE_ACCESS_KEY}
         # Setup required software for Magento Installation
         # Set up MySQL
       - name: Setup - MySQL
