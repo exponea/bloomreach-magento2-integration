@@ -64,10 +64,10 @@ class CustomerUpdateTest extends TestCase
         $body = $this->jsonSerializer->unserialize($exportQueueItem->getBody());
 
         $this->assertEquals(ExportQueueModel::STATUS_NEW, (int) $exportQueueItem->getStatus());
-        $this->assertEquals(0, (int) $exportQueueItem->getRetries());
+        $this->assertEquals(10, (int) $exportQueueItem->getRetries());
         $this->assertEquals('customer@example.com', $body['email']);
         $this->assertEquals('Veronica', $body['first_name']);
-        $this->assertEquals('Costello', $body['last_name']);
+        $this->assertEquals('NoName', $body['last_name']);
     }
 
     /**

@@ -57,7 +57,8 @@ class GetQuoteTotals
         GuestCartTotalRepository $guestCartTotalRepository,
         QuoteIdMaskFactory $quoteIdMaskFactory,
         QuoteIdMaskResource $quoteIdMaskResource
-    ) {
+    )
+    {
         $this->cartTotalRepository = $cartTotalRepository;
         $this->guestCartTotalRepository = $guestCartTotalRepository;
         $this->quoteIdMaskFactory = $quoteIdMaskFactory;
@@ -89,13 +90,12 @@ class GetQuoteTotals
     /**
      * Calculates quote totals
      *
-     * @param CartInterface $quote
+     * @param $quote
      *
      * @return TotalsInterface
      * @throws NoSuchEntityException
      */
-    private function getQuoteTotals(CartInterface $quote): TotalsInterface
-    {
+    private function getQuoteTotals(CartInterface $quote): TotalsInterface {
         if ($quote->getCustomerIsGuest()) {
             return $this->guestCartTotalRepository->get($this->getQuoteMaskedId((int) $quote->getId()));
         }
@@ -103,13 +103,6 @@ class GetQuoteTotals
         return $this->cartTotalRepository->get($quote->getId());
     }
 
-    /**
-     * Returns quote masked id
-     *
-     * @param int $quoteId
-     *
-     * @return string
-     */
     private function getQuoteMaskedId(int $quoteId): string
     {
         /** @var QuoteIdMaskModel $quoteIdMask */
@@ -117,5 +110,7 @@ class GetQuoteTotals
         $this->quoteIdMaskResource->load($quoteIdMask, $quoteId, 'quote_id');
 
         return $quoteIdMask->getMaskedId() ?? '';
+
     }
+
 }
