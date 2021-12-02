@@ -3,9 +3,16 @@
     "version": "1.0.0",
     "description": "The module provides the Bloomreach integration with Magento 2.",
     "type": "magento2-module",
+    "authors": [
+        {
+            "name": "Bloomreach Inc.",
+            "email": "support@bloomreach.com"
+        }
+    ],
     "require": {
+        "guzzlehttp/guzzle": "~6.0",
         "magento/framework": "*",
-        "guzzlehttp/guzzle": "~6.0"
+        "php": "~7.3.0||~7.4.0"
     },
     "license": [
         "Proprietary"
