@@ -241,6 +241,9 @@
                     <item name="telephone" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Customer\Telephone
                     </item>
+                    <item name="dob" xsi:type="object">
+                        Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Customer\Timestamp
+                    </item>
                 </item>
                 <item name="purchase" xsi:type="array">
                     <item name="default" xsi:type="object">
