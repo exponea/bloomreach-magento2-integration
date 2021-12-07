@@ -9,19 +9,20 @@ namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Cu
 
 use Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface;
 use Bloomreach\EngagementConnector\Service\Customer\GetCustomerAttributeValue;
-use Bloomreach\EngagementConnector\Service\EavAttribute\GetAttributeValue;
 use Magento\Customer\Api\Data\CustomerInterface;
-use Magento\Customer\Model\Customer;
+use Magento\Framework\Api\AbstractSimpleObject;
+use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Stdlib\DateTime\DateTime;
 
 /**
- * The class is responsible for rendering the value of customer field
+ * The class is responsible for render and convert birth_date field for customer
  */
-class DefaultRenderer implements RenderInterface
+class Timestamp implements RenderInterface
 {
     /**
-     * @var GetAttributeValue
+     * @var DateTime
      */
-    private $getAttributeValue;
+    private $dateTime;
 
     /**
      * @var GetCustomerAttributeValue
@@ -29,39 +30,32 @@ class DefaultRenderer implements RenderInterface
     private $getCustomerAttributeValue;
 
     /**
-     * @param GetAttributeValue $getAttributeValue
-     * @param GetCustomerAttributeValue $getCustomerAttributeValue
+     * @param DateTime $dateTime
      */
     public function __construct(
-        GetAttributeValue $getAttributeValue,
+        DateTime $dateTime,
         GetCustomerAttributeValue $getCustomerAttributeValue
     ) {
-        $this->getAttributeValue = $getAttributeValue;
+        $this->dateTime = $dateTime;
         $this->getCustomerAttributeValue = $getCustomerAttributeValue;
     }
 
     /**
-     * Render the value of customer field
+     * Render and convert birth_date field
      *
-     * @param CustomerInterface|Customer $entity
+     * @param AbstractSimpleObject|AbstractModel|CustomerInterface $entity
      * @param string $fieldCode
      *
      * @return string
-     *
-     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function render($entity, string $fieldCode)
     {
         if ($entity instanceof CustomerInterface) {
             $attributeValue = $this->getCustomerAttributeValue->execute($entity, $fieldCode);
         } else {
-            $attributeValue = $entity->getData($fieldCode);
+            $attributeValue = (string) $entity->getData($fieldCode);
         }
 
-        return (string) $this->getAttributeValue->execute(
-            $attributeValue,
-            $fieldCode,
-            Customer::ENTITY
-        );
+        return $attributeValue ? (string) $this->dateTime->timestamp($attributeValue) : '';
     }
 }
