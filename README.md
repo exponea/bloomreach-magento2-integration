@@ -2,6 +2,41 @@
 
 This is a module for integration with the [Bloomreach service](https://www.bloomreach.com/).
 
+## Prerequisites
+
+- Magento 2.3, 2.4
+- PHP 7.3, 7.4
+
+## Installation
+
+### Composer
+
+1. composer config repositories.bloomreach git https://github.com/exponea/bloomreach-magento2-integration.git
+2. composer require bloomreach/bloomreach-engagement-connector-magento
+
+### Manually
+
+Check to see if your Magento instance has an app/code directory structure. If not, create it manually.
+
+1. Then create 2 more directories with this path: `Bloomreach/EngagementConnector`. The final path should look like: `app/code/Bloomreach/EngagementConnector`
+2. Extract the downloaded zip folder and move the content of the extracted folder to this path: `app/code/Bloomreach/EngagementConnector`
+
+### Initialize the extension
+
+#### For production mode stores
+
+1. bin/magento maintenance:enable
+2. bin/magento module:enable Bloomreach_EngagementConnector
+3. bin/magento deploy:mode:set production
+4. bin/magento cache:clean
+5. bin/magento maintenance:disable
+
+#### For developer mode stores
+
+1. bin/magento module:enable Bloomreach_EngagementConnector
+2. bin/magento setup:upgrade
+3. bin/magento cache:clean
+
 ## Database modification
 
 ### Created Tables
