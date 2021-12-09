@@ -20,6 +20,11 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
 class Timestamp implements RenderInterface
 {
     /**
+     * Offset in seconds (12h)
+     */
+    private const OFFSET = 43200;
+
+    /**
      * @var DateTime
      */
     private $dateTime;
@@ -56,6 +61,6 @@ class Timestamp implements RenderInterface
             $attributeValue = (string) $entity->getData($fieldCode);
         }
 
-        return $attributeValue ? (string) $this->dateTime->timestamp($attributeValue) : '';
+        return $attributeValue ? (string) ($this->dateTime->timestamp($attributeValue) + self::OFFSET) : '';
     }
 }
