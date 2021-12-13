@@ -25,7 +25,7 @@ class GetDiscountService
     public function execute($product): float
     {
         $specialPrice = $product->getSpecialPrice();
-        $specialPriceFromDate = $product->getSpecialFromDate();
+        $specialPriceFromDate = $product->getSpecialFromDate() ?? date('Y-m-d', strtotime('-1 day'));
         $specialPriceToDate = $product->getSpecialToDate() ?? date('Y-m-d', strtotime('+1 day'));
         $today = time();
         $price = $product->getPrice();
