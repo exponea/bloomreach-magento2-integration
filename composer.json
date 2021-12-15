@@ -10,8 +10,6 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "~6.0",
-        "magento/framework": ">=102.0.1",
         "php": "~7.3.0||~7.4.0"
     },
     "license": [
