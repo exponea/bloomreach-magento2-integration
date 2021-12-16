@@ -512,6 +512,37 @@
             </argument>
         </arguments>
     </type>
+    <type name="Bloomreach\EngagementConnector\Console\Command\StartExport">
+        <arguments>
+            <argument name="exportProcessor" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\ExportProcessor\Proxy</argument>
+            <argument name="appState" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
+            <argument name="startApiImportService" xsi:type="object">Bloomreach\EngagementConnector\Service\Integration\StartApiImportService\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Console\Command\AddToExportQueue">
+        <arguments>
+            <argument name="queueProcessor" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\QueueProcessor\Proxy</argument>
+            <argument name="appState" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Console\Command\GenerateExportFileForExportQueue">
+        <arguments>
+            <argument name="saveExportQueue" xsi:type="object">Bloomreach\EngagementConnector\Api\SaveExportQueueInterface\Proxy</argument>
+            <argument name="exportFileProcessor" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\ExportFileProcessor\Proxy</argument>
+            <argument name="appState" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
+            <argument name="entityType" xsi:type="object">Bloomreach\EngagementConnector\Model\DataProvider\EntityType\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Console\Command\CleanExportQueueCommand">
+        <arguments>
+            <argument name="cleanExportQueueService" xsi:type="object">Bloomreach\EngagementConnector\Service\Cron\CleanExportQueueService\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Console\Command\CleanCsvFilesCommand">
+        <arguments>
+            <argument name="cleanCsvFilesService" xsi:type="object">Bloomreach\EngagementConnector\Service\Cron\CleanCsvFilesService\Proxy</argument>
+        </arguments>
+    </type>
     <type name="Bloomreach\EngagementConnector\Model\Export\Entity\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
