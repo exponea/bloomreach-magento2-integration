@@ -26,6 +26,6 @@ class FinalPrice implements RenderInterface
      */
     public function render($entity, string $fieldCode)
     {
-        return number_format(round($entity->getFinalPrice(), 2), 4);
+        return number_format(round((float) $entity->getFinalPrice(), 2), 4);
     }
 }

@@ -7,5 +7,5 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Bloomreach_EngagementConnector" setup_version="0.9.2"/>
+    <module name="Bloomreach_EngagementConnector" setup_version="0.9.3"/>
 </config>
