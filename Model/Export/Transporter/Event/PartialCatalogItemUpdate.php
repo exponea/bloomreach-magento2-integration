@@ -8,11 +8,10 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\Export\Transporter\Event;
 
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
+use Bloomreach\EngagementConnector\Model\Export\Transporter\ResponseHandler;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface;
 use Bloomreach\EngagementConnector\Service\Integration\PartialCatalogItemUpdateRequest;
-use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
 
 /**
@@ -31,15 +30,23 @@ class PartialCatalogItemUpdate implements TransporterInterface
     private $jsonSerializer;
 
     /**
+     * @var ResponseHandler
+     */
+    private $responseHandler;
+
+    /**
      * @param PartialCatalogItemUpdateRequest $partialCatalogItemUpdateRequest
      * @param SerializerInterface $jsonSerializer
+     * @param ResponseHandler $responseHandler
      */
     public function __construct(
         PartialCatalogItemUpdateRequest $partialCatalogItemUpdateRequest,
-        SerializerInterface $jsonSerializer
+        SerializerInterface $jsonSerializer,
+        ResponseHandler $responseHandler
     ) {
         $this->partialCatalogItemUpdateRequest = $partialCatalogItemUpdateRequest;
         $this->jsonSerializer = $jsonSerializer;
+        $this->responseHandler = $responseHandler;
     }
 
     /**
@@ -48,9 +55,6 @@ class PartialCatalogItemUpdate implements TransporterInterface
      * @param ExportQueueInterface $exportQueue
      *
      * @return bool
-     *
-     * @throws FileSystemException
-     * @throws NoSuchEntityException
      * @throws LocalizedException
      */
     public function send(ExportQueueInterface $exportQueue): bool
@@ -58,12 +62,9 @@ class PartialCatalogItemUpdate implements TransporterInterface
         $properties = $this->jsonSerializer->unserialize($exportQueue->getBody());
         $itemId = $properties['item_id'] ?? '';
         $body = ['properties' => $properties];
-
-        $response = $this->partialCatalogItemUpdateRequest->execute($body, $itemId, $exportQueue->getEntityType());
-
-        if ((int) $response->getStatusCode() !== 200) {
-            throw new LocalizedException(__($response->getReasonPhrase()));
-        }
+        $this->responseHandler->handle(
+            $this->partialCatalogItemUpdateRequest->execute($body, $itemId, $exportQueue->getEntityType())
+        );
 
         return true;
     }

@@ -5,11 +5,23 @@
  */
 /** @var \Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\Button $block */
 
-$isEnabled = $block->getIsEnabled();
+$isInProgress = $block->getIsImportInProgress();
+$isEnabled = $block->getIsEnabled() && !$isInProgress;
 $messageContainer = $block->escapeHtmlAttr($block->getHtmlId() . '_message');
 ?>
 <div class="actions">
-    <div class="<?= /* @noEscape */ $messageContainer; ?>"></div>
+    <div class="<?= /* @noEscape */ $messageContainer; ?>">
+        <?php if ($isInProgress):?>
+        <div class="messages">
+            <div class="message message-progress">
+                <strong><?= $block->escapeHtml(__('Disabled.')) ?></strong>
+                <?= $block->escapeHtml(
+                    __('Run initial imports is currently disabled, because there are imports already in progress.')
+                ); ?>
+            </div>
+        </div>
+        <?php endif; ?>
+    </div>
     <button type="button" id="<?= $block->escapeHtmlAttr($block->getHtmlId()); ?>"
         <?= !$isEnabled ? 'disabled' : ''; ?>>
         <span><?= $block->escapeHtml($block->getButtonLabel()); ?></span>

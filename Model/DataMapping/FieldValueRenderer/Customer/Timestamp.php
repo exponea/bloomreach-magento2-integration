@@ -36,6 +36,7 @@ class Timestamp implements RenderInterface
 
     /**
      * @param DateTime $dateTime
+     * @param GetCustomerAttributeValue $getCustomerAttributeValue
      */
     public function __construct(
         DateTime $dateTime,

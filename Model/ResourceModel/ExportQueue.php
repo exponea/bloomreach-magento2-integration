@@ -16,7 +16,7 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
  */
 class ExportQueue extends AbstractDb
 {
-    private const TABLE_NAME = 'bloomreach_export_queue';
+    public const TABLE_NAME = 'bloomreach_export_queue';
 
     /**
      * Resource initialization

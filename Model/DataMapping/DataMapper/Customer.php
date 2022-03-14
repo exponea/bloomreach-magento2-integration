@@ -10,15 +10,15 @@ namespace Bloomreach\EngagementConnector\Model\DataMapping\DataMapper;
 use Bloomreach\EngagementConnector\Model\DataMapping\Config\Data\FieldMappingConfigDataInterface;
 use Bloomreach\EngagementConnector\Model\DataMapping\MappingProcessor;
 use Magento\Framework\Api\AbstractSimpleObject;
-use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\DataObject;
+use Magento\Framework\Model\AbstractModel;
 
 /**
  * Maps Customer data to Bloomreach data
  */
 class Customer implements DataMapperInterface
 {
-    private const ENTITY_TYPE = 'customer';
+    const ENTITY_TYPE = 'customer';
 
     /**
      * @var MappingProcessor

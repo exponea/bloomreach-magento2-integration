@@ -9,6 +9,8 @@ namespace Bloomreach\EngagementConnector\Model\Export;
 
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
 use Bloomreach\EngagementConnector\Api\SaveExportQueueInterface;
+use Bloomreach\EngagementConnector\Exception\ExportRequestException;
+use Bloomreach\EngagementConnector\Logger\Debugger;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface;
 use Bloomreach\EngagementConnector\Model\ExportQueueModel;
 use Exception;
@@ -31,6 +33,11 @@ class SenderProcessor
     private $transporterResolver;
 
     /**
+     * @var Debugger
+     */
+    private $debugger;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -38,15 +45,18 @@ class SenderProcessor
     /**
      * @param SaveExportQueueInterface $saveExportQueue
      * @param TransporterInterface $transporterResolver
+     * @param Debugger $debugger
      * @param LoggerInterface $logger
      */
     public function __construct(
         SaveExportQueueInterface $saveExportQueue,
         TransporterInterface $transporterResolver,
+        Debugger $debugger,
         LoggerInterface $logger
     ) {
         $this->saveExportQueue = $saveExportQueue;
         $this->transporterResolver = $transporterResolver;
+        $this->debugger = $debugger;
         $this->logger = $logger;
     }
 
@@ -60,25 +70,41 @@ class SenderProcessor
     public function process(ExportQueueInterface $exportQueue): void
     {
         try {
+            $updateRetries = true;
             $exportQueue->setStatus(ExportQueueModel::STATUS_IN_PROGRESS);
             $this->saveExportQueue->execute($exportQueue);
+            $this->debugger->log(
+                __(
+                    'Export data for Export Queue with ID: %1 started.',
+                    $exportQueue->getEntityId()
+                )
+            );
+            $this->debugger->log(
+                __('Export Queue ID: %1', $exportQueue->getEntityId())
+            );
+            $this->debugger->log(
+                __('Entity Type: %1', $exportQueue->getEntityType())
+            );
+            $this->debugger->log(
+                __('Api Type: %1', $exportQueue->getApiType())
+            );
             $this->transporterResolver->send($exportQueue);
             $this->saveExportQueue($exportQueue);
             $exportQueue->setStatus(ExportQueueModel::STATUS_COMPLETE);
-        } catch (Exception $e) {
-            $this->logger->error(
+            $this->debugger->log(
                 __(
-                    'An error occurred while sending the data to the Bloomreach. Export Queue ID: %1. ' .
-                    'Entity type: %2.  Error: %3',
-                    $exportQueue->getEntityId(),
-                    $exportQueue->getEntityType(),
-                    $e->getMessage(),
+                    'Export data for Export Queue with ID: %1 completed successfully.',
+                    $exportQueue->getEntityId()
                 )
             );
-            $exportQueue->setStatus(ExportQueueModel::STATUS_ERROR);
+        } catch (ExportRequestException $e) {
+            $updateRetries = $e->isNeedUpdateRetryCounter();
+            $this->handleError($exportQueue, $e->getMessage());
+        } catch (Exception $e) {
+            $this->handleError($exportQueue, $e->getMessage());
         }
 
-        $this->saveExportQueue($exportQueue, true);
+        $this->saveExportQueue($exportQueue, $updateRetries);
     }
 
     /**
@@ -110,5 +136,35 @@ class SenderProcessor
                 )
             );
         }
+    }
+
+    /**
+     * Handle error
+     *
+     * @param ExportQueueInterface $exportQueue
+     * @param string $errorMessage
+     *
+     * @return void
+     */
+    private function handleError(ExportQueueInterface $exportQueue, string $errorMessage): void
+    {
+        $this->logger->error(
+            __(
+                'An error occurred while sending the data to the Bloomreach. Export Queue ID: %1. ' .
+                'Entity type: %2.  Error: %3',
+                $exportQueue->getEntityId(),
+                $exportQueue->getEntityType(),
+                $errorMessage,
+            )
+        );
+        $exportQueue->setStatus(ExportQueueModel::STATUS_ERROR);
+        $this->debugger->log(
+            __(
+                'Export data for Export Queue with ID: %1 completed with error. '
+                . 'For more information, see in the log file %2',
+                $exportQueue->getEntityId(),
+                '<project_dir>/var/log/bloomreach/engagement_connector.log'
+            )
+        );
     }
 }

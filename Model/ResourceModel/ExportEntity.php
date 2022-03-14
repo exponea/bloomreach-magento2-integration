@@ -16,7 +16,7 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
  */
 class ExportEntity extends AbstractDb
 {
-    private const TABLE_NAME = 'bloomreach_export_entity';
+    public const TABLE_NAME = 'bloomreach_export_entity';
 
     /**
      * Resource initialization

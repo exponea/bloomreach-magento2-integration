@@ -56,7 +56,10 @@ class ImportIdResolver
 
         if (!$configPath) {
             throw new LocalizedException(
-                __('There is no such config for %2 entity type')
+                __(
+                    'There is no such config for %1 entity type',
+                    $entityType
+                )
             );
         }
 

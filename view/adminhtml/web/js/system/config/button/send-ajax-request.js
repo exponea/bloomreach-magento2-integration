@@ -52,6 +52,8 @@ define([
                     this._renderMessageContent(data.message, true);
                 } else {
                     this._renderMessageContent(data.message, false);
+                    $('#' + this.options.buttonId).prop('disabled', true);
+
                 }
             }.bind(this)).fail(function () {
                 this._renderMessageContent(

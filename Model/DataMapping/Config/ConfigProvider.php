@@ -95,6 +95,16 @@ class ConfigProvider
     public const XPATH_CATALOG_VARIANTS_ID = 'bloomreach_engagement/general/variants_id';
 
     /**
+     * Enable Debug Mode system configuration value XPATH
+     */
+    public const XPATH_ENABLE_DEBUG_MODE = 'bloomreach_engagement/general/debug_mode';
+
+    /**
+     * Request timeout system configuration value XPATH
+     */
+    public const XPATH_REQUEST_TIMEOUT = 'bloomreach_engagement/general/request_timeout';
+
+    /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
@@ -341,5 +351,35 @@ class ConfigProvider
         $scopeCode = null
     ): string {
         return (string) $this->scopeConfig->getValue(self::XPATH_CATALOG_VARIANTS_ID, $scopeType, $scopeCode);
+    }
+
+    /**
+     * Get is enable Debug Mode
+     *
+     * @param string $scopeType
+     * @param int|string $scopeCode
+     *
+     * @return bool
+     */
+    public function isDebugModeEnabled(
+        string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
+        $scopeCode = null
+    ): bool {
+        return $this->scopeConfig->isSetFlag(self::XPATH_ENABLE_DEBUG_MODE, $scopeType, $scopeCode);
+    }
+
+    /**
+     * Get Request Timeout
+     *
+     * @param string $scopeType
+     * @param int|string $scopeCode
+     *
+     * @return int
+     */
+    public function getRequestTimeout(
+        string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
+        $scopeCode = null
+    ): int {
+        return (int) $this->scopeConfig->getValue(self::XPATH_REQUEST_TIMEOUT, $scopeType, $scopeCode);
     }
 }
