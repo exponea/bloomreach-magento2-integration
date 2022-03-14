@@ -68,14 +68,14 @@ class StartExport extends Command
     {
         $output->writeln('Data export to Bloomreach has started');
 
-        $importId = $input->getOption('import_id');
+        $importId = (string) $input->getOption('import_id');
 
         if ($importId) {
             try {
                 $result = $this->startApiImportService->execute(
                     $importId,
-                    $input->getOption('csv_file_path'),
-                    $input->getOption('test_connection')
+                    (string) $input->getOption('csv_file_path'),
+                    (bool) $input->getOption('test_connection')
                 );
 
                 $output->writeln('Status: ' . $result->getStatusCode());

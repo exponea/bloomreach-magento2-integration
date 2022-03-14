@@ -6,6 +6,7 @@
 namespace Bloomreach\EngagementConnector\Model\Export\Transporter;
 
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Sends data to the Bloomreach service
@@ -18,6 +19,7 @@ interface TransporterInterface
      * @param ExportQueueInterface $exportQueue
      *
      * @return bool
+     * @throws LocalizedException
      */
     public function send(ExportQueueInterface $exportQueue): bool;
 }

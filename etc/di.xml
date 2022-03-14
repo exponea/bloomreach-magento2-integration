@@ -335,6 +335,7 @@
                 <item name="delete" xsi:type="array">
                     <item name="catalog_product" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\Transporter\Delete\DeleteCatalogItem</item>
                     <item name="catalog_product_variants" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\Transporter\Delete\DeleteCatalogItem</item>
+                    <item name="customer" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\Transporter\Delete\AnonymizeCustomer</item>
                 </item>
                 <item name="partial_update" xsi:type="array">
                     <item name="catalog_product_variants" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\Transporter\Event\PartialCatalogItemUpdate</item>
@@ -448,6 +449,29 @@
     <type name="Bloomreach\EngagementConnector\Service\Export\UpdateProductVariantsStatus">
         <arguments>
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Service\Export\DeleteCustomerEntity">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <!-- Creates the debugger logger -->
+    <virtualType name="Bloomreach\EngagementConnector\Logger\Handler\Debugger" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/bloomreach/debug.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Bloomreach\EngagementConnector\Logger\DebugLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="error" xsi:type="object">Bloomreach\EngagementConnector\Logger\Handler\Debugger</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Bloomreach\EngagementConnector\Logger\Debugger">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\DebugLogger</argument>
         </arguments>
     </type>
 </config>

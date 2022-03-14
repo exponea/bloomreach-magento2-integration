@@ -11,6 +11,8 @@
             <general>
                 <enabled>0</enabled>
                 <api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <debug_mode>0</debug_mode>
+                <request_timeout>60</request_timeout>
             </general>
             <frontend_tracking>
                 <enable_js_sdk>0</enable_js_sdk>

@@ -8,9 +8,8 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Service\Integration;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
-use GuzzleHttp\Client;
+use Bloomreach\EngagementConnector\Service\Integration\Client\RequestSender;
 use GuzzleHttp\ClientFactory;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ResponseFactory;
 use Magento\Framework\Webapi\Rest\Request;
@@ -21,19 +20,21 @@ use Magento\Framework\Webapi\Rest\Request;
 class StartApiImportService
 {
     /**
+     * Endpoint pattern '/data/v2/projects/{projectToken}/imports/{import_id}/start'
+     */
+    public const URL_ENDPOINT_PATTERN = '%s/data/v2/projects/%s/imports/%s/start';
+
+    public const REQUEST_TYPE = Request::HTTP_METHOD_POST;
+
+    /**
      * @var ConfigProvider
      */
     private $configProvider;
 
     /**
-     * @var GetEndpointService
+     * @var RequestSender
      */
-    private $getEndpointService;
-
-    /**
-     * @var ClientFactory
-     */
-    private $clientFactory;
+    private $requestSender;
 
     /**
      * @var ResponseFactory
@@ -41,20 +42,22 @@ class StartApiImportService
     private $responseFactory;
 
     /**
+     * @var array
+     */
+    private $endpoint = [];
+
+    /**
      * @param ConfigProvider $configProvider
-     * @param GetEndpointService $getEndpointService
-     * @param ClientFactory $clientFactory
+     * @param RequestSender $requestSender
      * @param ResponseFactory $responseFactory
      */
     public function __construct(
         ConfigProvider $configProvider,
-        GetEndpointService $getEndpointService,
-        ClientFactory $clientFactory,
+        RequestSender $requestSender,
         ResponseFactory $responseFactory
     ) {
         $this->configProvider = $configProvider;
-        $this->getEndpointService = $getEndpointService;
-        $this->clientFactory = $clientFactory;
+        $this->requestSender = $requestSender;
         $this->responseFactory = $responseFactory;
     }
 
@@ -69,81 +72,47 @@ class StartApiImportService
      *
      * @SuppressWarnings(PMD.BooleanArgumentFlag)
      */
-    public function execute($importId, $csvFilePath = '', $testConnection = false): Response
-    {
-        $apiEndpoint = $this->getEndpointService->execute($importId);
-
-        return $this->doRequest($apiEndpoint, $csvFilePath, $testConnection);
-    }
-
-    /**
-     * Do API request
-     *
-     * @param string $uriEndpoint
-     * @param string $csvFilePath
-     * @param bool $testConnection
-     *
-     * @return Response
-     */
-    private function doRequest($uriEndpoint, $csvFilePath, $testConnection): Response
+    public function execute(string $importId, string $csvFilePath = '', bool $testConnection = false): Response
     {
         if (!$csvFilePath) {
             /** @var Response $response */
-            $response = $this->responseFactory->create([
-                'reason' => __('The path of CSV file is not exist')
-            ]);
-
-            return $response;
-        }
-
-        $requestMethod = Request::HTTP_METHOD_POST;
-
-        /** @var Client $client */
-        $client = $this->clientFactory->create(['config' => [
-            'base_uri' => (string) $uriEndpoint,
-            'auth' => $this->getAuthData(),
-            'headers' => [
-                'Content-Type'  => 'application/json',
-                'Accept'        => 'application/json'
-            ]
-        ]]);
-
-        $body = ['test_connection' => (bool) $testConnection];
-        if ((bool) $testConnection === false) {
-            $body = [
-                'path' => $csvFilePath
-            ];
-        }
-
-        try {
-            $response = $client->request(
-                $requestMethod,
-                $client->getConfig('base_uri'),
+            return $this->responseFactory->create(
                 [
-                    'json' => $body
+                    'reason' => __('The path of CSV file is not exist')
                 ]
             );
-        } catch (GuzzleException $exception) {
-            /** @var Response $response */
-            $response = $this->responseFactory->create([
-                'status' => $exception->getCode(),
-                'reason' => $exception->getMessage()
-            ]);
         }
 
-        return $response;
+        $body = ['test_connection' => $testConnection];
+
+        if ($testConnection === false) {
+            $body = ['path' => $csvFilePath];
+        }
+
+        return $this->requestSender->execute($this->getEndpoint($importId), static::REQUEST_TYPE, $body);
     }
 
     /**
-     * Get authorization data
+     * Returns event endpoint
      *
-     * @return array
+     * @param string $importId
+     *
+     * @return string
      */
-    private function getAuthData()
+    private function getEndpoint(string $importId): string
     {
-        $username = $this->configProvider->getApiKeyId();
-        $password = $this->configProvider->getApiSecret();
+        if (!array_key_exists($importId, $this->endpoint)) {
+            $apiBaseUrl = $this->configProvider->getApiTarget();
+            $projectToken = $this->configProvider->getProjectTokenId();
 
-        return [$username, $password];
+            $this->endpoint[$importId] = sprintf(
+                self::URL_ENDPOINT_PATTERN,
+                $apiBaseUrl,
+                $projectToken,
+                $importId
+            );
+        }
+
+        return $this->endpoint[$importId];
     }
 }

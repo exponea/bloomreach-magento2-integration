@@ -9,11 +9,10 @@ namespace Bloomreach\EngagementConnector\Model\Export\Transporter\Event;
 
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
 use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
+use Bloomreach\EngagementConnector\Model\Export\Transporter\ResponseHandler;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface;
 use Bloomreach\EngagementConnector\Service\Integration\UpdateCustomerRequest;
-use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
 
 /**
@@ -37,18 +36,26 @@ class UpdateCustomer implements TransporterInterface
     private $registeredGenerator;
 
     /**
+     * @var ResponseHandler
+     */
+    private $responseHandler;
+
+    /**
      * @param UpdateCustomerRequest $updateCustomerRequest
      * @param SerializerInterface $jsonSerializer
      * @param RegisteredGenerator $registeredGenerator
+     * @param ResponseHandler $responseHandler
      */
     public function __construct(
         UpdateCustomerRequest $updateCustomerRequest,
         SerializerInterface $jsonSerializer,
-        RegisteredGenerator $registeredGenerator
+        RegisteredGenerator $registeredGenerator,
+        ResponseHandler $responseHandler
     ) {
         $this->updateCustomerRequest = $updateCustomerRequest;
         $this->jsonSerializer = $jsonSerializer;
         $this->registeredGenerator = $registeredGenerator;
+        $this->responseHandler = $responseHandler;
     }
 
     /**
@@ -57,18 +64,11 @@ class UpdateCustomer implements TransporterInterface
      * @param ExportQueueInterface $exportQueue
      *
      * @return bool
-     *
-     * @throws FileSystemException
-     * @throws NoSuchEntityException
      * @throws LocalizedException
      */
     public function send(ExportQueueInterface $exportQueue): bool
     {
-        $response = $this->updateCustomerRequest->execute($this->buildEventBody($exportQueue));
-
-        if ((int) $response->getStatusCode() !== 200) {
-            throw new LocalizedException(__($response->getReasonPhrase()));
-        }
+        $this->responseHandler->handle($this->updateCustomerRequest->execute($this->buildEventBody($exportQueue)));
 
         return true;
     }

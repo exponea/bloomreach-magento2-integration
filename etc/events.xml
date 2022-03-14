@@ -27,4 +27,8 @@
         <observer name="bloomreach_engagementconnector_collect_child_ids_before_delete"
                   instance="Bloomreach\EngagementConnector\Observer\CollectChildIdsBeforeDeleteProduct"/>
     </event>
+    <event name="customer_delete_commit_after">
+        <observer name="bloomreach_engagementconnector_delete_customer"
+                  instance="Bloomreach\EngagementConnector\Observer\DeleteCustomerEntity"/>
+    </event>
 </config>

@@ -55,6 +55,22 @@
                         <field id="enable">1</field>
                     </depends>
                 </field>
+                <field id="debug_mode" translate="label" type="select" sortOrder="60" showInDefault="1">
+                    <label>Enable Debug Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Save logs to "var/log/bloomreach/debug.log".</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="request_timeout" translate="label" type="text" sortOrder="70" showInDefault="1">
+                    <label>Request timeout</label>
+                    <comment>Timeout in seconds for the requests that the plugin sends to Bloomreach API. Use 0 to wait indefinitely.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                    <validate>required-entry validate-zero-or-greater validate-digits</validate>
+                </field>
             </group>
             <group id="imports" translate="label" type="text" sortOrder="300" showInDefault="1">
                 <label>Imports</label>
@@ -115,8 +131,8 @@
                     <label>Run Initial imports</label>
                     <button_label>Run Initial imports</button_label>
                     <button_url>bloomreach_engagement/import/RunInitialImport</button_url>
-                    <frontend_model>Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\Button</frontend_model>
-                    <comment>By click on this button initial imports for all data feeds will be started. Check import status on the Engagement import page.</comment>
+                    <frontend_model>Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\RunInitialImportButton</frontend_model>
+                    <comment>By clicking on this button initial imports for all data feeds will be started. Check import status on the Engagement import page.</comment>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>

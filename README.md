@@ -48,7 +48,8 @@ Check to see if your Magento instance has an app/code directory structure. If no
 
 ### Logger
 
-- `<project_dir>/var/log/bloomreach/engagement_connector.log`
+- `<project_dir>/var/log/bloomreach/engagement_connector.log` - contains errors information
+- `<project_dir>/var/log/bloomreach/debug.log` - contains debugging information
 
 ### Data Mapping
 

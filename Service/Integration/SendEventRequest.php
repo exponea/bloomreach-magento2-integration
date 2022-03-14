@@ -8,9 +8,7 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Service\Integration;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientFactory;
-use GuzzleHttp\Exception\GuzzleException;
+use Bloomreach\EngagementConnector\Service\Integration\Client\RequestSender;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ResponseFactory;
 use Magento\Framework\Webapi\Rest\Request;
@@ -33,9 +31,9 @@ class SendEventRequest
     private $configProvider;
 
     /**
-     * @var ClientFactory
+     * @var RequestSender
      */
-    private $clientFactory;
+    private $requestSender;
 
     /**
      * @var ResponseFactory
@@ -49,16 +47,16 @@ class SendEventRequest
 
     /**
      * @param ConfigProvider $configProvider
-     * @param ClientFactory $clientFactory
+     * @param RequestSender $requestSender
      * @param ResponseFactory $responseFactory
      */
     public function __construct(
         ConfigProvider $configProvider,
-        ClientFactory $clientFactory,
+        RequestSender $requestSender,
         ResponseFactory $responseFactory
     ) {
         $this->configProvider = $configProvider;
-        $this->clientFactory = $clientFactory;
+        $this->requestSender = $requestSender;
         $this->responseFactory = $responseFactory;
     }
 
@@ -73,38 +71,14 @@ class SendEventRequest
     {
         if (!$body) {
             /** @var Response $response */
-            return $this->responseFactory->create([
-                'reason' => __('Nothing to send')
-            ]);
-        }
-
-        /** @var Client $client */
-        $client = $this->clientFactory->create(['config' => [
-            'base_uri' => $this->getEndpoint(),
-            'auth' => $this->getAuthData(),
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
-            ]
-        ]]);
-
-        try {
-            $response = $client->request(
-                static::REQUEST_TYPE,
-                $client->getConfig('base_uri'),
+            return $this->responseFactory->create(
                 [
-                    'json' => $body
+                    'reason' => __('Nothing to send')
                 ]
             );
-        } catch (GuzzleException $exception) {
-            /** @var Response $response */
-            $response = $this->responseFactory->create([
-                'status' => $exception->getCode(),
-                'reason' => $exception->getMessage()
-            ]);
         }
 
-        return $response;
+        return $this->requestSender->execute($this->getEndpoint(), static::REQUEST_TYPE, $body);
     }
 
     /**
@@ -122,18 +96,5 @@ class SendEventRequest
         }
 
         return $this->endpoint;
-    }
-
-    /**
-     * Get authorization data
-     *
-     * @return array
-     */
-    private function getAuthData(): array
-    {
-        return [
-            $this->configProvider->getApiKeyId(),
-            $this->configProvider->getApiSecret()
-        ];
     }
 }

@@ -8,11 +8,10 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\Export\Transporter\Event;
 
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
+use Bloomreach\EngagementConnector\Model\Export\Transporter\ResponseHandler;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface;
 use Bloomreach\EngagementConnector\Service\Integration\UpdateCatalogItemRequest;
-use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
 
 /**
@@ -31,15 +30,23 @@ class UpdateCatalogItem implements TransporterInterface
     private $jsonSerializer;
 
     /**
+     * @var ResponseHandler
+     */
+    private $responseHandler;
+
+    /**
      * @param UpdateCatalogItemRequest $updateCatalogItemRequest
      * @param SerializerInterface $jsonSerializer
+     * @param ResponseHandler $responseHandler
      */
     public function __construct(
         UpdateCatalogItemRequest $updateCatalogItemRequest,
-        SerializerInterface $jsonSerializer
+        SerializerInterface $jsonSerializer,
+        ResponseHandler $responseHandler
     ) {
         $this->updateCatalogItemRequest = $updateCatalogItemRequest;
         $this->jsonSerializer = $jsonSerializer;
+        $this->responseHandler = $responseHandler;
     }
 
     /**
@@ -48,9 +55,6 @@ class UpdateCatalogItem implements TransporterInterface
      * @param ExportQueueInterface $exportQueue
      *
      * @return bool
-     *
-     * @throws FileSystemException
-     * @throws NoSuchEntityException
      * @throws LocalizedException
      */
     public function send(ExportQueueInterface $exportQueue): bool
@@ -58,12 +62,9 @@ class UpdateCatalogItem implements TransporterInterface
         $properties = $this->jsonSerializer->unserialize($exportQueue->getBody());
         $itemId = $properties['item_id'] ?? '';
         $body = ['properties' => $properties];
-
-        $response = $this->updateCatalogItemRequest->execute($body, $itemId, $exportQueue->getEntityType());
-
-        if ((int) $response->getStatusCode() !== 200) {
-            throw new LocalizedException(__($response->getReasonPhrase()));
-        }
+        $this->responseHandler->handle(
+            $this->updateCatalogItemRequest->execute($body, $itemId, $exportQueue->getEntityType())
+        );
 
         return true;
     }

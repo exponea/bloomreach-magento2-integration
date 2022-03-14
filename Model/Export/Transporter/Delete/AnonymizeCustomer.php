@@ -10,18 +10,24 @@ namespace Bloomreach\EngagementConnector\Model\Export\Transporter\Delete;
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\ResponseHandler;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface;
-use Bloomreach\EngagementConnector\Service\Integration\DeleteCatalogItemRequest;
+use Bloomreach\EngagementConnector\Service\Integration\AnonymizeCustomerRequest;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Serialize\SerializerInterface;
 
 /**
- * Delete catalog item on the Bloomreach side
+ * Anonymize customer on the Bloomreach side
  */
-class DeleteCatalogItem implements TransporterInterface
+class AnonymizeCustomer implements TransporterInterface
 {
     /**
-     * @var DeleteCatalogItemRequest
+     * @var AnonymizeCustomerRequest
      */
-    private $deleteCatalogItemRequest;
+    private $anonymizeCustomerRequest;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $jsonSerializer;
 
     /**
      * @var ResponseHandler
@@ -29,19 +35,22 @@ class DeleteCatalogItem implements TransporterInterface
     private $responseHandler;
 
     /**
-     * @param DeleteCatalogItemRequest $deleteCatalogItemRequest
+     * @param AnonymizeCustomerRequest $anonymizeCustomerRequest
+     * @param SerializerInterface $jsonSerializer
      * @param ResponseHandler $responseHandler
      */
     public function __construct(
-        DeleteCatalogItemRequest $deleteCatalogItemRequest,
+        AnonymizeCustomerRequest $anonymizeCustomerRequest,
+        SerializerInterface $jsonSerializer,
         ResponseHandler $responseHandler
     ) {
-        $this->deleteCatalogItemRequest = $deleteCatalogItemRequest;
+        $this->anonymizeCustomerRequest = $anonymizeCustomerRequest;
+        $this->jsonSerializer = $jsonSerializer;
         $this->responseHandler = $responseHandler;
     }
 
     /**
-     * Sends delete request to the Bloomreach service
+     * Sends anonymize request to the Bloomreach service
      *
      * @param ExportQueueInterface $exportQueue
      *
@@ -51,7 +60,9 @@ class DeleteCatalogItem implements TransporterInterface
     public function send(ExportQueueInterface $exportQueue): bool
     {
         $this->responseHandler->handle(
-            $this->deleteCatalogItemRequest->execute([], $exportQueue->getBody(), $exportQueue->getEntityType())
+            $this->anonymizeCustomerRequest->execute(
+                $this->jsonSerializer->unserialize($exportQueue->getBody())
+            )
         );
 
         return true;
