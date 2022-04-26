@@ -17,9 +17,9 @@ use Magento\Framework\Model\AbstractModel;
  */
 class OnSale implements RenderInterface
 {
-    const TRUE = 'true';
+    public const TRUE = 'true';
 
-    const FALSE = 'false';
+    public const FALSE = 'false';
 
     /**
      * @var GetDiscountService

@@ -14,13 +14,13 @@ use Magento\Framework\App\Request\DataPersistor;
  */
 class CartUpdateEventSettings
 {
-    const ADD_ACTION = 'add';
+    public const ADD_ACTION = 'add';
 
-    const REMOVE_ACTION = 'remove';
+    public const REMOVE_ACTION = 'remove';
 
-    const UPDATE_ACTION = 'update';
+    public const UPDATE_ACTION = 'update';
 
-    const EMPTY_ACTION = 'empty';
+    public const EMPTY_ACTION = 'empty';
 
     private const EVENT_KEY = 'bloomreach_cart_updated';
 

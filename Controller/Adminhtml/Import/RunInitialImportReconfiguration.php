@@ -25,7 +25,7 @@ class RunInitialImportReconfiguration extends Action implements HttpPostActionIn
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Bloomreach_EngagementConnector::config_bloomreach_engagement';
+    public const ADMIN_RESOURCE = 'Bloomreach_EngagementConnector::config_bloomreach_engagement';
 
     /**
      * @var PreconfigurateEntityExport

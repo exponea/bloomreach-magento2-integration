@@ -18,7 +18,7 @@ use Magento\Framework\Model\AbstractModel;
  */
 class Customer implements DataMapperInterface
 {
-    const ENTITY_TYPE = 'customer';
+    public const ENTITY_TYPE = 'customer';
 
     /**
      * @var MappingProcessor
