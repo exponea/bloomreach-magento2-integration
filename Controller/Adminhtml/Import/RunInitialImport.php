@@ -26,7 +26,7 @@ class RunInitialImport extends Action implements HttpPostActionInterface
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Bloomreach_EngagementConnector::config_bloomreach_engagement';
+    public const ADMIN_RESOURCE = 'Bloomreach_EngagementConnector::config_bloomreach_engagement';
 
     /**
      * @var InitialEntityExportInterface

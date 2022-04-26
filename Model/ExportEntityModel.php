@@ -16,11 +16,11 @@ use Magento\Framework\Model\AbstractModel;
  */
 class ExportEntityModel extends AbstractModel implements ExportEntityInterface
 {
-    const ENTITY_ID = 'entity_id';
+    public const ENTITY_ID = 'entity_id';
 
-    const EXPORT_ENTITY_ID = 'export_entity_id';
+    public const EXPORT_ENTITY_ID = 'export_entity_id';
 
-    const ENTITY_TYPE = 'entity_type';
+    public const ENTITY_TYPE = 'entity_type';
 
     /**
      * Model initialization

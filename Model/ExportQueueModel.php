@@ -16,31 +16,31 @@ use Magento\Framework\Model\AbstractModel;
  */
 class ExportQueueModel extends AbstractModel implements ExportQueueInterface
 {
-    const ENTITY_ID = 'entity_id';
+    public const ENTITY_ID = 'entity_id';
 
-    const ENTITY_TYPE = 'entity_type';
+    public const ENTITY_TYPE = 'entity_type';
 
-    const STATUS = 'status';
+    public const STATUS = 'status';
 
-    const RETRIES = 'retries';
+    public const RETRIES = 'retries';
 
-    const BODY = 'body';
+    public const BODY = 'body';
 
-    const API_TYPE = 'api_type';
+    public const API_TYPE = 'api_type';
 
-    const REGISTERED = 'registered';
+    public const REGISTERED = 'registered';
 
-    const CREATED_AT = 'created_at';
+    public const CREATED_AT = 'created_at';
 
-    const UPDATED_AT = 'updated_at';
+    public const UPDATED_AT = 'updated_at';
 
-    const STATUS_NEW = 1;
+    public const STATUS_NEW = 1;
 
-    const STATUS_IN_PROGRESS = 2;
+    public const STATUS_IN_PROGRESS = 2;
 
-    const STATUS_ERROR = 3;
+    public const STATUS_ERROR = 3;
 
-    const STATUS_COMPLETE = 4;
+    public const STATUS_COMPLETE = 4;
 
     /**
      * Model initialization

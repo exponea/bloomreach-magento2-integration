@@ -14,9 +14,9 @@ use Magento\Framework\Api\AbstractSimpleObject;
  */
 class FieldMappingConfigData extends AbstractSimpleObject implements FieldMappingConfigDataInterface
 {
-    const BLOOMREACH_CODE = 'bloomreach_code';
+    public const BLOOMREACH_CODE = 'bloomreach_code';
 
-    const FIELD = 'field';
+    public const FIELD = 'field';
 
     /**
      * Return Bloomreach code

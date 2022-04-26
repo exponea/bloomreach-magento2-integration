@@ -22,7 +22,7 @@ use GuzzleHttp\RequestOptions;
  */
 class RequestSender
 {
-    const MAP_ERROR_MESSAGE_TO_CODE = [
+    private const MAP_ERROR_MESSAGE_TO_CODE = [
         'curl error 28' => 504,
         'curl error 5' => 503,
         'curl error 6' => 502,
