@@ -72,7 +72,7 @@ jobs:
           composer install --dev
       # Copy config file for integrations tests
       - name: Setup - Copy `install-config-mysql` file
-        run: cp ./vendor/bloomreach/bloomreach-engagement-connector-magento/.github/config/install-config-mysql.php ./dev/tests/integration/etc/install-config-mysql.php
+        run: cp ./vendor/bloomreach/bloomreach-engagement-connector-magento/.github/config/mysql-config.php ./dev/tests/integration/etc/install-config-mysql.php
 
       # Run tests
       - name: Test - Magento Coding Standart
