@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Test\Integration\Controller;
 
+use Bloomreach\EngagementConnector\Controller\Adminhtml\Import\RunInitialImport;
 use Bloomreach\EngagementConnector\Model\DataProvider\EntityType;
 use Bloomreach\EngagementConnector\Model\Export\ExportProcessor;
 use Bloomreach\EngagementConnector\Model\Export\File\DirectoryProvider;
@@ -150,6 +151,25 @@ class RunInitialImportTest extends AbstractBackendController
     }
 
     /**
+     * Test initial import with credential validation
+     *
+     * @magentoConfigFixture default/bloomreach_engagement/general/api_target https://api-engagement.bloomreach.com
+     * @magentoConfigFixture default/bloomreach_engagement/general/api_key_id 12345
+     * @magentoConfigFixture default/bloomreach_engagement/general/api_secret 12345
+     * @magentoConfigFixture default/bloomreach_engagement/general/project_token_id 12345
+     *
+     * @return void
+     */
+    public function testRunInitialImportWithCredentialValidation(): void
+    {
+        $this->dispatchRunInitialImportRequest(false);
+        $response = $this->jsonSerializer->unserialize((string) $this->getResponse()->getBody());
+        $this->assertArrayHasKey('message', $response);
+        $this->assertArrayHasKey('error', $response);
+        $this->assertEquals(1, (int) $response['error']);
+    }
+
+    /**
      * Test set up
      *
      * @return void
@@ -191,11 +211,16 @@ class RunInitialImportTest extends AbstractBackendController
     /**
      * Dispatch RunInitialImportReconfiguration controller
      *
+     * @param bool $skipCredentialValidation
+     *
      * @return void
      */
-    private function dispatchRunInitialImportRequest(): void
+    private function dispatchRunInitialImportRequest(bool $skipCredentialValidation = true): void
     {
         $this->getRequest()->setMethod($this->httpMethod);
+        $this->getRequest()->setParams(
+            ['skipCredentialValidation' => $skipCredentialValidation]
+        );
         $this->dispatch($this->uri);
     }
 

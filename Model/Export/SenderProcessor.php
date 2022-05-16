@@ -13,6 +13,7 @@ use Bloomreach\EngagementConnector\Exception\ExportRequestException;
 use Bloomreach\EngagementConnector\Logger\Debugger;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface;
 use Bloomreach\EngagementConnector\Model\ExportQueueModel;
+use Bloomreach\EngagementConnector\Service\ExportQueue\CalculateTimeOfNextSendingAttempt;
 use Exception;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Psr\Log\LoggerInterface;
@@ -33,6 +34,11 @@ class SenderProcessor
     private $transporterResolver;
 
     /**
+     * @var CalculateTimeOfNextSendingAttempt
+     */
+    private $calculateTimeOfNextSendingAttempt;
+
+    /**
      * @var Debugger
      */
     private $debugger;
@@ -45,17 +51,20 @@ class SenderProcessor
     /**
      * @param SaveExportQueueInterface $saveExportQueue
      * @param TransporterInterface $transporterResolver
+     * @param CalculateTimeOfNextSendingAttempt $calculateTimeOfNextSendingAttempt
      * @param Debugger $debugger
      * @param LoggerInterface $logger
      */
     public function __construct(
         SaveExportQueueInterface $saveExportQueue,
         TransporterInterface $transporterResolver,
+        CalculateTimeOfNextSendingAttempt $calculateTimeOfNextSendingAttempt,
         Debugger $debugger,
         LoggerInterface $logger
     ) {
         $this->saveExportQueue = $saveExportQueue;
         $this->transporterResolver = $transporterResolver;
+        $this->calculateTimeOfNextSendingAttempt = $calculateTimeOfNextSendingAttempt;
         $this->debugger = $debugger;
         $this->logger = $logger;
     }
@@ -158,6 +167,9 @@ class SenderProcessor
             )
         );
         $exportQueue->setStatus(ExportQueueModel::STATUS_ERROR);
+        $failedAttempts = $exportQueue->getFailedSendingAttempts() + 1;
+        $exportQueue->setTimeOfNextSendingAttempt($this->calculateTimeOfNextSendingAttempt->execute($failedAttempts));
+        $exportQueue->setFailedSendingAttempts($failedAttempts);
         $this->debugger->log(
             __(
                 'Export data for Export Queue with ID: %1 completed with error. '

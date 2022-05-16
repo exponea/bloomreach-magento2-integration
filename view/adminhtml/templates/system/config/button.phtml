@@ -33,8 +33,10 @@ $messageContainer = $block->escapeHtmlAttr($block->getHtmlId() . '_message');
             "Bloomreach_EngagementConnector/js/system/config/button/send-ajax-request": {
                 "ajaxUrl": "<?= $block->escapeUrl($block->getButtonUrl()); ?>",
                 "isEnabled": "<?= /* @noEscape */ $isEnabled; ?>",
-                "buttonId": "<?= $block->escapeHtml($block->getHtmlId()); ?>",
-                "messageContainer": "<?= /* @noEscape */ $messageContainer; ?>"
+                "buttonId": "#<?= $block->escapeHtml($block->getHtmlId()); ?>",
+                "messageContainer": ".<?= /* @noEscape */ $messageContainer; ?>",
+                "requiredFieldsSelectors": "<?= /* @noEscape */ $block->getRequiredFieldsSelectors(); ?>",
+                "disableButtonAfterClick": "<?= /* @noEscape */ $block->getDisableButtonAfterClick(); ?>"
             }
         }
     }

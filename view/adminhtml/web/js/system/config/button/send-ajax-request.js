@@ -15,8 +15,13 @@ define([
             isEnabled: false,
             buttonId: '',
             messageContainer: '',
-            successClass: 'message message-success success',
-            errorClass: 'message message-error error'
+            messageTypeClass: {
+                success: 'message message-success success',
+                error: 'message message-error error',
+                notice: 'message message-notice notice'
+            },
+            requiredFieldsSelectors: '',
+            disableButtonAfterClick: ''
         },
 
         /**
@@ -26,10 +31,16 @@ define([
          */
         _create: function () {
             if (this.options.buttonId && this.options.isEnabled) {
-                $('#' + this.options.buttonId).click(function (e) {
+                $(this.options.buttonId).click(function (e) {
                     e.preventDefault();
                     this._ajaxSubmit();
                 }.bind(this));
+
+                if (this.options.requiredFieldsSelectors !== '') {
+                    $(this.options.requiredFieldsSelectors).change(function () {
+                        this._blockButtonIfConfigChanged();
+                    }.bind(this));
+                }
             }
         },
 
@@ -49,16 +60,17 @@ define([
                 showLoader: true
             }).done(function (data) {
                 if (data.error) {
-                    this._renderMessageContent(data.message, true);
+                    this._renderMessageContent(data.message, 'error');
                 } else {
-                    this._renderMessageContent(data.message, false);
-                    $('#' + this.options.buttonId).prop('disabled', true);
-
+                    this._renderMessageContent(data.message, 'success');
+                    if (this.options.disableButtonAfterClick) {
+                        $(this.options.buttonId).prop('disabled', true);
+                    }
                 }
             }.bind(this)).fail(function () {
                 this._renderMessageContent(
                     $t('An error occurred while processing your request. Please try again later.'),
-                    true
+                    'error'
                 );
             }.bind(this));
         },
@@ -67,13 +79,34 @@ define([
          * Render message content
          *
          * @param message
-         * @param isError
+         * @param messageType
          * @private
          */
-        _renderMessageContent: function (message, isError) {
-            var cssClass = isError ? this.options.errorClass : this.options.successClass;
+        _renderMessageContent: function (message, messageType) {
+            var messageTypeClass = this.options.messageTypeClass,
+                cssClass = messageTypeClass.hasOwnProperty(messageType) ? messageTypeClass[messageType] : '';
+
             message = '<div class="messages"><div class="' + cssClass + '">' + message + '</div></div>';
-            $('.' + this.options.messageContainer).html(message);
+            $(this.options.messageContainer).html(message);
+        },
+
+        /**
+         * Block button if required config changed
+         *
+         * @private
+         */
+        _blockButtonIfConfigChanged: function() {
+            var button = $(this.options.buttonId);
+            if (!button.is(":disabled")) {
+                button.prop('disabled', true);
+                this._renderMessageContent(
+                    $t(
+                        'Looks like the settings have changed. '
+                        + 'Please save the settings or reload the page to make button active'
+                    ),
+                    'notice'
+                );
+            }
         }
     });
 

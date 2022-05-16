@@ -92,6 +92,13 @@ class ExportProcessor
             ]
         );
 
+        $collection->addFieldToFilter(
+            ExportQueueModel::TIME_OF_NEXT_SENDING_ATTEMPT,
+            [
+                'lteq' => time()
+            ]
+        );
+
         return $collection;
     }
 

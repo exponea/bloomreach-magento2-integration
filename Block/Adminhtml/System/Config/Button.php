@@ -7,38 +7,30 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Block\Adminhtml\System\Config;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
 /**
- * Fronted model for rendering the initial import buttons
+ * Fronted model for rendering the button
  */
 class Button extends Field
 {
     /**
-     * Path to catalog import id config
+     * Configurations required to enable the button
      */
-    private const XPATH_CATALOG_IMPORT_ID = 'bloomreach_engagement/general/catalog_import_id';
+    public const REQUIRED_FIELDS = [];
 
     /**
-     * Path to variants import id config
+     * Map config path to system.xml path
      */
-    private const XPATH_VARIANTS_IMPORT_ID = 'bloomreach_engagement/general/variants_import_id';
-
-    /**
-     * Path to customer import id config
-     */
-    private const XPATH_CUSTOMER_IMPORT_ID = 'bloomreach_engagement/general/customer_import_id';
-
-    /**
-     * Path to order import id config
-     */
-    private const XPATH_ORDER_IMPORT_ID = 'bloomreach_engagement/general/order_import_id';
-
-    /**
-     * Path to order import line item id config
-     */
-    private const XPATH_ORDER_IMPORTLINE_ITEM_ID = 'bloomreach_engagement/general/order_importline_item_id';
+    public const CONFIG_MAPPING = [
+        ConfigProvider::XPATH_CUSTOMER_IMPORT_ID => 'bloomreach_engagement/imports/customer_import_id',
+        ConfigProvider::XPATH_CATALOG_IMPORT_ID => 'bloomreach_engagement/imports/catalog_import_id',
+        ConfigProvider::XPATH_VARIANTS_IMPORT_ID => 'bloomreach_engagement/imports/variants_import_id',
+        ConfigProvider::XPATH_ORDER_IMPORT_ID => 'bloomreach_engagement/imports/order_import_id',
+        ConfigProvider::XPATH_ORDER_IMPORTLINE_ITEM_ID => 'bloomreach_engagement/imports/order_importline_item_id'
+    ];
 
     /**
      * @var string
@@ -74,7 +66,9 @@ class Button extends Field
             'button_label' => $originalData['button_label'],
             'button_url' => $this->getUrl($originalData['button_url'], ['_current' => true]),
             'html_id' => $element->getHtmlId(),
-            'is_enabled' => $this->isEnabled()
+            'is_enabled' => $this->isEnabled(),
+            'required_fields_selectors' => $this->getRequiredFieldsSelectors(),
+            'disable_button_after_click' => false
         ]);
 
         return $this->_toHtml();
@@ -87,10 +81,29 @@ class Button extends Field
      */
     protected function isEnabled(): bool
     {
-        return $this->_scopeConfig->getValue(self::XPATH_CATALOG_IMPORT_ID) &&
-            $this->_scopeConfig->getValue(self::XPATH_VARIANTS_IMPORT_ID) &&
-            $this->_scopeConfig->getValue(self::XPATH_CUSTOMER_IMPORT_ID) &&
-            $this->_scopeConfig->getValue(self::XPATH_ORDER_IMPORT_ID) &&
-            $this->_scopeConfig->getValue(self::XPATH_ORDER_IMPORTLINE_ITEM_ID);
+        foreach (static::REQUIRED_FIELDS as $requireField) {
+            if (!$this->_scopeConfig->getValue($requireField)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get required fields selectors separated by comma #field_id1,#field_id2
+     *
+     * @return string
+     */
+    protected function getRequiredFieldsSelectors(): string
+    {
+        $result = [];
+
+        foreach (static::REQUIRED_FIELDS as $requiredField) {
+            $requiredField = static::CONFIG_MAPPING[$requiredField] ?? $requiredField;
+            $result[] = sprintf('%s%s', '#', str_replace('/', '_', $requiredField));
+        }
+
+        return implode(',', $result);
     }
 }

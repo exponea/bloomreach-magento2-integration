@@ -9,7 +9,9 @@
             "created_at": true,
             "updated_at": true,
             "api_type": true,
-            "registered": true
+            "registered": true,
+            "failed_sending_attempts": true,
+            "time_of_next_sending_attempt": true
         },
         "constraint": {
             "PRIMARY": true
