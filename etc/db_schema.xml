@@ -19,6 +19,10 @@
                 comment="Number of sending attempts"/>
         <column xsi:type="varchar" name="registered" nullable="true" comment="Customer identifier"/>
         <column xsi:type="mediumtext" name="body" nullable="false" comment="Body of sending"/>
+        <column xsi:type="int" name="failed_sending_attempts" padding="11" default="0" unsigned="true" nullable="false"
+                identity="false" comment="Number of failed sending attempts"/>
+        <column xsi:type="int" name="time_of_next_sending_attempt" padding="11" nullable="false" default="0" identity="false"
+                comment="The time of the next sending attempt. Represented in the Unix timestamp."/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"

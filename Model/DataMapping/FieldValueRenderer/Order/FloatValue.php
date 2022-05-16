@@ -26,6 +26,6 @@ class FloatValue implements RenderInterface
      */
     public function render($entity, string $fieldCode)
     {
-        return number_format(round((float) $entity->getData($fieldCode), 2), 4);
+        return number_format(round((float) $entity->getData($fieldCode), 2), 4, '.', '');
     }
 }

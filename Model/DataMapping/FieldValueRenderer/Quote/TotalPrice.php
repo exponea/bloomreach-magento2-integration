@@ -44,7 +44,9 @@ class TotalPrice implements RenderInterface
 
         return number_format(
             (float) ($quoteTotals ? $quoteTotals->getBaseGrandTotal() : $entity->getBaseGrandTotal()),
-            2
+            2,
+            ',',
+            ''
         );
     }
 }

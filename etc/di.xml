@@ -474,4 +474,9 @@
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\DebugLogger</argument>
         </arguments>
     </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\Validator\AccessCredentials">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
 </config>

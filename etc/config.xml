@@ -13,6 +13,8 @@
                 <api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <debug_mode>0</debug_mode>
                 <request_timeout>60</request_timeout>
+                <retry_base_wait_time>60</retry_base_wait_time>
+                <retry_max_wait_time>240</retry_max_wait_time>
             </general>
             <frontend_tracking>
                 <enable_js_sdk>0</enable_js_sdk>

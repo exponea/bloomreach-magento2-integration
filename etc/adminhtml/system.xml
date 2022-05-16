@@ -55,7 +55,17 @@
                         <field id="enable">1</field>
                     </depends>
                 </field>
-                <field id="debug_mode" translate="label" type="select" sortOrder="60" showInDefault="1">
+                <field id="validate_access_credentials" translate="label" sortOrder="60" showInDefault="1">
+                    <label>Validate Credentials</label>
+                    <button_label>Validate Credentials</button_label>
+                    <button_url>bloomreach_engagement/validator/AccessCredentials</button_url>
+                    <frontend_model>Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\CredentialValidatorButton</frontend_model>
+                    <comment>Validate enetered credentials.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="debug_mode" translate="label" type="select" sortOrder="70" showInDefault="1">
                     <label>Enable Debug Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Save logs to "var/log/bloomreach/debug.log".</comment>
@@ -63,9 +73,25 @@
                         <field id="enable">1</field>
                     </depends>
                 </field>
-                <field id="request_timeout" translate="label" type="text" sortOrder="70" showInDefault="1">
+                <field id="request_timeout" translate="label" type="text" sortOrder="80" showInDefault="1">
                     <label>Request timeout</label>
                     <comment>Timeout in seconds for the requests that the plugin sends to Bloomreach API. Use 0 to wait indefinitely.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                    <validate>required-entry validate-zero-or-greater validate-digits</validate>
+                </field>
+                <field id="retry_base_wait_time" translate="label" type="text" sortOrder="80" showInDefault="1">
+                    <label>Base Wait Time</label>
+                    <comment>The base time in seconds to wait before retrying a request to the Bloomreach API.</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                    <validate>required-entry validate-greater-than-zero validate-digits</validate>
+                </field>
+                <field id="retry_max_wait_time" translate="label" type="text" sortOrder="90" showInDefault="1">
+                    <label>Max Wait Time</label>
+                    <comment>The max time in seconds to wait before retrying a request to the Bloomreach API.</comment>
                     <depends>
                         <field id="enable">1</field>
                     </depends>

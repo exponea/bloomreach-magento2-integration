@@ -1,3 +1,10 @@
+# v0.9.5
+
+- Improved the retry mechanism using the "exponential backoff" with jitter
+- Fixed the exception being thrown when uninstalling a fresh installed module
+- Fixed the separator for prices higher than $1000
+- Added a button to validate the entered credentials
+
 # v0.9.4
 
 - Improved the queue failed retry mechanism

@@ -48,7 +48,7 @@ class OriginalPrice implements RenderInterface
             $price = $this->getBundleProductPrice($entity, $fieldCode);
         }
 
-        return number_format($price, 2);
+        return number_format($price, 2, ',', '');
     }
 
     /**

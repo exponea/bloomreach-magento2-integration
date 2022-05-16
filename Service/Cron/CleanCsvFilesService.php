@@ -71,8 +71,6 @@ class CleanCsvFilesService
 
     /**
      * Clean old csv files
-     *
-     * @return void
      */
     public function execute(): void
     {
@@ -82,7 +80,12 @@ class CleanCsvFilesService
             $timeEnd = strtotime($this->date->date()) - $day * 24 * 60 * 60;
             $directory = '/' . DirectoryProvider::DEFAULT_BASE_DIRECTORY . '/';
             $path = $this->directoryList->getPath('media') . $directory;
-            $paths =  $this->driverFile->readDirectoryRecursively($path);
+
+            if (!$this->driverFile->isExists($path)) {
+                return;
+            }
+
+            $paths = $this->driverFile->readDirectoryRecursively($path);
 
             $this->deleteCsv($paths, $timeEnd);
         }
@@ -93,8 +96,6 @@ class CleanCsvFilesService
      *
      * @param array $paths
      * @param int|false $timeEnd
-     *
-     * @return void
      */
     private function deleteCsv($paths, $timeEnd): void
     {

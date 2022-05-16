@@ -123,6 +123,38 @@ interface ExportQueueInterface
     public function setRegistered(string $registered): void;
 
     /**
+     * Get failed sending attempts
+     *
+     * @return int
+     */
+    public function getFailedSendingAttempts(): int;
+
+    /**
+     * Set failed sending attempts
+     *
+     * @param int $failedAttempts
+     *
+     * @return void
+     */
+    public function setFailedSendingAttempts(int $failedAttempts): void;
+
+    /**
+     * Get time of the next sending attempt
+     *
+     * @return int
+     */
+    public function getTimeOfNextSendingAttempt(): int;
+
+    /**
+     * Set time of the next sending attempt
+     *
+     * @param int $time
+     *
+     * @return void
+     */
+    public function setTimeOfNextSendingAttempt(int $time): void;
+
+    /**
      * Get Created At
      *
      * @return string

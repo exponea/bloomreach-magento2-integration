@@ -105,6 +105,16 @@ class ConfigProvider
     public const XPATH_REQUEST_TIMEOUT = 'bloomreach_engagement/general/request_timeout';
 
     /**
+     * Base Wait Time system configuration value XPATH
+     */
+    public const XPATH_RETRY_BASE_WAIT_TIME = 'bloomreach_engagement/general/retry_base_wait_time';
+
+    /**
+     * Max Wait Time system configuration value XPATH
+     */
+    public const XPATH_RETRY_MAX_WAIT_TIME = 'bloomreach_engagement/general/retry_max_wait_time';
+
+    /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
@@ -381,5 +391,35 @@ class ConfigProvider
         $scopeCode = null
     ): int {
         return (int) $this->scopeConfig->getValue(self::XPATH_REQUEST_TIMEOUT, $scopeType, $scopeCode);
+    }
+
+    /**
+     * Get Base Wait Time
+     *
+     * @param string $scopeType
+     * @param int|string $scopeCode
+     *
+     * @return int
+     */
+    public function getRetryBaseWaitTime(
+        string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
+        $scopeCode = null
+    ): int {
+        return (int) $this->scopeConfig->getValue(self::XPATH_RETRY_BASE_WAIT_TIME, $scopeType, $scopeCode);
+    }
+
+    /**
+     * Get Max Wait Time
+     *
+     * @param string $scopeType
+     * @param int|string $scopeCode
+     *
+     * @return int
+     */
+    public function getRetryMaxWaitTime(
+        string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
+        $scopeCode = null
+    ): int {
+        return (int) $this->scopeConfig->getValue(self::XPATH_RETRY_MAX_WAIT_TIME, $scopeType, $scopeCode);
     }
 }

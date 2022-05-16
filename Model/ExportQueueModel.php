@@ -30,6 +30,10 @@ class ExportQueueModel extends AbstractModel implements ExportQueueInterface
 
     public const REGISTERED = 'registered';
 
+    public const FAILED_SENDING_ATTEMPTS = 'failed_sending_attempts';
+
+    public const TIME_OF_NEXT_SENDING_ATTEMPT = 'time_of_next_sending_attempt';
+
     public const CREATED_AT = 'created_at';
 
     public const UPDATED_AT = 'updated_at';
@@ -206,6 +210,50 @@ class ExportQueueModel extends AbstractModel implements ExportQueueInterface
     public function setRegistered(string $registered): void
     {
         $this->setData(self::REGISTERED, $registered);
+    }
+
+    /**
+     * Get failed sending attempts
+     *
+     * @return int
+     */
+    public function getFailedSendingAttempts(): int
+    {
+        return (int) $this->getData(self::FAILED_SENDING_ATTEMPTS);
+    }
+
+    /**
+     * Set failed sending attempts
+     *
+     * @param int $failedAttempts
+     *
+     * @return void
+     */
+    public function setFailedSendingAttempts(int $failedAttempts): void
+    {
+        $this->setData(self::FAILED_SENDING_ATTEMPTS, $failedAttempts);
+    }
+
+    /**
+     * Get time of the next sending attempt
+     *
+     * @return int
+     */
+    public function getTimeOfNextSendingAttempt(): int
+    {
+        return (int) $this->getData(self::TIME_OF_NEXT_SENDING_ATTEMPT);
+    }
+
+    /**
+     * Set time of the next sending attempt
+     *
+     * @param int $time
+     *
+     * @return void
+     */
+    public function setTimeOfNextSendingAttempt(int $time): void
+    {
+        $this->setData(self::TIME_OF_NEXT_SENDING_ATTEMPT, $time);
     }
 
     /**

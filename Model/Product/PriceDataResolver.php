@@ -70,7 +70,9 @@ class PriceDataResolver
             if (!$this->isConvertRequire($product)) {
                 return (float) number_format(
                     (float) $this->priceCache[$product->getId()]['base_final_price'],
-                    2
+                    2,
+                    '.',
+                    ''
                 );
             }
 
@@ -80,7 +82,7 @@ class PriceDataResolver
                 $rate ? round((float)($price * $rate), 2) : $price;
         }
 
-        return (float) number_format((float) $this->priceCache[$product->getId()]['base_final_price'], 2);
+        return (float) number_format((float) $this->priceCache[$product->getId()]['base_final_price'], 2, '.', '');
     }
 
     /**
@@ -97,7 +99,7 @@ class PriceDataResolver
                 (float) $product->getPriceInfo()->getPrice('final_price')->getValue();
         }
 
-        return (float) number_format((float) $this->priceCache[$product->getId()]['final_price'], 2);
+        return (float) number_format((float) $this->priceCache[$product->getId()]['final_price'], 2, '.', '');
     }
 
     /**
@@ -154,7 +156,7 @@ class PriceDataResolver
             $this->priceCache[$product->getId()]['regular_price'] = $price;
 
             if ($product->getTypeId() !== Configurable::TYPE_CODE) {
-                (float) number_format((float) $this->priceCache[$product->getId()]['regular_price'], 2);
+                (float) number_format((float) $this->priceCache[$product->getId()]['regular_price'], 2, '.', '');
             }
 
             if ($this->isConvertRequire($product)) {
@@ -162,6 +164,6 @@ class PriceDataResolver
             }
         }
 
-        return (float) number_format((float) $this->priceCache[$product->getId()]['regular_price'], 2);
+        return (float) number_format((float) $this->priceCache[$product->getId()]['regular_price'], 2, '.', '');
     }
 }

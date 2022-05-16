@@ -41,6 +41,6 @@ class Discount implements RenderInterface
      */
     public function render($entity, string $fieldCode)
     {
-        return number_format($this->getDiscountService->execute($entity), 2);
+        return number_format($this->getDiscountService->execute($entity), 2, '.', '');
     }
 }
