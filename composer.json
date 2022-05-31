@@ -1,6 +1,6 @@
 {
     "name": "bloomreach/bloomreach-engagement-connector-magento",
-    "version": "0.9.4",
+    "version": "0.9.5",
     "description": "The module provides the Bloomreach integration with Magento 2.",
     "type": "magento2-module",
     "authors": [
