@@ -62,7 +62,7 @@ Check to see if your Magento instance has an app/code directory structure. If no
 ##### Nodes
 
 - `entity_type` - entity type to map;
-- `bloomereach_code` - the name of the key on the Bloomreach side;
+- `bloomreach_code` - the name of the key on the Bloomreach side;
 - `field` - field to map with `bloomreach_code`. 
 
 #### How to add entity to the Mapping
