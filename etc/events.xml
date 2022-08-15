@@ -11,7 +11,7 @@
         <observer name="bloomreach_engagementconnector_customer_save"
                   instance="Bloomreach\EngagementConnector\Observer\CustomerEntitySave" />
     </event>
-    <event name="checkout_submit_all_after">
+    <event name="sales_model_service_quote_submit_success">
         <observer name="bloomreach_engagementconnector_order_save"
                   instance="Bloomreach\EngagementConnector\Observer\OrderEntitySave" />
     </event>
