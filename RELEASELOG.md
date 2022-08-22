@@ -1,3 +1,9 @@
+# v0.9.6
+
+- Improved the sending flow, by skipping the entities that are not configured
+- Fixed the PayPal orders are not being synced
+- Added the Admin system notification if some errors were thrown while the import is processing
+
 # v0.9.5
 
 - Improved the retry mechanism using the "exponential backoff" with jitter

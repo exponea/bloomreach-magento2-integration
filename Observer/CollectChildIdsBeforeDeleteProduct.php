@@ -49,7 +49,10 @@ class CollectChildIdsBeforeDeleteProduct implements ObserverInterface
      */
     public function execute(Observer $observer): void
     {
-        if ($this->configProvider->isEnabled()) {
+        if ($this->configProvider->isEnabled()
+            && $this->configProvider->getCatalogId()
+            && $this->configProvider->getCatalogVariantsId()
+        ) {
             $event = $observer->getEvent();
             /** @var $product Product */
             $product = $event->getProduct();

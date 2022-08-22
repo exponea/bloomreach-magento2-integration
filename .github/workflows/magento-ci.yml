@@ -7,7 +7,7 @@ env:
   DB_USER: root
   DB_PASSWORD: root
   ES_VERSION: 7.10.0
-  PHP_VERSION: 7.4
+  PHP_VERSION: 8.1
 
 
 on: [pull_request]
