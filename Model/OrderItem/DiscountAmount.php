@@ -117,7 +117,10 @@ class DiscountAmount
         }
 
         // Used if order items were loaded through a collection
-        $childItemsData = $this->getChildItemsData((int) $orderItem->getItemId());
+        $childItemsData = $this->getChildItemsData(
+            (int) $orderItem->getOrderId(),
+            (int) $orderItem->getItemId()
+        );
 
         foreach ($childItemsData as $childItem) {
             $discountAmount = $childItem[$type] ?? 0.0;
@@ -143,15 +146,16 @@ class DiscountAmount
     /**
      * Returns child item data from database
      *
+     * @param int $orderId
      * @param int $orderItemId
      *
      * @return array
      */
-    private function getChildItemsData(int $orderItemId): array
+    private function getChildItemsData(int $orderId, int $orderItemId): array
     {
         if (!array_key_exists($orderItemId, $this->cachedData)) {
             $this->cachedData = [
-                $orderItemId => $this->childItems->getDiscountData($orderItemId)
+                $orderItemId => $this->childItems->getDiscountData($orderId, $orderItemId)
             ];
         }
 
