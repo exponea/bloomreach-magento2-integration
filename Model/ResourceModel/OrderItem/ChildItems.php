@@ -39,13 +39,14 @@ class ChildItems
     /**
      * Returns an array of product ids
      *
+     * @param int $orderId
      * @param int $orderItemId
      *
      * @return array
      */
-    public function getChildIds(int $orderItemId): array
+    public function getChildIds(int $orderId, int $orderItemId): array
     {
-        $result = $this->getConnection()->fetchCol($this->getSelect($orderItemId, [OrderItemInterface::PRODUCT_ID]));
+        $result = $this->getConnection()->fetchCol($this->getSelect($orderId, $orderItemId, [OrderItemInterface::PRODUCT_ID]));
 
         return $result ?: [];
     }
@@ -67,19 +68,20 @@ class ChildItems
     /**
      * Returns child item select
      *
+     * @param int $orderId
      * @param int $orderItemId
      * @param array $columns
      *
      * @return Select
      */
-    private function getSelect(int $orderItemId, array $columns): Select
+    private function getSelect(int $orderId, int $orderItemId, array $columns): Select
     {
         $connection = $this->getConnection();
         $select = $connection->select()->reset();
         $select->from(
             $connection->getTableName('sales_order_item'),
             $columns
-        )->where('parent_item_id = ?', $orderItemId);
+        )->where('order_id = ?', $orderId)->where('parent_item_id = ?', $orderItemId);
 
         return $select;
     }
@@ -87,15 +89,17 @@ class ChildItems
     /**
      * Get Child name
      *
+     * @param int $orderId
      * @param int $orderItemId
      *
      * @return string
      */
-    public function getChildName(int $orderItemId): string
+    public function getChildName(int $orderId, int $orderItemId): string
     {
         return (string) $this->getConnection()
             ->fetchOne(
                 $this->getSelect(
+                    $orderId,
                     $orderItemId,
                     [OrderItemInterface::NAME]
                 )
@@ -105,13 +109,15 @@ class ChildItems
     /**
      * Returns data to calculate discount amount
      *
+     * @param int $orderId
      * @param int $orderItemId
      *
      * @return array
      */
-    public function getDiscountData(int $orderItemId): array
+    public function getDiscountData(int $orderId, int $orderItemId): array
     {
         $select = $this->getSelect(
+            $orderId,
             $orderItemId,
             [
                 OrderItemInterface::QTY_ORDERED,
