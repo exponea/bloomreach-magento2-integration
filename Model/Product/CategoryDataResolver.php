@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @author Bloomreach
  * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
  */
+
 declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Model\Product;
@@ -11,6 +13,7 @@ use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Store\Model\StoreManagerInterface;
+
 
 /**
  * The class is responsible for generating product category data
@@ -75,7 +78,6 @@ class CategoryDataResolver
     public function getDataByCode(ProductInterface $product, string $code)
     {
         $categoryId = $this->getProductFirstCategoryId($product);
-
         if (!$categoryId) {
             return '';
         }
@@ -171,7 +173,9 @@ class CategoryDataResolver
     private function getCategory(int $categoryId): ?CategoryInterface
     {
         try {
-            return $this->categoryRepository->get($categoryId);
+            // additionally make sure that category is retrieved for the defaul store only
+            $defaultStoreId = (int) $this->storeManager->getDefaultStoreView()->getId();
+            return $this->categoryRepository->get($categoryId, $defaultStoreId);
         } catch (\Exception $e) {
             return null;
         }
@@ -204,6 +208,9 @@ class CategoryDataResolver
     private function generateCategoryDataWithLevel3(CategoryInterface $category, int $defaultStoreId): void
     {
         $parentCategory = $category->getParentCategory();
+        // get parent category directly from category repository to make sure it uses default's store translations
+        $parentCategoryDirect = $this->getCategory(intval($parentCategory->getId()));
+
         $categoryId = $category->getId();
 
         if ($parentCategory) {
@@ -211,17 +218,18 @@ class CategoryDataResolver
                 // This workaround is required to correctly render the frontend URL for the current active store
                 $parentCategory->setStoreId($defaultStoreId);
             }
-            $this->categoryCache[$categoryId][self::CATEGORY_LEVEL_1] = $parentCategory->getName();
+            $this->categoryCache[$categoryId][self::CATEGORY_LEVEL_1] = $parentCategoryDirect->getName();
             $this->categoryCache[$categoryId][self::CATEGORY_URL_1] = $this->removeBaseRoot(
                 $parentCategory->getUrl()
             );
-            $path[] = $parentCategory->getName();
+            $path[] = $parentCategoryDirect->getName();
+
             $ids[] = $parentCategory->getId();
         }
 
         $this->categoryCache[$categoryId][self::CATEGORY_LEVEL_2] = $category->getName();
         $this->categoryCache[$categoryId][self::CATEGORY_URL_2] = $this->removeBaseRoot($category->getUrl());
-        $path[] = $category->getName();
+        $path[] = $parentCategoryDirect->getName();
         $ids[] = $category->getId();
         $this->categoryCache[$categoryId][self::CATEGORY_PATH] = $this->generatePath($path);
         $this->categoryCache[$categoryId][self::CATEGORY_IDS] = $ids;
@@ -259,22 +267,25 @@ class CategoryDataResolver
             if ($iterator > 2) {
                 break;
             }
+            // get parent category directly from category repository to make sure it uses default's store translations
+            $parentCategoryDirect = $this->getCategory(intval($parentCategory->getId()));
 
+            // $parentCategory->setStoreId($defaultStoreId);
             if ($parentCategory->getStoreId() === 0) {
                 // This workaround is required to correctly render the frontend URL for the current active store
                 $parentCategory->setStoreId($defaultStoreId);
             }
 
-            $path[] = $parentCategory->getName();
+            $path[] = $parentCategoryDirect->getName();
             $ids[] = $parentCategory->getId();
-            $this->categoryCache[$categoryId][self::CATEGORY_LEVEL . $iterator] = $parentCategory->getName();
+            $this->categoryCache[$categoryId][self::CATEGORY_LEVEL . $iterator] = $parentCategoryDirect->getName();
             $this->categoryCache[$categoryId]['category_' . $iterator . '_url'] = $this->removeBaseRoot(
                 $parentCategory->getUrl()
             );
             $iterator++;
         }
         $ids[] = $category->getId();
-        $path[] = $category->getName();
+        $path[] = $parentCategoryDirect->getName();
         $this->categoryCache[$categoryId][self::CATEGORY_PATH] = $this->generatePath($path);
         $this->categoryCache[$categoryId][self::CATEGORY_IDS] = $ids;
     }
