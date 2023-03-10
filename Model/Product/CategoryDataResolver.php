@@ -276,7 +276,7 @@ class CategoryDataResolver
                 $parentCategory->setStoreId($defaultStoreId);
             }
 
-            $path[] = $parentCategoryDirect->getName();
+            $path[] = $category->getName();
             $ids[] = $parentCategory->getId();
             $this->categoryCache[$categoryId][self::CATEGORY_LEVEL . $iterator] = $parentCategoryDirect->getName();
             $this->categoryCache[$categoryId]['category_' . $iterator . '_url'] = $this->removeBaseRoot(
@@ -285,7 +285,7 @@ class CategoryDataResolver
             $iterator++;
         }
         $ids[] = $category->getId();
-        $path[] = $parentCategoryDirect->getName();
+        $path[] = $category->getName();
         $this->categoryCache[$categoryId][self::CATEGORY_PATH] = $this->generatePath($path);
         $this->categoryCache[$categoryId][self::CATEGORY_IDS] = $ids;
     }
