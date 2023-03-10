@@ -229,7 +229,7 @@ class CategoryDataResolver
 
         $this->categoryCache[$categoryId][self::CATEGORY_LEVEL_2] = $category->getName();
         $this->categoryCache[$categoryId][self::CATEGORY_URL_2] = $this->removeBaseRoot($category->getUrl());
-        $path[] = $parentCategoryDirect->getName();
+        $path[] = $category->getName();
         $ids[] = $category->getId();
         $this->categoryCache[$categoryId][self::CATEGORY_PATH] = $this->generatePath($path);
         $this->categoryCache[$categoryId][self::CATEGORY_IDS] = $ids;
