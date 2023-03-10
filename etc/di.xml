@@ -126,7 +126,7 @@
                 <item name="purchase" xsi:type="array">
                     <item name="default" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultRenderer</item>
                     <item name="timestamp" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Timestamp</item>
-                    <item name="status" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Status</item>
+                    <item name="status" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultRenderer</item>
                     <item name="product_ids" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ProductIds</item>
                     <item name="product_list" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ProductList</item>
                     <item name="variant_ids" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\VariantIds</item>
@@ -144,7 +144,7 @@
                     <item name="customer_id" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OrderField</item>
                     <item name="timestamp" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Timestamp</item>
                     <item name="increment_id" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OrderField</item>
-                    <item name="status" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Status</item>
+                    <item name="status" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Status</item>
                     <item name="name" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Name</item>
                     <item name="order_currency_code" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\OrderField</item>
                     <item name="manufacturer" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\ProductField</item>
