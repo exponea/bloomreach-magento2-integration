@@ -309,6 +309,9 @@
         <bloomreach_code code="variant_id">
             <field code="variant_id"/>
         </bloomreach_code>
+        <bloomreach_code code="sku">
+            <field code="sku"/>
+        </bloomreach_code>
         <bloomreach_code code="title">
             <field code="name"/>
         </bloomreach_code>
