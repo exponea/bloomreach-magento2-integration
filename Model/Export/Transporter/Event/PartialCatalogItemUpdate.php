@@ -61,6 +61,12 @@ class PartialCatalogItemUpdate implements TransporterInterface
     {
         $properties = $this->jsonSerializer->unserialize($exportQueue->getBody());
         $itemId = $properties['item_id'] ?? '';
+
+        //Unset primary id to avoid duplicating the Primary field in the Bloomreach catalog
+        if (isset($properties['item_id'])) {
+            unset($properties['item_id']);
+        }
+
         $body = ['properties' => $properties];
         $this->responseHandler->handle(
             $this->partialCatalogItemUpdateRequest->execute($body, $itemId, $exportQueue->getEntityType())
