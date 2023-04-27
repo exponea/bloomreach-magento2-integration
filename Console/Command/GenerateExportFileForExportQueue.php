@@ -17,6 +17,7 @@ use Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue\CollectionFac
 use Exception;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
+use Magento\Framework\Console\Cli;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Symfony\Component\Console\Command\Command;
@@ -221,7 +222,7 @@ class GenerateExportFileForExportQueue extends Command
      * @throws LocalizedException
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Generation of files for export has started');
         $this->appState->emulateAreaCode(
@@ -233,6 +234,7 @@ class GenerateExportFileForExportQueue extends Command
             [$input, $output]
         );
         $output->writeln('Generation of files for export complete');
+        return Cli::RETURN_SUCCESS;
     }
 
     /**

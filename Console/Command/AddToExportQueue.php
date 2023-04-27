@@ -11,6 +11,7 @@ use Bloomreach\EngagementConnector\Model\Export\QueueProcessor;
 use Exception;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
+use Magento\Framework\Console\Cli;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -55,7 +56,7 @@ class AddToExportQueue extends Command
      * @throws Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Adding Entities to the export queue has started');
         $this->appState->emulateAreaCode(
@@ -67,6 +68,7 @@ class AddToExportQueue extends Command
             []
         );
         $output->writeln('Adding Entities to the export queue complete');
+        return Cli::RETURN_SUCCESS;
     }
 
     /**
