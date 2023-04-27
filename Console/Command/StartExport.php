@@ -12,6 +12,7 @@ use Bloomreach\EngagementConnector\Service\Integration\StartApiImportService;
 use Exception;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
+use Magento\Framework\Console\Cli;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -64,7 +65,7 @@ class StartExport extends Command
      * @return void
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Data export to Bloomreach has started');
 
@@ -95,6 +96,8 @@ class StartExport extends Command
         }
 
         $output->writeln('Data export to Bloomreach has complete');
+
+        return Cli::RETURN_SUCCESS;
     }
 
     /**

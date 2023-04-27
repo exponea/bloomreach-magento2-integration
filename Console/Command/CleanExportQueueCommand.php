@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Console\Command;
 
 use Bloomreach\EngagementConnector\Service\Cron\CleanExportQueueService;
+use Magento\Framework\Console\Cli;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,13 +42,15 @@ class CleanExportQueueCommand extends Command
      * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function execute(InputInterface $input, OutputInterface $output): void
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Start of cleaning the export queue data');
 
         $this->cleanExportQueueService->execute();
 
         $output->writeln('Finish of cleaning the export queue data');
+
+        return Cli::RETURN_SUCCESS;
     }
 
     /**

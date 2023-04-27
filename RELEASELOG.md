@@ -3,6 +3,9 @@
 - Improved the sending flow, by skipping the entities that are not configured
 - Fixed the PayPal orders are not being synced
 - Added the Admin system notification if some errors were thrown while the import is processing
+- Fixed catalog updates are not being sent
+- Added PHP 8.2 compatibility
+- Added Magento 2.4.6 compatibility
 
 # v0.9.5
 
