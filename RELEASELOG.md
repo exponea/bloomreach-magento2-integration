@@ -28,4 +28,4 @@
 
 # v0.9.2
 
-- Init module
+- Init module.
