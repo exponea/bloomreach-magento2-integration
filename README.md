@@ -1,6 +1,6 @@
 # Bloomreach_EngagementConnector module
 
-This is a module for integration with the [Bloomreach service](https://www.bloomreach.com/).
+This is a module for integration with the [Bloomreach service](https://www.bloomreach.com/)
 
 ## Prerequisites
 
