@@ -17,12 +17,12 @@ class AccessCredentialsValidatorTest extends AbstractBackendController
     /**
      * @var string
      */
-    public $uri = 'backend/bloomreach_engagement/import/RunInitialImport';
+    public $uri = 'backend/bloomreach_engagement/validator/AccessCredentials';
 
     /**
      * @var string
      */
-    public $resource = 'Bloomreach_EngagementConnector::config_bloomreach_engagement';
+    public $resource = 'Bloomreach_EngagementConnector::bloomreach_engagement_config';
 
     /**
      * @var string

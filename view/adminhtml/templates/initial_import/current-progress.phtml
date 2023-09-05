@@ -1,0 +1,165 @@
+<?php
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+
+use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
+use Bloomreach\EngagementConnector\Block\Adminhtml\InitialImport\CurrentProgress;
+
+/** @var CurrentProgress $block */
+
+$totalItems = $block->getTotalItems();
+?>
+<?php if ($block->isStarted() && $totalItems > 0): ?>
+    <?php $totalQueuedItems = $block->getTotalQueuedItems(); ?>
+    <?php $totalProcessedPercent = sprintf(
+        '%s%%',
+        number_format($totalQueuedItems / $totalItems  * 100, 0)
+    );
+    ?>
+    <div class="bloomreach-ec-progress-wrapper">
+        <section class="admin__page-section">
+            <div class="admin__page-section-title">
+                <span class="title">
+                    <?= /* @noEscape */ __('Adding items to the Export Queue'); ?>
+                </span>
+            </div>
+            <div class="bloomreach-ec-progress-block-content">
+                <div class="bloomreach-ec-progress-bar-wrapper">
+                    <div class="bloomreach-ec-progress-bar"
+                         style="width: <?= $block->escapeHtmlAttr($totalProcessedPercent); ?>">
+                        <div class="bloomreach-ec-progress-bar-content">
+                            <?= /* @noEscape */ $totalProcessedPercent; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="bloomreach-ec-progress-bar-text">
+                    <?= /* @noEscape */ __('%1 out of %2 completed', $totalQueuedItems, $totalItems); ?>
+                </div>
+            </div>
+        </section>
+        <?php if ($block->getExportQueueCollection()->getSize() > 0): ?>
+            <?php $totalProcessedItems = $block->getTotalProcessedItems(); ?>
+            <?php $totalProcessedPercent = sprintf(
+                '%s%%',
+                number_format($totalProcessedItems / $totalItems  * 100, 0)
+            );
+            ?>
+            <section class="admin__page-section">
+                <div class="admin__page-section-title">
+                    <span class="title"><?= /* @noEscape */ __('Export Progress'); ?></span>
+                </div>
+                <div class="bloomreach-ec-progress-block-content">
+                    <div class="bloomreach-ec-progress-bar-wrapper">
+                        <div class="bloomreach-ec-progress-bar"
+                             style="width: <?= $block->escapeHtmlAttr($totalProcessedPercent); ?>">
+                            <div class="bloomreach-ec-progress-bar-content">
+                                <?= /* @noEscape */ $totalProcessedPercent; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bloomreach-ec-progress-bar-text">
+                        <?= /* @noEscape */ __('%1 out of %2 completed', $totalProcessedItems, $totalItems); ?>
+                    </div>
+                </div>
+                <div class="admin__table-wrapper">
+                    <table class="data-table admin__table-primary">
+                        <thead>
+                            <tr class="headings">
+                                <th><span><?= /* @noEscape */ __('Entity ID'); ?></span></th>
+                                <th><span><?= /* @noEscape */ __('Status'); ?></span></th>
+                                <th><span><?= /* @noEscape */ __('Number Of Retries'); ?></span></th>
+                                <th><span><?= /* @noEscape */ __('Entity IDs in the batch'); ?></span></th>
+                                <th><span><?= /* @noEscape */ __('Export File Link'); ?></span></th>
+                                <th><span><?= /* @noEscape */ __('Number of items in the batch'); ?></span></th>
+                                <th><span><?= /* @noEscape */ __('Time of the next sending'); ?></span></th>
+                            </tr>
+                        </thead>
+                        <?php /** @var ExportQueueInterface $item */ ?>
+                        <?php foreach ($block->getExportQueueCollection() as $item): ?>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span><?= $block->escapeHtml($item->getEntityId()); ?></span>
+                                    </td>
+                                    <td>
+                                        <?= $block->escapeHtml($block->getDecoratedStatus($item), ['span']); ?>
+                                    </td>
+                                    <td>
+                                        <span><?= $block->escapeHtml($item->getRetries()); ?></span>
+                                    </td>
+                                    <td>
+                                        <span><?= $block->escapeHtml($block->getEntitiesRange($item)); ?></span>
+                                    </td>
+                                    <td>
+                                        <a href="<?= $block->escapeUrl($block->getFileUrl($item)); ?>">
+                                            <?= /* @noEscape */ __('Download csv file'); ?>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span><?= $block->escapeHtml($item->getNumberOfItems()); ?></span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <?= $block->escapeHtml($block->getTimeOfNextSendingAttempt($item)); ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            </section>
+        <?php endif; ?>
+    </div>
+    <style>
+        .bloomreach-ec-modal-view_progress {
+            width: 80%;
+            margin: auto;
+        }
+
+        .bloomreach-ec-progress-wrapper table {
+            position: relative;
+            margin-top: 30px;
+        }
+
+        .bloomreach-ec-progress-wrapper table tbody {
+            border-bottom: 1px solid #e3e3e3;
+        }
+
+        .bloomreach-ec-progress-wrapper table td,
+        .bloomreach-ec-progress-wrapper table th {
+            text-align: center;
+        }
+
+        .bloomreach-ec-progress-wrapper table tbody:last-of-type {
+            border-bottom: none;
+        }
+
+        .bloomreach-ec-progress-wrapper table td {
+            border-bottom: none;
+        }
+
+        .bloomreach-ec-progress-wrapper .bloomreach-ec-progress-bar-text {
+            text-align: right;
+            margin-top: 10px;
+            margin-right: 15px;
+        }
+
+        .bloomreach-ec-progress-wrapper .bloomreach-ec-progress-bar-wrapper {
+            border: 1px solid #ccc;
+        }
+
+        .bloomreach-ec-progress-wrapper .bloomreach-ec-progress-bar {
+            color: #fff;
+            background-color: #4CAF50;
+            padding: 8px 0;
+        }
+
+        .bloomreach-ec-progress-wrapper .bloomreach-ec-progress-bar-content {
+            text-align: center;
+        }
+    </style>
+<?php endif; ?>
+

@@ -47,8 +47,8 @@ define([
          * @param customer
          * @private
          */
-        _identifyCustomer: function(customer) {
-            let registered = this._getRegisteredData(customer)
+        _identifyCustomer: function (customer) {
+            let registered = this._getRegisteredData(customer);
             if (Object.keys(registered).length !== 0) {
                 window.exponea.identify(registered);
             }
@@ -74,7 +74,7 @@ define([
          * @private
          */
         _mergeRegistered: function(registered) {
-            return $.extend(this.options.registered, registered);
+            return $.extend({}, this.options.registered, registered);
         }
     });
 

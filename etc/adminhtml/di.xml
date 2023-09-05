@@ -14,4 +14,71 @@
             </argument>
         </arguments>
     </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\Validator\AccessCredentials">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\InitialImport\Enable">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\BuilderComposite">
+        <arguments>
+            <argument name="builderPool" xsi:type="array">
+                <item name="default" xsi:type="string">Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\Entity\DefaultBuilder</item>
+                <item name="catalog_product" xsi:type="string">Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\Entity\Catalog</item>
+                <item name="catalog_product_variants" xsi:type="string">Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\Entity\Catalog</item>
+                <item name="customer" xsi:type="string">Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\Entity\Customer</item>
+                <item name="purchase" xsi:type="string">Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\Entity\Event</item>
+                <item name="purchase_item" xsi:type="string">Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\Entity\Event</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\InitialImport\PreviewConfiguration">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\InitialImport\Configure">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\InitialImport\Start">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\InitialImport\Stop">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\InitialImport\Flush">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Config\Backend\ValidateCatalog">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\ExportQueue\ExportLogFile">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\ExportQueue\MassRetry">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\ExportQueue\Retry">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
 </config>

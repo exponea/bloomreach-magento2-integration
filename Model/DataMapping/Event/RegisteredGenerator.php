@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Model\DataMapping\Event;
 
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Framework\Serialize\SerializerInterface;
 
 /**
@@ -24,11 +25,25 @@ class RegisteredGenerator
     private $jsonSerializer;
 
     /**
-     * @param SerializerInterface $jsonSerializer
+     * @var ConfigProvider
      */
-    public function __construct(SerializerInterface $jsonSerializer)
-    {
+    private $configProvider;
+
+    /**
+     * @var array
+     */
+    private $registeredMapping;
+
+    /**
+     * @param SerializerInterface $jsonSerializer
+     * @param ConfigProvider $configProvider
+     */
+    public function __construct(
+        SerializerInterface $jsonSerializer,
+        ConfigProvider $configProvider
+    ) {
         $this->jsonSerializer = $jsonSerializer;
+        $this->configProvider = $configProvider;
     }
 
     /**
@@ -55,6 +70,23 @@ class RegisteredGenerator
     public function generateSerialized(string $customerEmail, ?int $customerId): string
     {
         return $this->jsonSerializer->serialize($this->generate($customerEmail, $customerId));
+    }
+
+    /**
+     * Get Registered Mapping
+     *
+     * @return string[]
+     */
+    public function getRegisteredMapping(): array
+    {
+        if ($this->registeredMapping === null) {
+            $this->registeredMapping = [
+                self::EMAIL_ID => $this->configProvider->getEmailFieldMapping() ?: self::EMAIL_ID,
+                self::CUSTOMER_ID => $this->configProvider->getCustomerIdFieldMapping() ?: self::CUSTOMER_ID
+            ];
+        }
+
+        return $this->registeredMapping;
     }
 
     /**
@@ -85,6 +117,11 @@ class RegisteredGenerator
      */
     private function getRegistered(?string $customerEmail = null, ?int $customerId = null): array
     {
-        return [self::EMAIL_ID => $customerEmail, self::CUSTOMER_ID => $customerId];
+        $registeredMapping = $this->getRegisteredMapping();
+
+        return [
+            $registeredMapping[self::EMAIL_ID] => $customerEmail,
+            $registeredMapping[self::CUSTOMER_ID] => $customerId
+        ];
     }
 }

@@ -8,10 +8,10 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Service\Export;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Product\ProductVariantsType;
+use Bloomreach\EngagementConnector\Model\Export\Entity\ProductVariantsCollection;
 use Bloomreach\EngagementConnector\Model\Export\Queue\AddPartialDataToExportQueue;
 use Bloomreach\EngagementConnector\Model\Product\ChildIdsDataProvider;
-use Bloomreach\EngagementConnector\Model\Product\ProductVariantsCollection;
-use Bloomreach\EngagementConnector\Model\Product\ProductVariantsCollectionFactory;
+use Bloomreach\EngagementConnector\Model\Export\Entity\ProductVariantsCollectionFactory;
 use Bloomreach\EngagementConnector\Service\Product\GetProductActiveStatus;
 use Magento\Bundle\Model\Product\Type as BundleType;
 use Magento\Catalog\Api\Data\ProductInterface;

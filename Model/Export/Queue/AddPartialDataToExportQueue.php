@@ -64,6 +64,7 @@ class AddPartialDataToExportQueue
         $exportQueue = $this->exportQueueFactory->create();
         $exportQueue->setEntityType($entityType);
         $exportQueue->setApiType(self::API_TYPE);
+        $exportQueue->setNumberOfItems(1);
         $exportQueue->setBody($this->jsonSerializer->serialize($data));
         $this->saveExportQueue->execute($exportQueue);
     }

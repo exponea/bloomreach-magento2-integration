@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Logger;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Framework\Phrase;
 use Magento\Framework\Serialize\SerializerInterface;
 use Psr\Log\LoggerInterface;

@@ -1,0 +1,26 @@
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<!-- ko if: visible -->
+<table>
+    <tr>
+        <td style="vertical-align: top">
+            <b>Add to Export Queue Cron</b>
+        </td>
+        <td style="padding-left: 25px">
+            <!-- ko if: last_run_minutes !== null -->
+            <p>Last run was <span data-bind="text: last_run_minutes"></span> minute(s) ago.</p>
+            <!-- /ko -->
+            <!-- ko if: items_count !== null -->
+            <p>Last run added <span data-bind="text: items_count"></span> item(s) to the queue.</p>
+            <!-- /ko -->
+            <!-- ko if: next_run_minutes !== null -->
+            <p>Next run is scheduled in <span data-bind="text: next_run_minutes"></span> minute(s).</p>
+            <!-- /ko -->
+        </td>
+    </tr>
+</table>
+<!-- /ko -->

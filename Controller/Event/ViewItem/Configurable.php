@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Controller\Event\ViewItem;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\ViewItemEvent;
 use Bloomreach\EngagementConnector\Model\DataMapping\DataMapperResolver;
 use Bloomreach\EngagementConnector\Model\Tracking\EventBuilderFactory;
 use Exception;
@@ -23,8 +24,6 @@ use Psr\Log\LoggerInterface;
  */
 class Configurable implements ActionInterface, HttpPostActionInterface
 {
-    private const EVENT_NAME = 'view_item';
-
     /**
      * @var JsonFactory
      */
@@ -100,10 +99,10 @@ class Configurable implements ActionInterface, HttpPostActionInterface
         try {
             $product = $this->productRepository->getById($productId);
             $product->setVariantId($productId);
-            $body = $this->dataMapperResolver->map($product, self::EVENT_NAME)->toArray();
+            $body = $this->dataMapperResolver->map($product, ViewItemEvent::ENTITY_TYPE)->toArray();
             $event = $this->eventBuilderFactory->create(
                 [
-                    'eventName' => self::EVENT_NAME,
+                    'eventName' => ViewItemEvent::ENTITY_TYPE,
                     'eventBody' => $body
                 ]
             )->build();

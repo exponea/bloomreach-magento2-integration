@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Observer;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Product\ProductVariantsType;
+use Bloomreach\EngagementConnector\Model\Export\Condition\IsRealTimeUpdateAllowed;
 use Bloomreach\EngagementConnector\Service\Export\DeleteProductEntity as DeleteProductEntityService;
 use Bloomreach\EngagementConnector\Service\Export\UpdateProductVariantsStatus;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -35,18 +37,26 @@ class DeleteProductEntity implements ObserverInterface
     private $configProvider;
 
     /**
+     * @var IsRealTimeUpdateAllowed
+     */
+    private $isRealTimeUpdateAllowed;
+
+    /**
      * @param DeleteProductEntityService $deleteProductEntity
      * @param UpdateProductVariantsStatus $updateProductVariantsStatus
      * @param ConfigProvider $configProvider
+     * @param IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed
      */
     public function __construct(
         DeleteProductEntityService $deleteProductEntity,
         UpdateProductVariantsStatus $updateProductVariantsStatus,
-        ConfigProvider $configProvider
+        ConfigProvider $configProvider,
+        IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed
     ) {
         $this->deleteProductEntity = $deleteProductEntity;
         $this->updateProductVariantsStatus = $updateProductVariantsStatus;
         $this->configProvider = $configProvider;
+        $this->isRealTimeUpdateAllowed = $isRealTimeUpdateAllowed;
     }
 
     /**
@@ -58,15 +68,17 @@ class DeleteProductEntity implements ObserverInterface
      */
     public function execute(Observer $observer): void
     {
-        if ($this->configProvider->isEnabled()
-            && $this->configProvider->getCatalogId()
-            && $this->configProvider->getCatalogVariantsId()
-        ) {
-            $event = $observer->getEvent();
-            /** @var $product Product */
-            $product = $event->getProduct();
+        if (!$this->configProvider->isEnabled()) {
+            return;
+        }
 
-            $this->deleteProductEntity->execute($product);
+        $event = $observer->getEvent();
+        /** @var $product Product */
+        $product = $event->getProduct();
+
+        $this->deleteProductEntity->execute($product);
+
+        if ($this->isRealTimeUpdateAllowed->execute(ProductVariantsType::ENTITY_TYPE)) {
             $this->updateProductVariantsStatus->execute($product);
         }
     }

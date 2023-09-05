@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Bloomreach_EngagementConnector::bloomreach_engagement"
+             sortOrder="100"
+             title="Bloomreach Engagement Connector"
+             module="Bloomreach_EngagementConnector"
+             parent="Magento_Backend::marketing"
+             resource="Bloomreach_EngagementConnector::bloomreach_engagement"
+             translate="title"
+             dependsOnConfig="bloomreach_engagement/general/enable"
+        />
+        <add id="Bloomreach_EngagementConnector::initial_import_view"
+             sortOrder="10"
+             title="Initial Import"
+             module="Bloomreach_EngagementConnector"
+             parent="Bloomreach_EngagementConnector::bloomreach_engagement"
+             resource="Bloomreach_EngagementConnector::initial_import_view"
+             translate="title"
+             action="bloomreach_engagement/initialImport/index"
+        />
+        <add id="Bloomreach_EngagementConnector::export_queue_view"
+             sortOrder="10"
+             title="Export Queue"
+             module="Bloomreach_EngagementConnector"
+             parent="Bloomreach_EngagementConnector::bloomreach_engagement"
+             resource="Bloomreach_EngagementConnector::export_queue_view"
+             translate="title"
+             action="bloomreach_engagement/exportQueue/index"
+        />
+    </menu>
+</config>

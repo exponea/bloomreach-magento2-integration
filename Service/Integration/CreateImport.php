@@ -1,0 +1,116 @@
+<?php
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+declare(strict_types=1);
+
+namespace Bloomreach\EngagementConnector\Service\Integration;
+
+use Bloomreach\EngagementConnector\Exception\AuthenticationException;
+use Bloomreach\EngagementConnector\Exception\AuthorizationException;
+use Bloomreach\EngagementConnector\Exception\BadRequestException;
+use Bloomreach\EngagementConnector\Exception\NotFoundException;
+use Bloomreach\EngagementConnector\Service\Integration\Client\RequestSender;
+use Bloomreach\EngagementConnector\Service\Integration\Response\ResponseValidator;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Webapi\Rest\Request;
+
+/**
+ * The class is responsible for creating the import
+ */
+class CreateImport
+{
+    /**
+     * Endpoint pattern '/imports/v1/{projectToken}'
+     */
+    public const URL_ENDPOINT_PATTERN = '%s/imports/v1/%s';
+
+    /**
+     * Request type
+     */
+    public const REQUEST_TYPE = Request::HTTP_METHOD_POST;
+
+    /**
+     * @var ConfigProvider
+     */
+    private $configProvider;
+
+    /**
+     * @var RequestSender
+     */
+    private $requestSender;
+
+    /**
+     * @var ResponseValidator
+     */
+    private $responseValidator;
+
+    /**
+     * @param ConfigProvider $configProvider
+     * @param RequestSender $requestSender
+     * @param ResponseValidator $responseValidator
+     */
+    public function __construct(
+        ConfigProvider $configProvider,
+        RequestSender $requestSender,
+        ResponseValidator $responseValidator
+    ) {
+        $this->configProvider = $configProvider;
+        $this->requestSender = $requestSender;
+        $this->responseValidator = $responseValidator;
+    }
+
+    /**
+     * Creates Import
+     *
+     * @param array $body
+     *
+     * @return string
+     * @throws AuthenticationException
+     * @throws AuthorizationException
+     * @throws NotFoundException
+     * @throws LocalizedException
+     */
+    public function execute(array $body): string
+    {
+        $response = $this->requestSender->execute($this->getEndpoint(), self::REQUEST_TYPE, $body);
+
+        try {
+            $this->responseValidator->validate($response);
+            $importId = $response->getData()['import_id'] ?? '';
+        } catch (BadRequestException $e) {
+            throw new LocalizedException(
+                __(
+                    'Failed to create an import. Original error message: %error_message.',
+                    ['error_message' => $e->getMessage()]
+                )
+            );
+        }
+
+        if (!$importId) {
+            throw new LocalizedException(
+                __(
+                    'Failed to create an import. There is no import ID in the response.',
+                )
+            );
+        }
+
+        return $importId;
+    }
+
+    /**
+     * Returns endpoint url
+     *
+     * @return string
+     */
+    private function getEndpoint(): string
+    {
+        return sprintf(
+            static::URL_ENDPOINT_PATTERN,
+            $this->configProvider->getApiTarget(),
+            $this->configProvider->getProjectTokenId()
+        );
+    }
+}

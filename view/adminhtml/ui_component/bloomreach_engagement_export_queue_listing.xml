@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">bloomreach_engagement_export_queue_listing.bloomreach_engagement_export_queue_listing_data_source</item>
+            <item name="deps" xsi:type="string">bloomreach_engagement_export_queue_listing.bloomreach_engagement_export_queue_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="download_debug_log" class="Bloomreach\EngagementConnector\Block\Adminhtml\ExportQueue\Listing\Button\DownloadDebugLogFile" />
+            <button name="download_error_log">
+                <url path="bloomreach_engagement/exportQueue/exportLogFile">
+                    <param name="fileName">bloomreach/engagement_connector.log</param>
+                </url>
+                <class>primary</class>
+                <label translate="true">Download Error Log File</label>
+            </button>
+        </buttons>
+        <spinner>bloomreach_engagement_export_queue_listing_columns</spinner>
+        <deps>
+            <dep>bloomreach_engagement_export_queue_listing.bloomreach_engagement_export_queue_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="bloomreach_engagement_export_queue_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">entity_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Bloomreach_EngagementConnector::export_queue_view</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="bloomreach_engagement_export_queue_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>entity_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <filters name="listing_filters"/>
+        <columnsControls name="columns_controls"/>
+        <container name="cron_data" class="Bloomreach\EngagementConnector\Ui\Component\Listing\ExportQueue\CronDataContainer">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="displayArea" xsi:type="string">dataGridFilters</item>
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="template" xsi:type="string">Bloomreach_EngagementConnector/grid/component/export_queue_cronjob_data</item>
+                </item>
+            </argument>
+        </container>
+        <massaction name="listing_massaction">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to delete selected items?</message>
+                        <title translate="true">Delete items</title>
+                    </confirm>
+                    <url path="bloomreach_engagement/exportQueue/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+            <action name="retry">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to resend the selected items?</message>
+                        <title translate="true">Resend items</title>
+                    </confirm>
+                    <url path="bloomreach_engagement/exportQueue/massRetry"/>
+                    <type>retry</type>
+                    <label translate="true">Retry</label>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="bloomreach_engagement_export_queue_listing_columns">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>entity_id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="entity_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Entity Id</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        <column name="entity_type" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <label translate="true">Entity</label>
+                <filter>select</filter>
+                <options class="Bloomreach\EngagementConnector\Model\DataProvider\EntityType" />
+                <dataType>select</dataType>
+            </settings>
+        </column>
+        <column name="api_type">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Api type</label>
+            </settings>
+        </column>
+        <column name="status" class="Bloomreach\EngagementConnector\Ui\Component\Listing\ExportQueue\Column\Status">
+            <settings>
+                <label translate="true">Status</label>
+                <filter>select</filter>
+                <options class="Bloomreach\EngagementConnector\Model\Export\Queue\Source\StatusSource" />
+                <dataType>select</dataType>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+            </settings>
+        </column>
+        <column name="retries">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Number Of Sending Attempts</label>
+            </settings>
+        </column>
+        <column name="error_message">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Error</label>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Created At</label>
+            </settings>
+        </column>
+        <column name="updated_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Updated At</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="Bloomreach\EngagementConnector\Ui\Component\Listing\ExportQueue\Column\Actions">
+            <settings>
+                <indexField>entity_id</indexField>
+                <label translate="true">Actions</label>
+                <resizeEnabled>false</resizeEnabled>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

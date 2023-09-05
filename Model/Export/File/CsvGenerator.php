@@ -9,6 +9,7 @@ namespace Bloomreach\EngagementConnector\Model\Export\File;
 
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\File\Csv;
+use Magento\Framework\Filesystem\Driver\File as FileDriver;
 use Magento\Framework\Serialize\SerializerInterface;
 
 /**
@@ -16,10 +17,7 @@ use Magento\Framework\Serialize\SerializerInterface;
  */
 class CsvGenerator implements FileGeneratorInterface
 {
-    /**
-     * @var FileNameGenerator
-     */
-    private $fileNameGenerator;
+    private const FILENAME_EXTENSION = 'csv';
 
     /**
      * @var Csv
@@ -32,50 +30,63 @@ class CsvGenerator implements FileGeneratorInterface
     private $jsonSerializer;
 
     /**
+     * @var FileDriver
+     */
+    private $fileDriver;
+
+    /**
      * @param Csv $csv
-     * @param FileNameGenerator $fileNameGenerator
      * @param SerializerInterface $jsonSerializer
+     * @param FileDriver $fileDriver
      */
     public function __construct(
         Csv $csv,
-        FileNameGenerator $fileNameGenerator,
-        SerializerInterface $jsonSerializer
+        SerializerInterface $jsonSerializer,
+        FileDriver $fileDriver
     ) {
         $this->csv = $csv;
-        $this->fileNameGenerator = $fileNameGenerator;
         $this->jsonSerializer = $jsonSerializer;
+        $this->fileDriver = $fileDriver;
     }
 
     /**
      * Generate csv file
      *
      * @param string $absoluteDirPath
+     * @param string $fileName
      * @param array $data
      *
      * @return string
      * @throws FileSystemException
      */
-    public function generate(string $absoluteDirPath, array $data): string
+    public function generate(string $absoluteDirPath, string $fileName, array $data): string
     {
-        $fileName = $this->getFileName();
+        $fullFileName = $this->getFullFileName($fileName);
+        $absoluteFilePath = $this->getFullFilePath($absoluteDirPath, $fullFileName);
         $data = $this->prepareToExport($data);
-        array_unshift($data, $this->getHeaders($data));
+
+        if (!$this->fileDriver->isExists($absoluteFilePath) && $this->hasHeaders($data)) {
+            array_unshift($data, $this->getHeaders($data));
+        }
+
         $this->csv
             ->setDelimiter(',')
             ->setEnclosure('"')
-            ->appendData($this->getFullFilePath($absoluteDirPath, $fileName), $data, 'a');
+            ->appendData($absoluteFilePath, $data, 'a');
 
-        return $fileName;
+        return $fullFileName;
     }
 
     /**
-     * Get file name
+     * Get full file name
+     *
+     * @param string $fileName
      *
      * @return string
      */
-    private function getFileName(): string
+    private function getFullFileName(string $fileName): string
     {
-        return $this->fileNameGenerator->execute() . '.csv';
+        return sprintf('%s.%s', $fileName, self::FILENAME_EXTENSION);
     }
 
     /**
@@ -87,6 +98,10 @@ class CsvGenerator implements FileGeneratorInterface
      */
     private function prepareToExport(array $data): array
     {
+        if (array_is_list($data) && !is_array(current($data))) {
+            return [array_map([$this, 'serialize'], $data)];
+        }
+
         $data = count($data) > 0 && !is_array(current($data)) ? [$data] : $data;
 
         foreach ($data as $key => $item) {
@@ -106,6 +121,18 @@ class CsvGenerator implements FileGeneratorInterface
     private function getHeaders(array $data): array
     {
         return array_keys(current($data));
+    }
+
+    /**
+     * Checks whether data has headers
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    private function hasHeaders(array $data): bool
+    {
+        return !array_is_list(current($data));
     }
 
     /**

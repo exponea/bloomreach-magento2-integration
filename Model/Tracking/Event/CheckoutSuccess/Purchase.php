@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Model\Tracking\Event\CheckoutSuccess;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Order as OrderDataMapper;
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\OrderItem as OrderItemDataMapper;
 use Bloomreach\EngagementConnector\Model\DataMapping\DataMapperResolver;
 use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
 use Bloomreach\EngagementConnector\Model\Tracking\Event\EventsInterface;
@@ -23,10 +25,6 @@ use Magento\Sales\Api\Data\OrderInterface;
  */
 class Purchase implements ArgumentInterface, EventsInterface
 {
-    private const PURCHASE_EVENT = 'purchase';
-
-    private const PURCHASE_ITEM_EVENT = 'purchase_item';
-
     private const FRONTEND_PURCHASE_EVENT_NAME = 'order';
 
     private const FRONTEND_PURCHASE_ITEM_EVENT_NAME = 'order_item';
@@ -88,7 +86,7 @@ class Purchase implements ArgumentInterface, EventsInterface
                     [
                         'eventName' => self::FRONTEND_PURCHASE_EVENT_NAME,
                         'eventBody' => $this->deleteUnusedFields(
-                            $this->dataMapperResolver->map($order, self::PURCHASE_EVENT)->toArray()
+                            $this->dataMapperResolver->map($order, OrderDataMapper::ENTITY_TYPE)->toArray()
                         )
                     ]
                 )->build();
@@ -101,7 +99,7 @@ class Purchase implements ArgumentInterface, EventsInterface
                         [
                             'eventName' => self::FRONTEND_PURCHASE_ITEM_EVENT_NAME,
                             'eventBody' => $this->deleteUnusedFields(
-                                $this->dataMapperResolver->map($orderItem, self::PURCHASE_ITEM_EVENT)->toArray()
+                                $this->dataMapperResolver->map($orderItem, OrderItemDataMapper::ENTITY_TYPE)->toArray()
                             )
                         ]
                     )->build();

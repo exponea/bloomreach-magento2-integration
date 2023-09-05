@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\Export;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Order;
 use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
 use Bloomreach\EngagementConnector\Model\Export\Queue\AddEventToExportQueue;
 use Exception;
@@ -18,8 +19,6 @@ use Psr\Log\LoggerInterface;
  */
 class PrepareOrderDataService
 {
-    private const ENTITY_TYPE = 'purchase';
-
     /**
      * @var AddEventToExportQueue
      */
@@ -61,7 +60,7 @@ class PrepareOrderDataService
     {
         try {
             $this->addEventToExportQueue->execute(
-                self::ENTITY_TYPE,
+                Order::ENTITY_TYPE,
                 $this->registeredGenerator->generateSerialized(
                     $order->getCustomerEmail(),
                     $order->getCustomerId() ? (int) $order->getCustomerId() : null

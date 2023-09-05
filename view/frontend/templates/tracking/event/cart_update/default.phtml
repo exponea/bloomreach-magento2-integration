@@ -3,11 +3,23 @@
  * @author Bloomreach
  * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
  */
+
+use Bloomreach\EngagementConnector\ViewModel\Tracking\Config as ConfigViewModel;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var ConfigViewModel $configViewModel */
+$configViewModel = $block->getData('config_view_model');
 ?>
-<script type="text/x-magento-init">
-    {
-        "*": {
-            "Bloomreach_EngagementConnector/js/tracking/cart-update": {}
+<?php if ($configViewModel): ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Bloomreach_EngagementConnector/js/tracking/cart-update": {
+                    "trackingProvider": "<?= /* @noEscape */ $configViewModel->getTrackingProvider(); ?>"
+                }
+            }
         }
-    }
-</script>
+    </script>
+<?php endif; ?>
+

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Setup;
 
 use Bloomreach\EngagementConnector\Setup\Service\ClearConfig;
+use Bloomreach\EngagementConnector\Setup\Service\ClearFlag;
 use Bloomreach\EngagementConnector\Setup\Service\RemoveCrons;
 use Bloomreach\EngagementConnector\Setup\Service\RemoveFiles;
 use Bloomreach\EngagementConnector\Setup\Service\RemoveTables;
@@ -43,21 +44,29 @@ class Uninstall implements UninstallInterface
     private $removeFiles;
 
     /**
+     * @var ClearFlag
+     */
+    private $clearFlag;
+
+    /**
      * @param RemoveTables $removeTables
-     * @param RemoveFiles $removeFiles
      * @param ClearConfig $clearConfig
      * @param RemoveCrons $removeCrons
+     * @param RemoveFiles $removeFiles
+     * @param ClearFlag $clearFlag
      */
     public function __construct(
         RemoveTables $removeTables,
-        RemoveFiles $removeFiles,
         ClearConfig $clearConfig,
-        RemoveCrons $removeCrons
+        RemoveCrons $removeCrons,
+        RemoveFiles $removeFiles,
+        ClearFlag $clearFlag
     ) {
         $this->removeTables = $removeTables;
         $this->clearConfig = $clearConfig;
         $this->removeCrons = $removeCrons;
         $this->removeFiles = $removeFiles;
+        $this->clearFlag = $clearFlag;
     }
 
     /**
@@ -77,5 +86,6 @@ class Uninstall implements UninstallInterface
         $this->clearConfig->execute();
         $this->removeCrons->execute();
         $this->removeFiles->execute();
+        $this->clearFlag->execute();
     }
 }

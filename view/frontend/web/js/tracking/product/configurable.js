@@ -17,7 +17,8 @@ define([
             priceBoxSelector: '[data-role=priceBox]',
             configurableOptionSelector: 'input[name="selected_configurable_option"]',
             configurableAttributeSelector: 'select.super-attribute-select',
-            swatchesSelector: '[data-role=swatch-options]'
+            swatchesSelector: '[data-role=swatch-options]',
+            trackingProvider: ''
         },
         eventCache: {},
 
@@ -53,7 +54,7 @@ define([
             }
 
             if (this.eventCache.hasOwnProperty(productId)) {
-                eventSender.sendEvent(this.eventCache[productId]);
+                eventSender.sendEvent(this.eventCache[productId], this.options.trackingProvider);
                 return;
             }
 
@@ -67,7 +68,7 @@ define([
             }).done(function (data) {
                 if (!data.errorMessage) {
                     this.eventCache[productId] = data.event;
-                    eventSender.sendEvent(data.event);
+                    eventSender.sendEvent(data.event, this.options.trackingProvider);
                 }
             }.bind(this));
         },
@@ -81,6 +82,7 @@ define([
 
             if (swatches.length) {
                 var swatchesData = swatches.data('mageSwatchRenderer');
+                swatchesData = _.isUndefined(swatchesData) ? swatches.data('mage-SwatchRenderer') : swatchesData;
 
                 if(_.isUndefined(swatchesData)) {
                     return optionIndex;

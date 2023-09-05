@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Model\Tracking\Event\ProductPage;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\ViewItemEvent;
 use Bloomreach\EngagementConnector\Model\DataMapping\DataMapperResolver;
 use Bloomreach\EngagementConnector\Model\Tracking\Event\EventsInterface;
 use Bloomreach\EngagementConnector\Model\Tracking\EventBuilderFactory;
@@ -23,8 +24,6 @@ use Magento\Framework\View\Element\Block\ArgumentInterface;
  */
 class ViewItem implements ArgumentInterface, EventsInterface
 {
-    private const EVENT_NAME = 'view_item';
-
     /**
      * @var RequestInterface
      */
@@ -77,10 +76,17 @@ class ViewItem implements ArgumentInterface, EventsInterface
         $product = $this->getCurrentProduct();
 
         if ($product) {
-            $body = $this->dataMapperResolver->map($product, self::EVENT_NAME)->toArray();
+            $body = $this->dataMapperResolver->map($product, ViewItemEvent::ENTITY_TYPE)->toArray();
         }
 
-        return $this->eventBuilderFactory->create(['eventName' => self::EVENT_NAME, 'eventBody' => $body])->build();
+        return [
+            $this->eventBuilderFactory->create(
+                [
+                    'eventName' => ViewItemEvent::ENTITY_TYPE,
+                    'eventBody' => $body
+                ]
+            )->build()
+        ];
     }
 
     /**

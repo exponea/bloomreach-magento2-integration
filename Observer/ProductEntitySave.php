@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Observer;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Product\ProductVariantsType;
+use Bloomreach\EngagementConnector\Model\Export\Condition\IsRealTimeUpdateAllowed;
 use Bloomreach\EngagementConnector\Service\Export\PrepareProductDataService;
 use Bloomreach\EngagementConnector\Service\Export\UpdateProductVariantsStatus;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Event\Observer;
@@ -36,18 +38,26 @@ class ProductEntitySave implements ObserverInterface
     private $configProvider;
 
     /**
+     * @var IsRealTimeUpdateAllowed
+     */
+    private $isRealTimeUpdateAllowed;
+
+    /**
      * @param PrepareProductDataService $prepareProductDataService
      * @param UpdateProductVariantsStatus $updateProductVariantsStatus
      * @param ConfigProvider $configProvider
+     * @param IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed
      */
     public function __construct(
         PrepareProductDataService $prepareProductDataService,
         UpdateProductVariantsStatus $updateProductVariantsStatus,
-        ConfigProvider $configProvider
+        ConfigProvider $configProvider,
+        IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed
     ) {
         $this->prepareProductDataService = $prepareProductDataService;
         $this->updateProductVariantsStatus = $updateProductVariantsStatus;
         $this->configProvider = $configProvider;
+        $this->isRealTimeUpdateAllowed = $isRealTimeUpdateAllowed;
     }
 
     /**
@@ -59,19 +69,20 @@ class ProductEntitySave implements ObserverInterface
      */
     public function execute(Observer $observer): void
     {
-        if ($this->configProvider->isEnabled()
-            && $this->configProvider->getCatalogId()
-            && $this->configProvider->getCatalogVariantsId()
+        if (!$this->configProvider->isEnabled()) {
+            return;
+        }
+
+        $event = $observer->getEvent();
+        /** @var $product Product */
+        $product = $event->getProduct();
+
+        $this->prepareProductDataService->execute($product);
+
+        if ($product->getStatus() !== $product->getOrigData(ProductInterface::STATUS)
+            && $this->isRealTimeUpdateAllowed->execute(ProductVariantsType::ENTITY_TYPE)
         ) {
-            $event = $observer->getEvent();
-            /** @var $product Product */
-            $product = $event->getProduct();
-
-            $this->prepareProductDataService->execute($product);
-
-            if ($product->getStatus() !== $product->getOrigData(ProductInterface::STATUS)) {
-                $this->updateProductVariantsStatus->execute($product);
-            }
+            $this->updateProductVariantsStatus->execute($product);
         }
     }
 }

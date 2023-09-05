@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\Export;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Customer as CustomerDataMapper;
 use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
 use Bloomreach\EngagementConnector\Model\Export\Queue\AddEventToExportQueue;
 use Magento\Customer\Model\Customer;
@@ -17,8 +18,6 @@ use Psr\Log\LoggerInterface;
  */
 class PrepareCustomerDataService
 {
-    private const ENTITY_TYPE = 'customer';
-
     /**
      * @var AddEventToExportQueue
      */
@@ -60,7 +59,7 @@ class PrepareCustomerDataService
     {
         try {
             $this->addEventToExportQueue->execute(
-                self::ENTITY_TYPE,
+                CustomerDataMapper::ENTITY_TYPE,
                 $this->registeredGenerator->generateSerialized(
                     $customer->getEmail(),
                     $customer->getEntityId() ? (int) $customer->getEntityId() : null

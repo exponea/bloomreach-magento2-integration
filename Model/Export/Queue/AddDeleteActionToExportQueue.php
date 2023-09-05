@@ -55,6 +55,7 @@ class AddDeleteActionToExportQueue
         $exportQueue = $this->exportQueueFactory->create();
         $exportQueue->setEntityType($entityType);
         $exportQueue->setApiType(self::API_TYPE);
+        $exportQueue->setNumberOfItems(1);
         $exportQueue->setBody($entityId);
         $this->saveExportQueue->execute($exportQueue);
     }

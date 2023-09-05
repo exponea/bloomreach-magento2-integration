@@ -10,6 +10,7 @@ namespace Bloomreach\EngagementConnector\Model\Export\Transporter\Event;
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\ResponseHandler;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface;
+use Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Catalog\FieldsMapper;
 use Bloomreach\EngagementConnector\Service\Integration\UpdateCatalogItemRequest;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -60,11 +61,11 @@ class UpdateCatalogItem implements TransporterInterface
     public function send(ExportQueueInterface $exportQueue): bool
     {
         $properties = $this->jsonSerializer->unserialize($exportQueue->getBody());
-        $itemId = $properties['item_id'] ?? '';
+        $itemId = $properties[FieldsMapper::PRIMARY_ID] ?? '';
 
         //Unset primary id to avoid duplicating the Primary field in the Bloomreach catalog
-        if (isset($properties['item_id'])) {
-            unset($properties['item_id']);
+        if (isset($properties[FieldsMapper::PRIMARY_ID])) {
+            unset($properties[FieldsMapper::PRIMARY_ID]);
         }
 
         $body = ['properties' => $properties];

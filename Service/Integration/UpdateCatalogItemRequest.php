@@ -7,12 +7,12 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\Integration;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
-use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Product\ProductVariantsType;
+use Bloomreach\EngagementConnector\Api\Data\ResponseInterface;
+use Bloomreach\EngagementConnector\Api\Data\ResponseInterfaceFactory;
 use Bloomreach\EngagementConnector\Service\Integration\Client\RequestSender;
-use GuzzleHttp\ClientFactory;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\ResponseFactory;
+use Bloomreach\EngagementConnector\System\CatalogIdResolver;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Webapi\Rest\Request;
 
 /**
@@ -38,23 +38,31 @@ class UpdateCatalogItemRequest
     private $requestSender;
 
     /**
-     * @var ResponseFactory
+     * @var ResponseInterfaceFactory
      */
     private $responseFactory;
 
     /**
+     * @var CatalogIdResolver
+     */
+    private $catalogIdResolver;
+
+    /**
      * @param ConfigProvider $configProvider
      * @param RequestSender $requestSender
-     * @param ResponseFactory $responseFactory
+     * @param ResponseInterfaceFactory $responseFactory
+     * @param CatalogIdResolver $catalogIdResolver
      */
     public function __construct(
         ConfigProvider $configProvider,
         RequestSender $requestSender,
-        ResponseFactory $responseFactory
+        ResponseInterfaceFactory $responseFactory,
+        CatalogIdResolver $catalogIdResolver
     ) {
         $this->configProvider = $configProvider;
         $this->requestSender = $requestSender;
         $this->responseFactory = $responseFactory;
+        $this->catalogIdResolver = $catalogIdResolver;
     }
 
     /**
@@ -64,17 +72,17 @@ class UpdateCatalogItemRequest
      * @param string $itemId
      * @param string $entityType
      *
-     * @return Response
+     * @return ResponseInterface
+     * @throws LocalizedException
      */
-    public function execute(array $body, string $itemId, string $entityType): Response
+    public function execute(array $body, string $itemId, string $entityType): ResponseInterface
     {
         if (!$body && static::REQUEST_TYPE !== Request::HTTP_METHOD_DELETE) {
-            /** @var Response $response */
-            return $this->responseFactory->create(
-                [
-                    'reason' => __('Nothing to send')
-                ]
-            );
+            /** @var ResponseInterface $response */
+            $response = $this->responseFactory->create();
+            $response->setErrorMessage(__('Nothing to send')->render());
+
+            return $response;
         }
 
         return $this->requestSender->execute(
@@ -91,25 +99,18 @@ class UpdateCatalogItemRequest
      * @param string $entityType
      *
      * @return string
+     * @throws LocalizedException
      */
     private function getEndpoint(string $itemId, string $entityType): string
     {
         $apiBaseUrl = $this->configProvider->getApiTarget();
         $projectToken = $this->configProvider->getProjectTokenId();
 
-        switch ($entityType) {
-            case ProductVariantsType::ENTITY_TYPE:
-                $catalogId = $this->configProvider->getCatalogVariantsId();
-                break;
-            default:
-                $catalogId = $this->configProvider->getCatalogId();
-        }
-
         return sprintf(
             static::URL_ENDPOINT_PATTERN,
             $apiBaseUrl,
             $projectToken,
-            $catalogId,
+            $this->catalogIdResolver->getCatalogId($entityType),
             $itemId
         );
     }

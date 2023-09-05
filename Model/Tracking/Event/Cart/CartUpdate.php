@@ -82,12 +82,14 @@ class CartUpdate implements EventsInterface
         $body = $this->dataMapperResolver->map($quote, CartUpdateEvent::ENTITY_TYPE)->toArray();
         $body['action'] = $this->cartUpdateEventSettings->getCartAction();
 
-        return $this->eventBuilderFactory->create(
-            [
-                'eventName' => CartUpdateEvent::ENTITY_TYPE,
-                'eventBody' => $body
-            ]
-        )->build();
+        return [
+            $this->eventBuilderFactory->create(
+                [
+                    'eventName' => CartUpdateEvent::ENTITY_TYPE,
+                    'eventBody' => $body
+                ]
+            )->build()
+        ];
     }
 
     /**

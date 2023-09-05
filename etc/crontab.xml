@@ -20,6 +20,11 @@
         >
             <config_path>bloomreach_engagement/bloomreach_engagement_cron/bloomreach_run_export_cron</config_path>
         </job>
+        <job name="bloomreach_export_queue_error_notification"
+             instance="Bloomreach\EngagementConnector\Cron\ExportQueueErrorNotificationRunner"
+             method="execute">
+            <schedule>0 * * * *</schedule>
+        </job>
     </group>
     <group id="bloomreach_engagement_cleaner">
         <job name="bloomreach_clean_export_queue"

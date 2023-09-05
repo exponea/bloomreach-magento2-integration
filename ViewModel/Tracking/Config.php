@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\ViewModel\Tracking;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\Service\Tracking\IsFrontendTrackingEnabled;
+use Bloomreach\EngagementConnector\Service\Tracking\TrackingProviderGetter;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 
 /**
@@ -21,11 +23,28 @@ class Config implements ArgumentInterface
     private $configProvider;
 
     /**
-     * @param ConfigProvider $configProvider
+     * @var TrackingProviderGetter
      */
-    public function __construct(ConfigProvider $configProvider)
-    {
+    private $getTrackingProvider;
+
+    /**
+     * @var IsFrontendTrackingEnabled
+     */
+    private $isFrontendTrackingEnabled;
+
+    /**
+     * @param ConfigProvider $configProvider
+     * @param TrackingProviderGetter $getTrackingProvider
+     * @param IsFrontendTrackingEnabled $isFrontendTrackingEnabled
+     */
+    public function __construct(
+        ConfigProvider $configProvider,
+        TrackingProviderGetter $getTrackingProvider,
+        IsFrontendTrackingEnabled $isFrontendTrackingEnabled
+    ) {
         $this->configProvider = $configProvider;
+        $this->getTrackingProvider = $getTrackingProvider;
+        $this->isFrontendTrackingEnabled = $isFrontendTrackingEnabled;
     }
 
     /**
@@ -35,10 +54,17 @@ class Config implements ArgumentInterface
      */
     public function isEnabled(): bool
     {
-        return $this->configProvider->isEnabled()
-            && $this->configProvider->isJsSdkEnabled()
-            && $this->getProjectId()
-            && $this->getApiTarget();
+        return $this->isFrontendTrackingEnabled->execute();
+    }
+
+    /**
+     * Get Tracking Provider Name
+     *
+     * @return string
+     */
+    public function getTrackingProvider(): string
+    {
+        return $this->getTrackingProvider->execute();
     }
 
     /**

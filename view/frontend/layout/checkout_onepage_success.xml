@@ -18,11 +18,14 @@
             <block class="Bloomreach\EngagementConnector\Block\Tracking\Event"
                    name="bloomreach.engagement.connector.purchase.tracking"
                    after="-"
-                   template="Bloomreach_EngagementConnector::tracking/event/purchase.phtml"
+                   template="Bloomreach_EngagementConnector::tracking/event/default.phtml"
                    ifconfig="bloomreach_engagement/frontend_tracking/enable_purchase">
-                <arguments>
+            <arguments>
                     <argument name="events" xsi:type="object">
                         Bloomreach\EngagementConnector\Model\Tracking\Event\CheckoutSuccess\Purchase
+                    </argument>
+                    <argument name="config_view_model" xsi:type="object">
+                        Bloomreach\EngagementConnector\ViewModel\Tracking\Config
                     </argument>
                 </arguments>
             </block>

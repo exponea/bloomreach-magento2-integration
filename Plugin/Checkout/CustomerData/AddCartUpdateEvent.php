@@ -7,9 +7,10 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Plugin\Checkout\CustomerData;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
 use Bloomreach\EngagementConnector\Model\Tracking\Event\Cart\CartUpdateEventsCollector;
 use Bloomreach\EngagementConnector\Model\Tracking\Event\Cart\CartUpdateEventSettings;
+use Bloomreach\EngagementConnector\Service\Tracking\IsFrontendTrackingEnabled;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Checkout\CustomerData\Cart as Subject;
 
 /**
@@ -33,18 +34,26 @@ class AddCartUpdateEvent
     private $cartUpdateEventSettings;
 
     /**
+     * @var IsFrontendTrackingEnabled
+     */
+    private $isFrontendTrackingEnabled;
+
+    /**
      * @param ConfigProvider $configProvider
      * @param CartUpdateEventsCollector $cartUpdateEventsCollector
      * @param CartUpdateEventSettings $cartUpdateEventSettings
+     * @param IsFrontendTrackingEnabled $isFrontendTrackingEnabled
      */
     public function __construct(
         ConfigProvider $configProvider,
         CartUpdateEventsCollector $cartUpdateEventsCollector,
-        CartUpdateEventSettings $cartUpdateEventSettings
+        CartUpdateEventSettings $cartUpdateEventSettings,
+        IsFrontendTrackingEnabled $isFrontendTrackingEnabled
     ) {
         $this->configProvider = $configProvider;
         $this->cartUpdateEventsCollector = $cartUpdateEventsCollector;
         $this->cartUpdateEventSettings = $cartUpdateEventSettings;
+        $this->isFrontendTrackingEnabled = $isFrontendTrackingEnabled;
     }
 
     /**
@@ -58,9 +67,8 @@ class AddCartUpdateEvent
      */
     public function afterGetSectionData(Subject $subject, array $result)
     {
-        if (!$this->configProvider->isEnabled()
-            || !$this->configProvider->isJsSdkEnabled()
-            || !$this->configProvider->isCartUpdateTrackingEnabled()
+        if (!$this->isFrontendTrackingEnabled->execute()
+            && !$this->configProvider->isCartUpdateTrackingEnabled()
         ) {
             return $result;
         }

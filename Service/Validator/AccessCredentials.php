@@ -7,18 +7,19 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\Validator;
 
+use Bloomreach\EngagementConnector\Exception\AuthenticationException;
+use Bloomreach\EngagementConnector\Exception\AuthorizationException;
+use Bloomreach\EngagementConnector\Exception\BadRequestException;
+use Bloomreach\EngagementConnector\Exception\NotFoundException;
 use Bloomreach\EngagementConnector\Logger\Debugger;
 use Bloomreach\EngagementConnector\Service\Integration\GetSystemTimeOfPlatform;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\ValidatorException;
+use Magento\Framework\Validation\ValidationException;
 
 /**
  * The class is responsible for validating access credentials
  */
 class AccessCredentials
 {
-    private const FAILED_AUTH_ERROR_CODES = [400, 401, 502];
-
     /**
      * @var GetSystemTimeOfPlatform
      */
@@ -45,19 +46,16 @@ class AccessCredentials
      * Validate access credentials
      *
      * @return void
-     * @throws ValidatorException
-     * @throws LocalizedException
+     * @throws AuthenticationException
+     * @throws AuthorizationException
+     * @throws BadRequestException
+     * @throws NotFoundException
+     * @throws ValidationException
      */
-    public function execute(): void
+    public function validate(): void
     {
         $this->debugger->log(__('Credential validation started.'));
-        $response = $this->getSystemTimeOfPlatform->execute();
+        $this->getSystemTimeOfPlatform->execute();
         $this->debugger->log(__('Credentials validation complete.'));
-
-        if (in_array($response->getStatusCode(), self::FAILED_AUTH_ERROR_CODES)) {
-            throw new ValidatorException(__($response->getReasonPhrase()));
-        } elseif ($response->getStatusCode() !== 200) {
-            throw new LocalizedException(__($response->getReasonPhrase()));
-        }
     }
 }

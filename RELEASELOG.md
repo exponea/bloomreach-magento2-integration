@@ -1,3 +1,17 @@
+# v1.0.0
+
+- Implemented new UI for Initial Import configuration
+- Implemented new UI for Export Queue
+- Added different types of ACL resources.
+- Added the ability to download log files on the Export Queue page
+- Added new system configurations
+- Added the ability to enable/disable real time updates for each feed type separately
+- Added the ability to enable/disable each type of feed separately
+- Added the ability to change registered mapping
+- Added the ability to track frontend events to the dataLayer
+- Added the ability to notify the user by e-mail about errors
+- Performance improvements
+
 # v0.9.6
 
 - Improved the sending flow, by skipping the entities that are not configured

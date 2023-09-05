@@ -30,9 +30,15 @@ class ExportQueueModel extends AbstractModel implements ExportQueueInterface
 
     public const REGISTERED = 'registered';
 
+    public const NUMBER_OF_ITEMS = 'number_of_items';
+
     public const FAILED_SENDING_ATTEMPTS = 'failed_sending_attempts';
 
     public const TIME_OF_NEXT_SENDING_ATTEMPT = 'time_of_next_sending_attempt';
+
+    public const ERROR_MESSAGE = 'error_message';
+
+    public const ADDITIONAL_DATA = 'additional_data';
 
     public const CREATED_AT = 'created_at';
 
@@ -45,16 +51,6 @@ class ExportQueueModel extends AbstractModel implements ExportQueueInterface
     public const STATUS_ERROR = 3;
 
     public const STATUS_COMPLETE = 4;
-
-    /**
-     * Model initialization
-     *
-     * @return void
-     */
-    protected function _construct()
-    {
-        $this->_init(ExportQueueResourceModel::class);
-    }
 
     /**
      * Get Entity Id
@@ -169,6 +165,28 @@ class ExportQueueModel extends AbstractModel implements ExportQueueInterface
     }
 
     /**
+     * Get Number of items
+     *
+     * @return int
+     */
+    public function getNumberOfItems(): int
+    {
+        return (int) $this->getData(self::NUMBER_OF_ITEMS);
+    }
+
+    /**
+     * Set Number of items
+     *
+     * @param int $numberOfItems
+     *
+     * @return void
+     */
+    public function setNumberOfItems(int $numberOfItems): void
+    {
+        $this->setData(self::NUMBER_OF_ITEMS, $numberOfItems);
+    }
+
+    /**
      * Get Api Type
      *
      * @return string
@@ -257,6 +275,50 @@ class ExportQueueModel extends AbstractModel implements ExportQueueInterface
     }
 
     /**
+     * Get Error Message
+     *
+     * @return string
+     */
+    public function getErrorMessage(): string
+    {
+        return (string) $this->getData(self::ERROR_MESSAGE);
+    }
+
+    /**
+     * Set error message
+     *
+     * @param string $errorMessage
+     *
+     * @return void
+     */
+    public function setErrorMessage(string $errorMessage): void
+    {
+        $this->setData(self::ERROR_MESSAGE, $errorMessage);
+    }
+
+    /**
+     * Get Additional Data
+     *
+     * @return string
+     */
+    public function getAdditionalData(): string
+    {
+        return (string) $this->getData(self::ADDITIONAL_DATA);
+    }
+
+    /**
+     * Set Additional Data
+     *
+     * @param string $additionalData
+     *
+     * @return void
+     */
+    public function setAdditionalData(string $additionalData): void
+    {
+        $this->setData(self::ADDITIONAL_DATA, $additionalData);
+    }
+
+    /**
      * Get Created At
      *
      * @return string
@@ -298,5 +360,39 @@ class ExportQueueModel extends AbstractModel implements ExportQueueInterface
     public function setUpdatedAt(string $updatedAt): void
     {
         $this->setData(self::UPDATED_AT, $updatedAt);
+    }
+
+    /**
+     * Retrieve existing extension attributes object or create a new one.
+     *
+     * @return array|null
+     */
+    public function getCustomAttributes(): array
+    {
+        $attributes = $this->getData(self::EXTENSION_ATTRIBUTES_KEY);
+
+        return is_array($attributes) ? $attributes : [];
+    }
+
+    /**
+     * Set an extension attributes object.
+     *
+     * @param array $customAttributes
+     *
+     * @return void
+     */
+    public function setCustomAttributes(array $customAttributes): void
+    {
+        $this->setData(self::EXTENSION_ATTRIBUTES_KEY, $customAttributes);
+    }
+
+    /**
+     * Model initialization
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+        $this->_init(ExportQueueResourceModel::class);
     }
 }

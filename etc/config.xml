@@ -11,13 +11,43 @@
             <general>
                 <enabled>0</enabled>
                 <api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <use_static_ips>0</use_static_ips>
                 <debug_mode>0</debug_mode>
                 <request_timeout>60</request_timeout>
                 <retry_base_wait_time>60</retry_base_wait_time>
                 <retry_max_wait_time>240</retry_max_wait_time>
             </general>
+            <http_basic_auth>
+                <enabled>0</enabled>
+                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+            </http_basic_auth>
+            <registered_mapping>
+                <customer_id>customer_id</customer_id>
+                <email>email_id</email>
+            </registered_mapping>
+            <catalog_product_feed>
+                <enabled>0</enabled>
+                <real_time_updates>0</real_time_updates>
+            </catalog_product_feed>
+            <catalog_product_variants_feed>
+                <enabled>0</enabled>
+                <real_time_updates>0</real_time_updates>
+            </catalog_product_variants_feed>
+            <customer_feed>
+                <enabled>0</enabled>
+                <real_time_updates>0</real_time_updates>
+            </customer_feed>
+            <purchase_feed>
+                <enabled>0</enabled>
+                <real_time_updates>0</real_time_updates>
+            </purchase_feed>
+            <purchase_item_feed>
+                <enabled>0</enabled>
+                <real_time_updates>0</real_time_updates>
+            </purchase_item_feed>
             <frontend_tracking>
                 <enable_js_sdk>0</enable_js_sdk>
+                <enable_datalayer>0</enable_datalayer>
                 <enable_purchase>0</enable_purchase>
                 <enable_product_view>0</enable_product_view>
                 <enable_cart_update>0</enable_cart_update>
@@ -30,6 +60,10 @@
                 <bloomreach_clean_export_queue_cron>0 0 * * *</bloomreach_clean_export_queue_cron>
                 <bloomreach_clean_csv_cron>0 0 * * *</bloomreach_clean_csv_cron>
             </bloomreach_engagement_cron>
+            <notification>
+                <enabled>0</enabled>
+                <allowed_error_percentage>10</allowed_error_percentage>
+            </notification>
         </bloomreach_engagement>
     </default>
 </config>

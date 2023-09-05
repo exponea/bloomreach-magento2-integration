@@ -40,6 +40,6 @@ class CartUpdateEventsCollector
             $eventsList[] = $event->getEvents();
         }
 
-        return $eventsList;
+        return array_merge([], ...$eventsList);
     }
 }

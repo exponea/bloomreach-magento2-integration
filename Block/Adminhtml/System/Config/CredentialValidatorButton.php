@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Block\Adminhtml\System\Config;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 
 /**
  * The class is responsible for rendering Validate Credentials Button

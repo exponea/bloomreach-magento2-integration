@@ -7,9 +7,14 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\Integration;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\Exception\AuthenticationException;
+use Bloomreach\EngagementConnector\Exception\AuthorizationException;
+use Bloomreach\EngagementConnector\Exception\BadRequestException;
+use Bloomreach\EngagementConnector\Exception\NotFoundException;
 use Bloomreach\EngagementConnector\Service\Integration\Client\RequestSender;
-use GuzzleHttp\Psr7\Response;
+use Bloomreach\EngagementConnector\Service\Integration\Response\ResponseValidator;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
+use Magento\Framework\Validation\ValidationException;
 use Magento\Framework\Webapi\Rest\Request;
 
 /**
@@ -38,25 +43,41 @@ class GetSystemTimeOfPlatform
     private $requestSender;
 
     /**
+     * @var ResponseValidator
+     */
+    private $responseValidator;
+
+    /**
      * @param ConfigProvider $configProvider
      * @param RequestSender $requestSender
+     * @param ResponseValidator $responseValidator
      */
     public function __construct(
         ConfigProvider $configProvider,
-        RequestSender $requestSender
+        RequestSender $requestSender,
+        ResponseValidator $responseValidator
     ) {
         $this->configProvider = $configProvider;
         $this->requestSender = $requestSender;
+        $this->responseValidator = $responseValidator;
     }
 
     /**
      * Get current time of Bloomreach platform
      *
-     * @return Response
+     * @return float
+     * @throws AuthenticationException
+     * @throws AuthorizationException
+     * @throws BadRequestException
+     * @throws NotFoundException
+     * @throws ValidationException
      */
-    public function execute(): Response
+    public function execute(): float
     {
-        return $this->requestSender->execute($this->getEndpoint(), self::REQUEST_TYPE, []);
+        $response = $this->requestSender->execute($this->getEndpoint(), self::REQUEST_TYPE, []);
+        $this->responseValidator->validate($response);
+
+        return (float) ($response->getData()['time'] ?? 0);
     }
 
     /**
