@@ -8,11 +8,11 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\Export\Transporter\InitialExport;
 
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
-use Bloomreach\EngagementConnector\Model\Export\ExportFileProcessor;
+use Bloomreach\EngagementConnector\Model\Export\File\MediaUrlGenerator;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\ResponseHandler;
 use Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface;
-use Bloomreach\EngagementConnector\Service\Integration\ImportIdResolver;
 use Bloomreach\EngagementConnector\Service\Integration\StartApiImportService;
+use Bloomreach\EngagementConnector\System\ImportIdResolver;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -23,9 +23,9 @@ use Magento\Framework\Exception\NoSuchEntityException;
 class DefaultTransporter implements TransporterInterface
 {
     /**
-     * @var ExportFileProcessor
+     * @var MediaUrlGenerator
      */
-    private $exportFileProcessor;
+    private $mediaUrlGenerator;
 
     /**
      * @var StartApiImportService
@@ -43,18 +43,18 @@ class DefaultTransporter implements TransporterInterface
     private $responseHandler;
 
     /**
-     * @param ExportFileProcessor $exportFileProcessor
+     * @param MediaUrlGenerator $mediaUrlGenerator
      * @param StartApiImportService $startApiImportService
      * @param ImportIdResolver $importIdResolver
      * @param ResponseHandler $responseHandler
      */
     public function __construct(
-        ExportFileProcessor $exportFileProcessor,
+        MediaUrlGenerator $mediaUrlGenerator,
         StartApiImportService $startApiImportService,
         ImportIdResolver $importIdResolver,
         ResponseHandler $responseHandler
     ) {
-        $this->exportFileProcessor = $exportFileProcessor;
+        $this->mediaUrlGenerator = $mediaUrlGenerator;
         $this->startApiImportService = $startApiImportService;
         $this->importIdResolver = $importIdResolver;
         $this->responseHandler = $responseHandler;
@@ -76,7 +76,7 @@ class DefaultTransporter implements TransporterInterface
         $this->responseHandler->handle(
             $this->startApiImportService->execute(
                 $this->importIdResolver->getImportId($exportQueue->getEntityType()),
-                $this->exportFileProcessor->process($exportQueue)
+                $this->mediaUrlGenerator->execute($exportQueue->getEntityType(), $exportQueue->getBody())
             )
         );
 

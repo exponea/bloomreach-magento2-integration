@@ -7,10 +7,12 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\Export;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Product\DefaultType;
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Product\ProductVariantsType;
+use Bloomreach\EngagementConnector\Model\Export\Condition\IsRealTimeUpdateAllowed;
+use Bloomreach\EngagementConnector\Model\Export\Entity\ProductVariantsCollection;
 use Bloomreach\EngagementConnector\Model\Export\Queue\AddEventToExportQueue;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\Product\Type as SimpleType;
-use Magento\Downloadable\Model\Product\Type;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -18,13 +20,16 @@ use Psr\Log\LoggerInterface;
  */
 class PrepareProductDataService
 {
-    private const ENTITY_TYPE = 'catalog_product';
-    private const VARIANTS_TYPE = 'catalog_product_variants';
 
     /**
      * @var AddEventToExportQueue
      */
     private $addEventToExportQueue;
+
+    /**
+     * @var IsRealTimeUpdateAllowed
+     */
+    private $isRealTimeUpdateAllowed;
 
     /**
      * @var LoggerInterface
@@ -33,13 +38,16 @@ class PrepareProductDataService
 
     /**
      * @param AddEventToExportQueue $addEventToExportQueue
+     * @param IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed
      * @param LoggerInterface $logger
      */
     public function __construct(
         AddEventToExportQueue $addEventToExportQueue,
+        IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed,
         LoggerInterface $logger
     ) {
         $this->addEventToExportQueue = $addEventToExportQueue;
+        $this->isRealTimeUpdateAllowed = $isRealTimeUpdateAllowed;
         $this->logger = $logger;
     }
 
@@ -55,16 +63,16 @@ class PrepareProductDataService
         try {
             $catalogTypes = [];
 
-            if (in_array($product->getTypeId(), [
-                SimpleType::TYPE_SIMPLE,
-                SimpleType::TYPE_VIRTUAL,
-                Type::TYPE_DOWNLOADABLE
-            ])) {
-                $catalogTypes[] = self::VARIANTS_TYPE;
+            if (in_array($product->getTypeId(), ProductVariantsCollection::VARIANT_TYPES)
+                && $this->isRealTimeUpdateAllowed->execute(ProductVariantsType::ENTITY_TYPE)
+            ) {
+                $catalogTypes[] = ProductVariantsType::ENTITY_TYPE;
             }
 
-            if ($product->isVisibleInSiteVisibility()) {
-                $catalogTypes[] = self::ENTITY_TYPE;
+            if ($product->isVisibleInSiteVisibility()
+                && $this->isRealTimeUpdateAllowed->execute(DefaultType::ENTITY_TYPE)
+            ) {
+                $catalogTypes[] = DefaultType::ENTITY_TYPE;
             }
 
             foreach ($catalogTypes as $catalogType) {

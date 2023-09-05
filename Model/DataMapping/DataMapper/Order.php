@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\DataMapping\DataMapper;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\Config\Data\FieldMappingConfigDataInterface;
-use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\DataMapperInterface;
 use Bloomreach\EngagementConnector\Model\DataMapping\MappingProcessor;
 use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\DataObject;
@@ -19,7 +18,7 @@ use Magento\Framework\Model\AbstractModel;
  */
 class Order implements DataMapperInterface
 {
-    private const ENTITY_TYPE = 'purchase';
+    public const ENTITY_TYPE = 'purchase';
 
     /**
      * @var MappingProcessor
@@ -27,11 +26,20 @@ class Order implements DataMapperInterface
     private $mappingProcessor;
 
     /**
-     * @param MappingProcessor $mappingProcessor
+     * @var RegisteredMapper
      */
-    public function __construct(MappingProcessor $mappingProcessor)
-    {
+    private $registeredMapper;
+
+    /**
+     * @param MappingProcessor $mappingProcessor
+     * @param RegisteredMapper $registeredMapper
+     */
+    public function __construct(
+        MappingProcessor $mappingProcessor,
+        RegisteredMapper $registeredMapper
+    ) {
         $this->mappingProcessor = $mappingProcessor;
+        $this->registeredMapper = $registeredMapper;
     }
 
     /**
@@ -44,6 +52,8 @@ class Order implements DataMapperInterface
      */
     public function map($entity, array $mapConfig): DataObject
     {
-        return $this->mappingProcessor->map($entity, self::ENTITY_TYPE, $mapConfig);
+        return $this->registeredMapper->map(
+            $this->mappingProcessor->map($entity, self::ENTITY_TYPE, $mapConfig)
+        );
     }
 }

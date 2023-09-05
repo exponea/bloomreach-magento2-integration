@@ -45,17 +45,21 @@ class GetChildItems
     {
         $orderItems = $orderItem->getChildrenItems();
 
-        return $orderItems ?: $this->getChildItemsCollection((int) $orderItem->getItemId());
+        return $orderItems ?: $this->getChildItemsCollection(
+            (int) $orderItem->getOrderId(),
+            (int) $orderItem->getItemId()
+        );
     }
 
     /**
      * Returns array with child items
      *
+     * @param int $orderId
      * @param int $parentId
      *
      * @return OrderItemInterface[]
      */
-    private function getChildItemsCollection(int $parentId): array
+    private function getChildItemsCollection(int $orderId, int $parentId): array
     {
         if (!array_key_exists($parentId, $this->itemsCollectionCache)) {
             // Clear cache
@@ -63,6 +67,7 @@ class GetChildItems
 
             /** @var Collection $collection */
             $collection = $this->collectionFactory->create();
+            $collection->addFieldToFilter(OrderItemInterface::ORDER_ID, $orderId);
             $collection->addFieldToFilter(OrderItemInterface::PARENT_ITEM_ID, $parentId);
 
             $this->itemsCollectionCache[$parentId] = $collection->getItems();

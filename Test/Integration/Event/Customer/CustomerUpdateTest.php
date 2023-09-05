@@ -40,6 +40,8 @@ class CustomerUpdateTest extends TestCase
      * Customer update event test
      *
      * @magentoConfigFixture bloomreach_engagement/general/enable 1
+     * @magentoConfigFixture bloomreach_engagement/customer_feed/enabled 1
+     * @magentoConfigFixture bloomreach_engagement/customer_feed/real_time_updates 1
      * @magentoAppArea adminhtml
      * @magentoDataFixture Bloomreach_EngagementConnector::Test/Integration/_files/customer.php
      *

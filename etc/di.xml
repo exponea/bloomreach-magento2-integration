@@ -9,22 +9,32 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Bloomreach\EngagementConnector\Model\DataMapping\Config\Data\FieldMappingConfigDataInterface"
                 type="Bloomreach\EngagementConnector\Model\DataMapping\Config\Data\FieldMappingConfigData"/>
-    <preference for="Bloomreach\EngagementConnector\Api\Data\ExportEntityInterface"
-                type="Bloomreach\EngagementConnector\Model\ExportEntityModel"/>
     <preference for="Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface"
                 type="Bloomreach\EngagementConnector\Model\ExportQueueModel"/>
-    <preference for="Bloomreach\EngagementConnector\Api\SaveExportEntityInterface"
-                type="Bloomreach\EngagementConnector\Service\ExportEntity\Save"/>
+    <preference for="Bloomreach\EngagementConnector\Api\DeleteExportQueueInterface"
+                type="Bloomreach\EngagementConnector\Service\ExportQueue\Delete"/>
     <preference for="Bloomreach\EngagementConnector\Api\SaveExportQueueInterface"
                 type="Bloomreach\EngagementConnector\Service\ExportQueue\Save"/>
     <preference for="Bloomreach\EngagementConnector\Model\Export\File\FileGeneratorInterface"
                 type="Bloomreach\EngagementConnector\Model\Export\File\CsvGenerator"/>
     <preference for="Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface"
                 type="Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver"/>
-    <preference for="Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExportInterface"
-                type="Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExport"/>
-    <preference for="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurationResultInterface"
-                type="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurationResult"/>
+    <preference for="Bloomreach\EngagementConnector\Api\Data\InitialExportStatusInterface"
+                type="Bloomreach\EngagementConnector\Model\InitialExportStatus\InitialExportStatus"/>
+    <preference for="Bloomreach\EngagementConnector\Api\GetInitialExportStatusInterface"
+                type="Bloomreach\EngagementConnector\Service\InitialExportStatus\Get"/>
+    <preference for="Bloomreach\EngagementConnector\Api\SaveInitialExportStatusInterface"
+                type="Bloomreach\EngagementConnector\Service\InitialExportStatus\Save"/>
+    <preference for="Bloomreach\EngagementConnector\Api\DeleteInitialExportStatusInterface"
+                type="Bloomreach\EngagementConnector\Service\InitialExportStatus\Delete"/>
+    <preference for="Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\BuilderInterface"
+                type="Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\BuilderComposite"/>
+    <preference for="Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Source\SourceInterface"
+                type="Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Source\SourceData"/>
+    <preference for="Bloomreach\EngagementConnector\Api\Data\ResponseInterface"
+                type="Bloomreach\EngagementConnector\Data\ResponseData"/>
+    <preference for="Bloomreach\EngagementConnector\Model\Export\Queue\Batch\Command\Data\Builder\BuilderInterface"
+                type="Bloomreach\EngagementConnector\Model\Export\Queue\Batch\Command\Data\Builder\BuilderResolver" />
     <!-- Creates the custom logger -->
     <virtualType name="Bloomreach\EngagementConnector\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
@@ -249,7 +259,6 @@
             <argument name="commands" xsi:type="array">
                 <item name="bloomreach_export-start" xsi:type="object">Bloomreach\EngagementConnector\Console\Command\StartExport</item>
                 <item name="bloomreach_add-to-export-queue" xsi:type="object">Bloomreach\EngagementConnector\Console\Command\AddToExportQueue</item>
-                <item name="bloomreach_generate-export-files" xsi:type="object">Bloomreach\EngagementConnector\Console\Command\GenerateExportFileForExportQueue</item>
                 <item name="bloomreach_clean-export-queue" xsi:type="object">Bloomreach\EngagementConnector\Console\Command\CleanExportQueueCommand</item>
                 <item name="bloomreach_clean-csv-files" xsi:type="object">Bloomreach\EngagementConnector\Console\Command\CleanCsvFilesCommand</item>
             </argument>
@@ -268,14 +277,6 @@
             <argument name="appState" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
         </arguments>
     </type>
-    <type name="Bloomreach\EngagementConnector\Console\Command\GenerateExportFileForExportQueue">
-        <arguments>
-            <argument name="saveExportQueue" xsi:type="object">Bloomreach\EngagementConnector\Api\SaveExportQueueInterface\Proxy</argument>
-            <argument name="exportFileProcessor" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\ExportFileProcessor\Proxy</argument>
-            <argument name="appState" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
-            <argument name="entityType" xsi:type="object">Bloomreach\EngagementConnector\Model\DataProvider\EntityType\Proxy</argument>
-        </arguments>
-    </type>
     <type name="Bloomreach\EngagementConnector\Console\Command\CleanExportQueueCommand">
         <arguments>
             <argument name="cleanExportQueueService" xsi:type="object">Bloomreach\EngagementConnector\Service\Cron\CleanExportQueueService\Proxy</argument>
@@ -289,11 +290,11 @@
     <type name="Bloomreach\EngagementConnector\Model\Export\Entity\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
-                <item name="catalog_product" xsi:type="string">Magento\Catalog\Model\ResourceModel\Product\Collection</item>
-                <item name="catalog_product_variants" xsi:type="string">Bloomreach\EngagementConnector\Model\Product\ProductVariantsCollection</item>
+                <item name="catalog_product" xsi:type="string">Bloomreach\EngagementConnector\Model\Export\Entity\ProductCollection</item>
+                <item name="catalog_product_variants" xsi:type="string">Bloomreach\EngagementConnector\Model\Export\Entity\ProductVariantsCollection</item>
                 <item name="customer" xsi:type="string">Magento\Customer\Model\ResourceModel\Customer\Collection</item>
                 <item name="purchase" xsi:type="string">Magento\Sales\Model\ResourceModel\Order\Collection</item>
-                <item name="purchase_item" xsi:type="string">Magento\Sales\Model\ResourceModel\Order\Item\Collection</item>
+                <item name="purchase_item" xsi:type="string">Bloomreach\EngagementConnector\Model\Export\Entity\PurchaseItemCollection</item>
             </argument>
         </arguments>
     </type>
@@ -312,14 +313,20 @@
     <type name="Bloomreach\EngagementConnector\Model\DataProvider\EntityType">
         <arguments>
             <argument name="entityTypes" xsi:type="array">
-                <item name="catalog_product" xsi:type="string">catalog_product</item>
-                <item name="catalog_product_variants" xsi:type="string">catalog_product_variants</item>
-                <item name="customer" xsi:type="string">customer</item>
-                <item name="purchase" xsi:type="string">purchase</item>
-                <item name="purchase_item" xsi:type="string">purchase_item</item>
+                <item name="catalog_product" xsi:type="string">Products Feed</item>
+                <item name="catalog_product_variants" xsi:type="string">Product Variants Feed</item>
+                <item name="customer" xsi:type="string">Customer Feed</item>
+                <item name="purchase" xsi:type="string">Purchase Feed</item>
+                <item name="purchase_item" xsi:type="string">Purchase Items Feed</item>
             </argument>
         </arguments>
     </type>
+    <virtualType name="Bloomreach\EngagementConnector\Model\Export\Transporter\Event\PartialCatalogItemUpdate"
+                 type="Bloomreach\EngagementConnector\Model\Export\Transporter\Event\UpdateCatalogItem">
+        <arguments>
+            <argument name="updateCatalogItemRequest" xsi:type="object">Bloomreach\EngagementConnector\Service\Integration\PartialCatalogItemUpdateRequest</argument>
+        </arguments>
+    </virtualType>
     <type name="Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver">
         <arguments>
             <argument name="transporters" xsi:type="array">
@@ -343,59 +350,17 @@
             </argument>
         </arguments>
     </type>
-    <type name="Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExport">
-        <arguments>
-            <argument name="entitiesToExport" xsi:type="array">
-                <item name="catalog_product" xsi:type="object">Bloomreach\EngagementConnector\Model\InitialExport\Entity\Product</item>
-                <item name="catalog_product_variants" xsi:type="object">Bloomreach\EngagementConnector\Model\InitialExport\Entity\ProductVariants</item>
-                <item name="customer" xsi:type="object">Bloomreach\EngagementConnector\Model\InitialExport\Entity\Customer</item>
-                <item name="purchase" xsi:type="object">Bloomreach\EngagementConnector\Model\InitialExport\Entity\Order</item>
-                <item name="purchase_item" xsi:type="object">Bloomreach\EngagementConnector\Model\InitialExport\Entity\OrderItem</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurateEntityExport">
-        <arguments>
-            <argument name="entitiesToPreconfigurate" xsi:type="array">
-                <item name="customer" xsi:type="object">Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Customer</item>
-                <item name="purchase" xsi:type="object">Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Order</item>
-                <item name="purchase_item" xsi:type="object">Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\OrderItem</item>
-                <item name="catalog_product" xsi:type="object">Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Product</item>
-                <item name="catalog_product_variants" xsi:type="object">Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\ProductVariants</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\Import\RunInitialImport">
+    <type name="Bloomreach\EngagementConnector\Model\Export\Queue\Sender\SenderProcessor">
         <arguments>
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
         </arguments>
     </type>
-    <type name="Bloomreach\EngagementConnector\Model\Export\Entity\AddToExport">
-        <arguments>
-            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
-        </arguments>
-    </type>
-    <type name="Bloomreach\EngagementConnector\Model\Export\SenderProcessor">
+    <type name="Bloomreach\EngagementConnector\Model\Export\Queue\Sender\SenderBatchProcessor">
         <arguments>
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
         </arguments>
     </type>
     <type name="Bloomreach\EngagementConnector\Model\Export\QueueProcessor">
-        <arguments>
-            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
-        </arguments>
-    </type>
-    <type name="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Product">
-        <arguments>
-            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
-        </arguments>
-    </type>
-    <type name="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Customer">
-        <arguments>
-            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
-        </arguments>
-    </type>
-    <type name="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Order">
         <arguments>
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
         </arguments>
@@ -413,22 +378,6 @@
     <type name="Bloomreach\EngagementConnector\Service\Export\PrepareOrderItemsDataService">
         <arguments>
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
-        </arguments>
-    </type>
-    <type name="Bloomreach\EngagementConnector\Service\Integration\ImportIdResolver">
-        <arguments>
-            <argument name="importIdsConfigPath" xsi:type="array">
-                <item name="catalog_product" xsi:type="string">bloomreach_engagement/general/catalog_import_id</item>
-                <item name="catalog_product_variants" xsi:type="string">bloomreach_engagement/general/variants_import_id</item>
-                <item name="customer" xsi:type="string">bloomreach_engagement/general/customer_import_id</item>
-                <item name="purchase" xsi:type="string">bloomreach_engagement/general/order_import_id</item>
-                <item name="purchase_item" xsi:type="string">bloomreach_engagement/general/order_importline_item_id</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Bloomreach\EngagementConnector\Console\Command\GenerateExportFileForExportQueue">
-        <arguments>
-            <argument name="saveExportQueue" xsi:type="object">Bloomreach\EngagementConnector\Service\ExportQueue\Save\Proxy</argument>
         </arguments>
     </type>
     <type name="Bloomreach\EngagementConnector\Model\Product\CategoryDataResolver">
@@ -474,9 +423,122 @@
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\DebugLogger</argument>
         </arguments>
     </type>
-    <type name="Bloomreach\EngagementConnector\Controller\Adminhtml\Validator\AccessCredentials">
+    <type name="Bloomreach\EngagementConnector\Model\Export\Condition\IsRealTimeUpdateAllowed">
+        <arguments>
+            <argument name="configPool" xsi:type="array">
+                <item name="catalog_product" xsi:type="array">
+                    <item name="feed_enabled" xsi:type="string">bloomreach_engagement/catalog_product_feed/enabled</item>
+                    <item name="catalog_id" xsi:type="string">bloomreach_engagement/catalog_product_feed/catalog_id</item>
+                    <item name="realtime_update" xsi:type="string">bloomreach_engagement/catalog_product_feed/real_time_updates</item>
+                </item>
+                <item name="catalog_product_variants" xsi:type="array">
+                    <item name="feed_enabled" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/enabled</item>
+                    <item name="catalog_id" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/catalog_id</item>
+                    <item name="realtime_update" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/real_time_updates</item>
+                </item>
+                <item name="customer" xsi:type="array">
+                    <item name="feed_enabled" xsi:type="string">bloomreach_engagement/customer_feed/enabled</item>
+                    <item name="realtime_update" xsi:type="string">bloomreach_engagement/customer_feed/real_time_updates</item>
+                </item>
+                <item name="purchase" xsi:type="array">
+                    <item name="feed_enabled" xsi:type="string">bloomreach_engagement/purchase_feed/enabled</item>
+                    <item name="realtime_update" xsi:type="string">bloomreach_engagement/purchase_feed/real_time_updates</item>
+                </item>
+                <item name="purchase_item" xsi:type="array">
+                    <item name="feed_enabled" xsi:type="string">bloomreach_engagement/purchase_item_feed/enabled</item>
+                    <item name="realtime_update" xsi:type="string">bloomreach_engagement/purchase_item_feed/real_time_updates</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Service\InitialExportStatus\Save">
         <arguments>
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Service\InitialExportStatus\Delete">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\System\ConfigPathGetter">
+        <arguments>
+            <argument name="configPool" xsi:type="array">
+                <item name="catalog_product" xsi:type="array">
+                    <item name="feed_enabled" xsi:type="string">bloomreach_engagement/catalog_product_feed/enabled</item>
+                    <item name="import_id" xsi:type="string">bloomreach_engagement/catalog_product_feed/import_id</item>
+                    <item name="catalog_id" xsi:type="string">bloomreach_engagement/catalog_product_feed/catalog_id</item>
+                    <item name="realtime_update" xsi:type="string">bloomreach_engagement/catalog_product_feed/real_time_updates</item>
+                </item>
+                <item name="catalog_product_variants" xsi:type="array">
+                    <item name="feed_enabled" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/enabled</item>
+                    <item name="import_id" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/import_id</item>
+                    <item name="catalog_id" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/catalog_id</item>
+                    <item name="realtime_update" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/real_time_updates</item>
+                </item>
+                <item name="customer" xsi:type="array">
+                    <item name="feed_enabled" xsi:type="string">bloomreach_engagement/customer_feed/enabled</item>
+                    <item name="import_id" xsi:type="string">bloomreach_engagement/customer_feed/import_id</item>
+                    <item name="realtime_update" xsi:type="string">bloomreach_engagement/customer_feed/real_time_updates</item>
+                </item>
+                <item name="purchase" xsi:type="array">
+                    <item name="feed_enabled" xsi:type="string">bloomreach_engagement/purchase_feed/enabled</item>
+                    <item name="import_id" xsi:type="string">bloomreach_engagement/purchase_feed/import_id</item>
+                    <item name="realtime_update" xsi:type="string">bloomreach_engagement/purchase_feed/real_time_updates</item>
+                </item>
+                <item name="purchase_item" xsi:type="array">
+                    <item name="feed_enabled" xsi:type="string">bloomreach_engagement/purchase_item_feed/enabled</item>
+                    <item name="import_id" xsi:type="string">bloomreach_engagement/purchase_item_feed/import_id</item>
+                    <item name="realtime_update" xsi:type="string">bloomreach_engagement/purchase_item_feed/real_time_updates</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Export\QueueProcessor">
+        <arguments>
+            <argument name="dataMapperResolver" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\DataMapperResolver\Proxy</argument>
+            <argument name="initialExportStatusList" xsi:type="object">Bloomreach\EngagementConnector\Service\InitialExportStatus\ItemsGetter\Proxy</argument>
+            <argument name="addInitialExportDataToExportQueue" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\Queue\AddInitialExportDataToExportQueue\Proxy</argument>
+            <argument name="saveInitialExportStatus" xsi:type="object">Bloomreach\EngagementConnector\Api\SaveInitialExportStatusInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Export\Queue\Batch\Command\Data\Builder\BuilderResolver">
+        <arguments>
+            <argument name="builderPool" xsi:type="array">
+                <item name="event" xsi:type="array">
+                    <item name="default" xsi:type="string">Bloomreach\EngagementConnector\Model\Export\Queue\Batch\Command\Data\Builder\DefaultData</item>
+                    <item name="customer" xsi:type="string">Bloomreach\EngagementConnector\Model\Export\Queue\Batch\Command\Data\Builder\CustomerUpdate</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Export\Queue\Batch\CommandsListBuilder">
+        <arguments>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\Export\Queue\Batch\CommandNameGetter">
+        <arguments>
+            <argument name="commandNamePool" xsi:type="array">
+                <item name="event" xsi:type="array">
+                    <item name="customer" xsi:type="string">customers</item>
+                    <item name="purchase" xsi:type="string">customers/events</item>
+                    <item name="purchase_item" xsi:type="string">customers/events</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">bloomreach_export_queue</argument>
+            <argument name="resourceModel" xsi:type="string">Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="bloomreach_engagement_export_queue_listing_data_source" xsi:type="string">Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue\Grid\Collection</item>
+            </argument>
         </arguments>
     </type>
 </config>

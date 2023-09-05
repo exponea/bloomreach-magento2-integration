@@ -10,7 +10,13 @@
         <referenceBlock name="bloomreach.engagement.connector.tracking">
             <referenceBlock name="bloomreach.engagement.connector.product.view.tracking">
                 <block name="bloomreach.engagement.connector.product.configurable.view.tracking"
-                       template="Bloomreach_EngagementConnector::tracking/event/view_item/configurable.phtml"/>
+                       template="Bloomreach_EngagementConnector::tracking/event/view_item/configurable.phtml">
+                    <arguments>
+                        <argument name="config_view_model" xsi:type="object">
+                            Bloomreach\EngagementConnector\ViewModel\Tracking\Config
+                        </argument>
+                    </arguments>
+                </block>
             </referenceBlock>
         </referenceBlock>
     </body>

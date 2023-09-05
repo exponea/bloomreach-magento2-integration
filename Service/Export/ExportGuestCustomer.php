@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\Export;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Customer;
 use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
 use Bloomreach\EngagementConnector\Model\Export\Queue\AddEventToExportQueue;
 use Bloomreach\EngagementConnector\Service\Customer\CreateGuestModelByOrder;
@@ -19,8 +20,6 @@ use Psr\Log\LoggerInterface;
  */
 class ExportGuestCustomer
 {
-    private const ENTITY_TYPE = 'customer';
-
     /**
      * @var CreateGuestModelByOrder
      */
@@ -74,7 +73,7 @@ class ExportGuestCustomer
 
         try {
             $this->addEventToExportQueue->execute(
-                self::ENTITY_TYPE,
+                Customer::ENTITY_TYPE,
                 $this->registeredGenerator->generateSerialized($order->getCustomerEmail(), null),
                 $this->createGuestModelByOrder->execute($order)
             );

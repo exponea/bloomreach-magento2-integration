@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\Integration;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\Api\Data\ResponseInterface;
+use Bloomreach\EngagementConnector\Api\Data\ResponseInterfaceFactory;
 use Bloomreach\EngagementConnector\Service\Integration\Client\RequestSender;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\ResponseFactory;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Framework\Webapi\Rest\Request;
 
 /**
@@ -36,7 +36,7 @@ class SendEventRequest
     private $requestSender;
 
     /**
-     * @var ResponseFactory
+     * @var ResponseInterfaceFactory
      */
     private $responseFactory;
 
@@ -48,12 +48,12 @@ class SendEventRequest
     /**
      * @param ConfigProvider $configProvider
      * @param RequestSender $requestSender
-     * @param ResponseFactory $responseFactory
+     * @param ResponseInterfaceFactory $responseFactory
      */
     public function __construct(
         ConfigProvider $configProvider,
         RequestSender $requestSender,
-        ResponseFactory $responseFactory
+        ResponseInterfaceFactory $responseFactory
     ) {
         $this->configProvider = $configProvider;
         $this->requestSender = $requestSender;
@@ -65,17 +65,16 @@ class SendEventRequest
      *
      * @param array $body
      *
-     * @return Response
+     * @return ResponseInterface
      */
-    public function execute(array $body): Response
+    public function execute(array $body): ResponseInterface
     {
         if (!$body) {
-            /** @var Response $response */
-            return $this->responseFactory->create(
-                [
-                    'reason' => __('Nothing to send')
-                ]
-            );
+            /** @var ResponseInterface $response */
+            $response = $this->responseFactory->create();
+            $response->setErrorMessage(__('Nothing to send')->render());
+
+            return $response;
         }
 
         return $this->requestSender->execute($this->getEndpoint(), static::REQUEST_TYPE, $body);

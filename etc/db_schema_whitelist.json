@@ -11,7 +11,10 @@
             "api_type": true,
             "registered": true,
             "failed_sending_attempts": true,
-            "time_of_next_sending_attempt": true
+            "time_of_next_sending_attempt": true,
+            "number_of_items": true,
+            "error_message": true,
+            "additional_data": true
         },
         "constraint": {
             "PRIMARY": true
@@ -26,6 +29,24 @@
         "constraint": {
             "PRIMARY": true,
             "BLOOMREACH_EXPORT_ENTITY_EXPORT_ENTITY_ID_ENTITY_TYPE": true
+        }
+    },
+    "bloomreach_initial_export_status": {
+        "column": {
+            "entity_id": true,
+            "entity_type": true,
+            "status": true,
+            "total_items": true,
+            "total_exported": true,
+            "total_error_items": true,
+            "errors": true,
+            "started_at": true,
+            "finished_at": true,
+            "is_locked": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "BLOOMREACH_INITIAL_EXPORT_STATUS_ENTITY_TYPE": true
         }
     }
 }

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Controller\Adminhtml\Validator;
 
+use Bloomreach\EngagementConnector\Exception\AuthenticationException;
 use Bloomreach\EngagementConnector\Service\Validator\AccessCredentials as AccessCredentialsValidator;
 use Exception;
 use Magento\Backend\App\Action;
@@ -14,7 +15,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Framework\Exception\ValidatorException;
+use Magento\Framework\Validation\ValidationException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -27,7 +28,7 @@ class AccessCredentials extends Action implements HttpPostActionInterface
      *
      * @see _isAllowed()
      */
-    public const ADMIN_RESOURCE = 'Bloomreach_EngagementConnector::config_bloomreach_engagement';
+    public const ADMIN_RESOURCE = 'Bloomreach_EngagementConnector::bloomreach_engagement_config';
 
     /**
      * @var JsonFactory
@@ -73,12 +74,20 @@ class AccessCredentials extends Action implements HttpPostActionInterface
         $error = 1;
 
         try {
-            $this->accessCredentialsValidator->execute();
+            $this->accessCredentialsValidator->validate();
             $message = __('Credentials are correct.');
             $error = 0;
-        } catch (ValidatorException $e) {
+        } catch (AuthenticationException $e) {
             $message = __('Invalid credentials. See debug log for detailed error message.');
             $this->logger->error(__('Invalid credentials. Error: %1', $e->getMessage()));
+        } catch (ValidationException $e) {
+            $errors[] = $e->getMessage();
+
+            foreach ($e->getErrors() as $exception) {
+                $errors[] = $exception->getMessage();
+            }
+
+            $message = implode('. ', $errors);
         } catch (Exception $e) {
             $this->logger->error(
                 __(

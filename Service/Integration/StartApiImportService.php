@@ -7,11 +7,10 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\Integration;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\Api\Data\ResponseInterface;
+use Bloomreach\EngagementConnector\Api\Data\ResponseInterfaceFactory;
 use Bloomreach\EngagementConnector\Service\Integration\Client\RequestSender;
-use GuzzleHttp\ClientFactory;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\ResponseFactory;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Framework\Webapi\Rest\Request;
 
 /**
@@ -20,9 +19,9 @@ use Magento\Framework\Webapi\Rest\Request;
 class StartApiImportService
 {
     /**
-     * Endpoint pattern '/data/v2/projects/{projectToken}/imports/{import_id}/start'
+     * Endpoint pattern '/imports/v1/{project_token}/{import_id}/run'
      */
-    public const URL_ENDPOINT_PATTERN = '%s/data/v2/projects/%s/imports/%s/start';
+    public const URL_ENDPOINT_PATTERN = '%s/imports/v1/%s/%s/run';
 
     public const REQUEST_TYPE = Request::HTTP_METHOD_POST;
 
@@ -37,7 +36,7 @@ class StartApiImportService
     private $requestSender;
 
     /**
-     * @var ResponseFactory
+     * @var ResponseInterfaceFactory
      */
     private $responseFactory;
 
@@ -49,12 +48,12 @@ class StartApiImportService
     /**
      * @param ConfigProvider $configProvider
      * @param RequestSender $requestSender
-     * @param ResponseFactory $responseFactory
+     * @param ResponseInterfaceFactory $responseFactory
      */
     public function __construct(
         ConfigProvider $configProvider,
         RequestSender $requestSender,
-        ResponseFactory $responseFactory
+        ResponseInterfaceFactory $responseFactory
     ) {
         $this->configProvider = $configProvider;
         $this->requestSender = $requestSender;
@@ -68,25 +67,24 @@ class StartApiImportService
      * @param string $csvFilePath
      * @param bool $testConnection
      *
-     * @return Response
+     * @return ResponseInterface
      *
      * @SuppressWarnings(PMD.BooleanArgumentFlag)
      */
-    public function execute(string $importId, string $csvFilePath = '', bool $testConnection = false): Response
+    public function execute(string $importId, string $csvFilePath = '', bool $testConnection = false): ResponseInterface
     {
         if (!$csvFilePath) {
-            /** @var Response $response */
-            return $this->responseFactory->create(
-                [
-                    'reason' => __('The path of CSV file is not exist')
-                ]
-            );
+            /** @var ResponseInterface $response */
+            $response = $this->responseFactory->create();
+            $response->setErrorMessage(__('Nothing to send')->render());
+
+            return $response;
         }
 
         $body = ['test_connection' => $testConnection];
 
         if ($testConnection === false) {
-            $body = ['path' => $csvFilePath];
+            $body = ['path_to_overwrite' => $csvFilePath];
         }
 
         return $this->requestSender->execute($this->getEndpoint($importId), static::REQUEST_TYPE, $body);

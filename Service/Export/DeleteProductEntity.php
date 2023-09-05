@@ -9,6 +9,7 @@ namespace Bloomreach\EngagementConnector\Service\Export;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Product\DefaultType;
 use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Product\ProductVariantsType;
+use Bloomreach\EngagementConnector\Model\Export\Condition\IsRealTimeUpdateAllowed;
 use Bloomreach\EngagementConnector\Model\Export\Queue\AddDeleteActionToExportQueue;
 use Magento\Bundle\Model\Product\Type as BundleType;
 use Magento\Catalog\Api\Data\ProductInterface;
@@ -27,19 +28,27 @@ class DeleteProductEntity
     private $addDeleteActionToExportQueue;
 
     /**
+     * @var IsRealTimeUpdateAllowed
+     */
+    private $isRealTimeUpdateAllowed;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
 
     /**
      * @param AddDeleteActionToExportQueue $addDeleteActionToExportQueue
+     * @param IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed
      * @param LoggerInterface $logger
      */
     public function __construct(
         AddDeleteActionToExportQueue $addDeleteActionToExportQueue,
+        IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed,
         LoggerInterface $logger
     ) {
         $this->addDeleteActionToExportQueue = $addDeleteActionToExportQueue;
+        $this->isRealTimeUpdateAllowed = $isRealTimeUpdateAllowed;
         $this->logger = $logger;
     }
 
@@ -54,11 +63,15 @@ class DeleteProductEntity
     {
         $productId = (string) $product->getId();
 
-        if (!in_array($product->getTypeId(), [Configurable::TYPE_CODE, BundleType::TYPE_CODE, Grouped::TYPE_CODE])) {
+        if (!in_array($product->getTypeId(), [Configurable::TYPE_CODE, BundleType::TYPE_CODE, Grouped::TYPE_CODE])
+            && $this->isRealTimeUpdateAllowed->execute(ProductVariantsType::ENTITY_TYPE)
+        ) {
             $this->addToExportQueue(ProductVariantsType::ENTITY_TYPE, $productId);
         }
 
-        $this->addToExportQueue(DefaultType::ENTITY_TYPE, $productId);
+        if ($this->isRealTimeUpdateAllowed->execute(DefaultType::ENTITY_TYPE)) {
+            $this->addToExportQueue(DefaultType::ENTITY_TYPE, $productId);
+        }
     }
 
     /**

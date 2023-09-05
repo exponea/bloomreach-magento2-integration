@@ -63,7 +63,10 @@ class VariantId implements RenderInterface
         $childrenItems = $entity->getChildrenItems();
 
         if (!$childrenItems) {
-            $variantIds = $this->childItems->getChildIds((int) $entity->getItemId());
+            $variantIds = $this->childItems->getChildIds(
+                (int) $entity->getOrderId(),
+                (int) $entity->getItemId()
+            );
 
             return $variantIds ?: [$this->getChildProductId->execute($entity)];
         }

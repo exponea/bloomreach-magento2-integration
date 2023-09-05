@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="bloomreach_export_queue_error_notification"
+              label="Export queue error notification"
+              file="export_queue_error_notification.html"
+              type="html"
+              module="Bloomreach_EngagementConnector"
+              area="frontend"/>
+</config>

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Setup\Service;
 
-use Bloomreach\EngagementConnector\Model\ResourceModel\ExportEntity;
+use Bloomreach\EngagementConnector\Model\InitialExportStatus\ResourceModel\InitialExportStatusResourceModel;
 use Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 
@@ -27,7 +27,7 @@ class RemoveTables
     public function execute(AdapterInterface $connection): void
     {
         $tables = [
-            ExportEntity::TABLE_NAME,
+            InitialExportStatusResourceModel::TABLE_NAME,
             ExportQueue::TABLE_NAME
         ];
 

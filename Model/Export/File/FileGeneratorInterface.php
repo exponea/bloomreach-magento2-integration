@@ -14,9 +14,10 @@ interface FileGeneratorInterface
      * Generate export file
      *
      * @param string $absoluteDirPath
+     * @param string $fileName
      * @param array $data
      *
      * @return string
      */
-    public function generate(string $absoluteDirPath, array $data): string;
+    public function generate(string $absoluteDirPath, string $fileName, array $data): string;
 }

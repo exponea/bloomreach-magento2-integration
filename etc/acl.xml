@@ -9,10 +9,22 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::marketing">
+                    <resource id="Bloomreach_EngagementConnector::bloomreach_engagement" title="Bloomreach Engagement" translate="title" sortOrder="100">
+                        <resource id="Bloomreach_EngagementConnector::initial_import" title="Initial Import" translate="title" sortOrder="10">
+                            <resource id="Bloomreach_EngagementConnector::initial_import_view" title="View a list of available imports" translate="title" sortOrder="10" />
+                            <resource id="Bloomreach_EngagementConnector::initial_import_manage" title="Manage Initial Imports" translate="title" sortOrder="20" />
+                        </resource>
+                        <resource id="Bloomreach_EngagementConnector::export_queue" title="Export Queue" translate="title" sortOrder="20">
+                            <resource id="Bloomreach_EngagementConnector::export_queue_view" title="View a list of export queue" translate="title" sortOrder="10" />
+                            <resource id="Bloomreach_EngagementConnector::export_queue_manage" title="Manage Export Queue" translate="title" sortOrder="20" />
+                        </resource>
+                    </resource>
+                </resource>
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="Bloomreach_EngagementConnector::config_bloomreach_engagement" title="Bloomreach Engagement Section" translate="title" sortOrder="50" />
+                            <resource id="Bloomreach_EngagementConnector::bloomreach_engagement_config" title="Bloomreach Engagement Configuration" translate="title" sortOrder="50" />
                         </resource>
                     </resource>
                 </resource>

@@ -43,13 +43,161 @@ Check to see if your Magento instance has an app/code directory structure. If no
 
 - `bloomreach_export_queue` - contains a queue of prepared data waiting to be exported.
 - `bloomreach_export_entity` - contains the identifiers of the entities to be added to the export queue.
+- `bloomreach_initial_export_status` - stores the initial export data (Current export status, export progress, export errors)
+
+## Cron
+
+- `bloomreach_add_to_export_queue` - prepares the entities that are waiting to be exported and adds them to the export queue.
+- `bloomreach_run_export` - exports data from the export queue to the Bloomreach service.
+- `bloomreach_clean_export_queue` - cleans export queue data from database.
+- `bloomreach_clean_csv` - cleans csv export files.
+- `bloomreach_export_queue_error_notification` - sends export error notifications.
+
+## Console Commands
+
+### Add entities to the export queue Command
+
+- Responsible class:
+``Bloomreach\EngagementConnector\Console\Command\AddToExportQueue``
+- The command:
+```bash
+bin/magento bloomreach:add-to-export-queue
+```
+
+### Start Export Command
+
+- Responsible class:
+``Bloomreach\EngagementConnector\Console\Command\StartExport``.
+The command:
+```bash
+bin/magento bloomreach:export-start --import_id="*********" --csv_file_path="*****" --test_connection="1"
+```
+
+Using the options, you can run the export from a specific csv file.
+
+Where:
+- import_id - ID of necessary import, can be taken from the Bloomreach
+- csv_file_path - path of the CSV file
+- - test_connection - set "1" to run a test connection (not required)
+
+### Clean CSV Files Command
+
+- Responsible class:
+  ``Bloomreach\EngagementConnector\Console\Command\CleanCsvFilesCommand``
+- The command:
+```bash
+bin/magento bloomreach:clean-csv-files
+```
+
+### Clean Export Queue Command
+- Responsible class:
+  ``Bloomreach\EngagementConnector\Console\Command\CleanExportQueueCommand``
+- The command:
+```bash
+bin/magento bloomreach:clean-export-queue
+```
+
+## Uninstallation
+
+### Composer
+
+If the module was installed through composer, it can be uninstalled using the magento uninstall command:
+```bash
+bin/magento module:uninstall Bloomreach_EngagementConnector
+```
+
+### Manually
+
+If the module was installed manually, then you need to do the following steps to completely remove all data:
+
+#### For production mode stores
+
+1. bin/magento maintenance:enable
+2. bin/magento module:disable Bloomreach_EngagementConnector
+3. delete `MAGENTO_ROOT/app/code/Bloomreach/EngagementConnector` folder;
+4. delete `MAGENTO_ROOT/var/bloomreach` folder;
+5. delete `bloomreach_export_queue`, `bloomreach_export_entity`, `bloomreach_initial_export_status` tables from database;
+6. delete system configs `WHERE path LIKE 'bloomreach_engagement%'`
+7. bin/magento setup:upgrade
+8. bin/magento deploy:mode:set production
+9. bin/magento cache:clean
+10. bin/magento maintenance:disable
+
+#### For developer mode stores
+
+1. bin/magento module:disable Bloomreach_EngagementConnector
+2. delete `MAGENTO_ROOT/app/code/Bloomreach/EngagementConnector` folder;
+3. delete `MAGENTO_ROOT/var/bloomreach` folder;
+4. delete `bloomreach_export_queue`, `bloomreach_export_entity`, `bloomreach_initial_export_status` tables from database;
+5. delete system configs `WHERE path LIKE 'bloomreach_engagement%'`
+6. bin/magento setup:upgrade
+7. bin/magento cache:clean
 
 ## Additional Data
 
 ### Logger
 
-- `<project_dir>/var/log/bloomreach/engagement_connector.log` - contains errors information
-- `<project_dir>/var/log/bloomreach/debug.log` - contains debugging information
+- `MAGENTO_ROOT/var/log/bloomreach/engagement_connector.log` - contains errors information
+- `MAGENTO_ROOT/var/log/bloomreach/debug.log` - contains debugging information
+
+### Initial Export Statuses
+
+#### DISABLED
+- Value: 1
+- Label: DISABLED
+- Initial Export has the DISABLED status if a certain feed is disabled in the system configuration.
+
+#### NOT READY
+- Value: 2
+- Label: NOT READY
+- Initial Export has the NOT READY status if a certain feed is enabled in the system configuration and import_id setting is not specified.
+
+#### READY
+- Value: 3
+- Label: READY
+- Initial Export has the READY status if a certain feed is enabled in the system configuration and import_id setting is specified and export has not started yet.
+
+#### SCHEDULED
+- Value: 4
+- Label: SCHEDULED
+- Initial Export has the SCHEDULED status if a certain feed is enabled in the system configuration and import_id setting is specified and Start action was triggered.
+
+#### PROCESSING
+- Value: 5
+- Label: PROCESSING
+- Initial Export has the PROCESSING status if a certain feed is enabled in the system configuration and import_id setting is specified and export has started.
+
+#### ERROR
+- Value: 6
+- Label: ERROR
+- Initial Export has the ERROR status if a certain feed is enabled in the system configuration and import_id setting is specified and export has finished with errors.
+
+#### SUCCESS
+- Value: 7
+- Label: SUCCESS
+- Initial Export has the SUCCESS status if a certain feed is enabled in the system configuration and import_id setting is specified and export has finished successfully.
+
+### Export Queue Statuses
+
+#### PENDING
+- Value: 1
+- Label: PENDING
+- Queue Item has the PENDING status if an item has not sent yet.
+- 
+#### IN PROGRESS
+- Value: 2
+- Label: IN PROGRESS
+- Queue Item has the IN PROGRESS status if sending is in progress.
+
+#### ERROR
+- Value: 3
+- Label: ERROR
+- Queue Item has the ERROR status f an error occurred while sending.
+
+#### COMPLETE
+- Value: 4
+- Label: COMPLETE
+- Queue Item has the COMPLETE status if an item was sent successfully.
 
 ### Data Mapping
 
@@ -216,73 +364,6 @@ Check to see if your Magento instance has an app/code directory structure. If no
 </entity_type>
 ```
 
-### Observers
-
-``Bloomreach\EngagementConnector\Observer\CustomerEntitySave`` the event ``customer_save_after`` 
-Get customer entity after save.
-
-``Bloomreach\EngagementConnector\Observer\OrderEntitySave`` the event ``checkout_submit_all_after``
-Get order entity after save
-
-``Bloomreach\EngagementConnector\Observer\ProductEntitySave`` the event ``catalog_product_save_commit_after``
-Get product entity after save
-
-### Services
-
-``Bloomreach\EngagementConnector\Service\Export\PrepareCustomerDataService`` Preparing customer entity data after save, 
-and push it to the mapper.
-
-``Bloomreach\EngagementConnector\Service\Export\PrepareOrderDataService`` Preparing order entity data after save and 
-push it to the mapper.
-
-``Bloomreach\EngagementConnector\Service\Export\PrepareProductDataService`` Prepare product entity data and push it to 
-the mapper.
-
-### API
-
-Start the API import: ``Bloomreach\EngagementConnector\Service\Integration\StartApiImportService`` class can be used to 
-start the import by API call. The method receives the import ID and path to the csv file with data. Also, the parameter
-``test_connection`` can be used to testing.
-
-``Bloomreach\EngagementConnector\Service\Integration\GetEndpointService`` class responsible to preparing URL endpoint
-by system config.
-
-### Console
-
-``Bloomreach\EngagementConnector\Console\Command\AddToExportQueue`` can be used to add entities to export queue manually.
-The command:
-```bash
-bin/magento bloomreach:add-to-export-queue
-```
-
-``Bloomreach\EngagementConnector\Console\Command\StartExport`` can be used to start export manually.
-The command:
-```bash
-bin/magento bloomreach:export-start --import_id="*********" --csv_file_path="*****" --test_connection="1"
-```
-
-Using the options, you can run the export from a specific csv file.
-
-Where:
-- import_id - is ID of necessary import, can be clarify in the bloomreach exponea admin
-- csv_file_path - path of CSV file
-- test_connection - is not required parameter - set "1" to run rest connection.
-
-``Bloomreach\EngagementConnector\Console\Command\GenerateExportFileForExportQueue`` can be used to testing or to generating import files manually.
-The command:
-```bash
-bin/magento bloomreach:generate-export-files --entity_type="*********" --update_export_status="1"
-```
-Where:
-- entity_type - is not a required parameter. If not specified, an export file is generated for all entity types. For example: `catalog_product`
-- update_export_status - is not required parameter. Set `1` to update the status of the export queue item after creating the file.
-
-
-## Cron
-
-- `bloomreach_add_to_export_queue` - prepares entities waiting to be exported and adds them to the export queue.
-- `bloomreach_run_export` - exports data from the export queue to the Bloomreach service.
-
 ### Export Processes
 
 - `Bloomreach\EngagementConnector\Model\Export\QueueProcessor` - obtains the entities that need to be exported, prepares them and adds them to the export queue.
@@ -310,13 +391,27 @@ Where:
 <type name="Bloomreach\EngagementConnector\Model\DataProvider\EntityType">
     <arguments>
         <argument name="entityTypes" xsi:type="array">
-            <item name="catalog_product" xsi:type="string">catalog_product</item>
+            <item name="catalog_product" xsi:type="string">Product Feed</item>
         </argument>
     </arguments>
 </type>
 ```
 2. Create Data Mapping for the new entity.
-3. Pass collection class to the `Bloomreach\EngagementConnector\Model\Export\Entity\CollectionFactory` via `di.xml`:
+3. **Optional** If you add an event to the export, you will need to add register fields by which Bloomreach recognizes which customer this event belongs to. 
+- Add `customer_id` and `email_id` fields to the mapping configuration.
+```xml
+<entity_type entity="purchase">
+    <bloomreach_code code="email_id">
+        <field code="customer_email"/>
+    </bloomreach_code>
+    <bloomreach_code code="customer_id">
+        <field code="customer_id"/>
+    </bloomreach_code>
+</entity_type>
+```
+- Make sure your entity contains these fields. (If not, implement them using the DataMapper approach).
+- Use `Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\RegisteredMapper` in your `DataMapper` to map registered fields.
+4. Pass collection class to the `Bloomreach\EngagementConnector\Model\Export\Entity\CollectionFactory` via `di.xml`:
 ```xml
 <type name="Bloomreach\EngagementConnector\Model\Export\Entity\CollectionFactory">
     <arguments>
@@ -328,8 +423,37 @@ Where:
     </arguments>
 </type>
 ```
-4. Create class that implements `Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface`.
-5. **Optional** If you want to use a separate API to send data to the Bloomreach, you can implement other transporter. Pass your transporter class to the `Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver` via `di.xml` and specify the `entity_type` and `api_type` as name of items:
+4. Add you entity type to the `Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\BuilderComposite` via `di.xml` and specify needed request builder:
+```xml
+<type name="Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\BuilderComposite">
+    <arguments>
+        <argument name="builderPool" xsi:type="array">
+            <item name="catalog_product" xsi:type="string">Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\Entity\Catalog</item>
+        </argument>
+    </arguments>
+</type>
+```
+5. Create a system config `feed_enable`,
+6. Create a system config for `import_id`,
+7. **Optional** Create a system config for `catalog_id` if your entity is a catalog,
+8. Pass your configs to the `ConfigPathGetter` class via `di.xml`:
+```xml
+<type name="Bloomreach\EngagementConnector\System\ConfigPathGetter">
+    <arguments>
+        <argument name="configPool" xsi:type="array">
+            <item name="catalog_product" xsi:type="array">
+                <item name="feed_enabled" xsi:type="string">bloomreach_engagement/catalog_product_feed/enabled</item>
+                <item name="import_id" xsi:type="string">bloomreach_engagement/catalog_product_feed/import_id</item>
+                <item name="catalog_id" xsi:type="string">bloomreach_engagement/catalog_product_feed/catalog_id</item>
+            </item>
+        </argument>
+    </arguments>
+</type>
+```
+
+#### How to change the API endpoint for a specific API call:
+1. Create class that implements `Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface`.
+2. Pass your transporter class to the `Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver` via `di.xml` and specify the `entity_type` and `api_type` as name of items:
 ```xml
 <type name="Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver">
     <arguments>
@@ -339,70 +463,6 @@ Where:
                     Bloomreach\EngagementConnector\Model\Export\Transporter\InitialExport\DefaultTransporter
                 </item>
             </item>
-        </argument>
-    </arguments>
-</type>
-```
-6. Use a `Bloomreach\EngagementConnector\Model\Export\Entity\AddToExport` class to add your entity id to the export.
-
-#### How to add data to the export if you cannot create a collection for your entity?
-
-1. Create Data Mapping for the new entity.
-2. Use a `Bloomreach\EngagementConnector\Model\Export\Queue\AddDataToExportQueue` class to add your entity to the export queue
-3. Create class that implements `Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterInterface`.
-4. **Optional** If you want to use separate API ot send data to the Bloomreach, you can implement other transporter. Pass your transporter class to the `Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver` via `di.xml` and specify the `entity_type` and `api_type` as name of items:
-```xml
-<type name="Bloomreach\EngagementConnector\Model\Export\Transporter\TransporterResolver">
-    <arguments>
-        <argument name="transporters" xsi:type="array">
-            <item name="csv_export" xsi:type="array">
-                <item name="default" xsi:type="object">
-                    Bloomreach\EngagementConnector\Model\Export\Transporter\InitialExport\DefaultTransporter
-                </item>
-            </item>
-        </argument>
-    </arguments>
-</type>
-```
-
-#### How to add your entity to the export preconfiguration:
-
-1. Create a class that implements `Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurateEntityExportInterface`
-2. Pass your class to the `Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurateEntityExport` via `di.xml`:
-```xml
-<type name="Bloomreach\EngagementConnector\Model\ExportPreconfiguration\PreconfigurateEntityExport">
-    <arguments>
-        <argument name="entitiesToPreconfigurate" xsi:type="array">
-            <item name="catalog_product" xsi:type="object">
-                Bloomreach\EngagementConnector\Model\ExportPreconfiguration\Entity\Product
-            </item>
-        </argument>
-    </arguments>
-</type>
-```
-
-#### How to add your entity to the initial export:
-
-1. Create a class that implements `Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExportInterface`.
-2. Pass your class to the `Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExport` via `di.xml`:
-```xml
-<type name="Bloomreach\EngagementConnector\Model\InitialExport\InitialEntityExport">
-    <arguments>
-        <argument name="entitiesToExport" xsi:type="array">
-            <item name="catalog_product" xsi:type="object">
-                Bloomreach\EngagementConnector\Model\InitialExport\Entity\Product
-            </item>
-        </argument>
-    </arguments>
-</type>
-```
-3. Create system config for import id
-4. Pass your config to the class via `di.xml`:
-```xml
-<type name="Bloomreach\EngagementConnector\Service\Integration\ImportIdResolver">
-    <arguments>
-        <argument name="importIdsConfigPath" xsi:type="array">
-            <item name="catalog_product" xsi:type="string">bloomreach_engagement/general/catalog_import_id</item>
         </argument>
     </arguments>
 </type>
@@ -426,7 +486,19 @@ Where:
     </arguments>
 </type>
 ```
-
+4. **Optional** If you want to send event using batch api endpoint, pass entity type to `Bloomreach\EngagementConnector\Model\Export\Queue\Batch\CommandNameGetter`:
+```xml
+<type name="Bloomreach\EngagementConnector\Model\Export\Queue\Batch\CommandNameGetter">
+    <arguments>
+        <argument name="commandNamePool" xsi:type="array">
+            <item name="event" xsi:type="array">
+                <item name="purchase" xsi:type="string">customers/events</item>
+                <item name="purchase_item" xsi:type="string">customers/events</item>
+            </item>
+        </argument>
+    </arguments>
+</type>
+```
 ### Frontend Tracking
 
 #### Event structure:

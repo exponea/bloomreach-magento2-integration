@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\Cron;
 
+use Bloomreach\EngagementConnector\Api\DeleteExportQueueInterface;
 use Bloomreach\EngagementConnector\Model\ExportQueueModel;
 use Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue\Collection;
 use Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue\CollectionFactory;
@@ -39,6 +40,11 @@ class CleanExportQueueService
     private $collectionFactory;
 
     /**
+     * @var DeleteExportQueueInterface
+     */
+    private $deleteExportQueue;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -47,17 +53,20 @@ class CleanExportQueueService
      * @param ScopeConfigInterface $scopeConfig
      * @param DateTime $date
      * @param CollectionFactory $collectionFactory
+     * @param DeleteExportQueueInterface $deleteExportQueue
      * @param LoggerInterface $logger
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         DateTime $date,
         CollectionFactory $collectionFactory,
+        DeleteExportQueueInterface $deleteExportQueue,
         LoggerInterface $logger
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->date = $date;
         $this->collectionFactory = $collectionFactory;
+        $this->deleteExportQueue = $deleteExportQueue;
         $this->logger = $logger;
     }
 
@@ -70,11 +79,11 @@ class CleanExportQueueService
 
         if ($day > 0) {
             $timeEnd = strtotime($this->date->date()) - $day * 24 * 60 * 60;
+            $lastEntityId = 0;
 
             /** @var Collection $collection */
-            $collection = $this->collectionFactory->create()
-                ->addFieldToFilter('created_at', ['lteq' => date('Y-m-d H:i:s', $timeEnd)])
-                ->addFieldToFilter('status', ['eq' => ExportQueueModel::STATUS_COMPLETE]);
+            $collection = $this->collectionFactory->create();
+            $this->setFilters($collection, $timeEnd, $lastEntityId);
 
             $collectionSize = $collection->getSize();
 
@@ -85,9 +94,10 @@ class CleanExportQueueService
             $collection->setPageSize(100);
             $lastPageNumber = $collection->getLastPageNumber();
 
-            for ($currentPage = $lastPageNumber; $currentPage >= 1; $currentPage--) {
-                $collection->setCurPage($currentPage);
-                $this->deleteQueue($collection);
+            for ($currentPage = 1; $currentPage <= $lastPageNumber; $currentPage++) {
+                $collection->getSelect()->reset('where');
+                $this->setFilters($collection, $timeEnd, $lastEntityId);
+                $lastEntityId = $this->deleteQueue($collection);
             }
         }
     }
@@ -97,18 +107,41 @@ class CleanExportQueueService
      *
      * @param Collection $collection
      *
-     * @return void
+     * @return int
      */
-    private function deleteQueue(Collection $collection): void
+    private function deleteQueue(Collection $collection): int
     {
+        $lastEntityId = 0;
+
+        /** @var ExportQueueModel $item */
         foreach ($collection as $item) {
+            $lastEntityId = $item->getEntityId();
             try {
-                $item->delete();
+                $this->deleteExportQueue->execute($item->getEntityId());
             } catch (Exception $e) {
                 $this->logger->critical($e);
             }
         }
 
         $collection->clear();
+
+        return (int) $lastEntityId;
+    }
+
+    /**
+     * Get Collection with filters
+     *
+     * @param Collection $collection
+     * @param int $timeEnd
+     * @param int $lastEntityId
+     *
+     * @return void
+     */
+    private function setFilters(Collection $collection, int $timeEnd, int $lastEntityId): void
+    {
+        $collection
+            ->addFieldToFilter(ExportQueueModel::CREATED_AT, ['lteq' => date('Y-m-d H:i:s', $timeEnd)])
+            ->addFieldToFilter(ExportQueueModel::STATUS, ['eq' => ExportQueueModel::STATUS_COMPLETE])
+            ->addFieldToFilter(ExportQueueModel::ENTITY_ID, ['gt' => $lastEntityId]);
     }
 }

@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Plugin\Customer\CustomerData;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
 use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Customer\CustomerData\Customer as Subject;
 use Magento\Customer\Model\Session as CustomerSession;
 

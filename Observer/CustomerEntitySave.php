@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Observer;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Customer as CustomerDataMapper;
+use Bloomreach\EngagementConnector\Model\Export\Condition\IsRealTimeUpdateAllowed;
 use Bloomreach\EngagementConnector\Service\Export\PrepareCustomerDataService;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Customer\Model\Customer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -29,15 +31,23 @@ class CustomerEntitySave implements ObserverInterface
     private $configProvider;
 
     /**
+     * @var IsRealTimeUpdateAllowed
+     */
+    private $isRealTimeUpdateAllowed;
+
+    /**
      * @param PrepareCustomerDataService $prepareCustomerDataService
      * @param ConfigProvider $configProvider
+     * @param IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed
      */
     public function __construct(
         PrepareCustomerDataService $prepareCustomerDataService,
-        ConfigProvider $configProvider
+        ConfigProvider $configProvider,
+        IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed
     ) {
         $this->prepareCustomerDataService = $prepareCustomerDataService;
         $this->configProvider = $configProvider;
+        $this->isRealTimeUpdateAllowed = $isRealTimeUpdateAllowed;
     }
 
     /**
@@ -49,12 +59,16 @@ class CustomerEntitySave implements ObserverInterface
      */
     public function execute(Observer $observer): void
     {
-        if ($this->configProvider->isEnabled()) {
-            $event = $observer->getEvent();
-            /** @var Customer $customer */
-            $customer = $event->getCustomer();
-
-            $this->prepareCustomerDataService->execute($customer);
+        if (!$this->configProvider->isEnabled()
+            || !$this->isRealTimeUpdateAllowed->execute(CustomerDataMapper::ENTITY_TYPE)
+        ) {
+            return;
         }
+
+        $event = $observer->getEvent();
+        /** @var Customer $customer */
+        $customer = $event->getCustomer();
+
+        $this->prepareCustomerDataService->execute($customer);
     }
 }

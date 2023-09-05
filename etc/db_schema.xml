@@ -19,10 +19,14 @@
                 comment="Number of sending attempts"/>
         <column xsi:type="varchar" name="registered" nullable="true" comment="Customer identifier"/>
         <column xsi:type="mediumtext" name="body" nullable="false" comment="Body of sending"/>
+        <column xsi:type="int" name="number_of_items" padding="11" default="1" unsigned="true" nullable="false"
+                comment="Number of items to export"/>
         <column xsi:type="int" name="failed_sending_attempts" padding="11" default="0" unsigned="true" nullable="false"
                 identity="false" comment="Number of failed sending attempts"/>
         <column xsi:type="int" name="time_of_next_sending_attempt" padding="11" nullable="false" default="0" identity="false"
                 comment="The time of the next sending attempt. Represented in the Unix timestamp."/>
+        <column xsi:type="text" name="error_message" nullable="true" comment="Error message"/>
+        <column xsi:type="text" name="additional_data" nullable="true" comment="Additional data"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
@@ -31,18 +35,28 @@
             <column name="entity_id"/>
         </constraint>
     </table>
-    <table name="bloomreach_export_entity" resource="default" engine="innodb"
-           comment="Table that stores entities for sending to Bloomreach">
+    <table name="bloomreach_initial_export_status" resource="default" engine="innodb"
+           comment="Table that initial export status">
         <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
                 comment="Entity ID"/>
-        <column xsi:type="int" name="export_entity_id" unsigned="true" nullable="false"
-                comment="Export Entity ID"/>
         <column xsi:type="varchar" name="entity_type" nullable="false" comment="Entity type"/>
+        <column xsi:type="smallint" name="status" padding="5" default="1" unsigned="true" nullable="false"
+                identity="false" comment="Status" />
+        <column xsi:type="int" name="total_items" padding="11" default="0" unsigned="true" nullable="false"
+                comment="Number of items to export"/>
+        <column xsi:type="int" name="total_exported" padding="11" default="0" unsigned="true" nullable="false"
+                comment="Number of items to export"/>
+        <column xsi:type="int" name="total_error_items" padding="11" default="0" unsigned="true" nullable="false"
+                comment="Number of items to export"/>
+        <column xsi:type="text" name="errors" nullable="true" comment="List of errors"/>
+        <column xsi:type="boolean" name="is_locked" default="false" comment="Is Locked"/>
+        <column xsi:type="timestamp" name="started_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Started At"/>
+        <column xsi:type="timestamp" name="finished_at" nullable="true" comment="Finished At"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
-        <constraint xsi:type="unique" referenceId="BLOOMREACH_EXPORT_ENTITIES_ENTITY_ID_ENTITY_TYPE">
-            <column name="export_entity_id"/>
+        <constraint xsi:type="unique" referenceId="BLOOMREACH_INITIAL_EXPORT_STATUS_ENTITY_TYPE">
             <column name="entity_type"/>
         </constraint>
     </table>

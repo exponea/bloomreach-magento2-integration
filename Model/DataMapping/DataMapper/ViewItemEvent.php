@@ -18,7 +18,7 @@ use Magento\Framework\Model\AbstractModel;
  */
 class ViewItemEvent implements DataMapperInterface
 {
-    private const ENTITY_TYPE = 'view_item';
+    public const ENTITY_TYPE = 'view_item';
 
     /**
      * @var MappingProcessor

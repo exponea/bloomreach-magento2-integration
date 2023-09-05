@@ -5,10 +5,12 @@
  */
 namespace Bloomreach\EngagementConnector\Api\Data;
 
+use Magento\Framework\Api\ExtensibleDataInterface;
+
 /**
  * Export Queue Data Interface
  */
-interface ExportQueueInterface
+interface ExportQueueInterface extends ExtensibleDataInterface
 {
     /**
      * Get Entity Id
@@ -114,6 +116,22 @@ interface ExportQueueInterface
     public function getRegistered(): string;
 
     /**
+     * Get Number of items
+     *
+     * @return int
+     */
+    public function getNumberOfItems(): int;
+
+    /**
+     * Set Number of items
+     *
+     * @param int $numberOfItems
+     *
+     * @return void
+     */
+    public function setNumberOfItems(int $numberOfItems): void;
+
+    /**
      * Set Registered
      *
      * @param string $registered
@@ -155,6 +173,38 @@ interface ExportQueueInterface
     public function setTimeOfNextSendingAttempt(int $time): void;
 
     /**
+     * Get Error Message
+     *
+     * @return string
+     */
+    public function getErrorMessage(): string;
+
+    /**
+     * Set error message
+     *
+     * @param string $errorMessage
+     *
+     * @return void
+     */
+    public function setErrorMessage(string $errorMessage): void;
+
+    /**
+     * Get Additional Data
+     *
+     * @return string
+     */
+    public function getAdditionalData(): string;
+
+    /**
+     * Set Additional Data
+     *
+     * @param string $additionalData
+     *
+     * @return void
+     */
+    public function setAdditionalData(string $additionalData): void;
+
+    /**
      * Get Created At
      *
      * @return string
@@ -185,4 +235,20 @@ interface ExportQueueInterface
      * @return void
      */
     public function setUpdatedAt(string $updatedAt): void;
+
+    /**
+     * Retrieve existing extension attributes object or create a new one.
+     *
+     * @return array
+     */
+    public function getCustomAttributes(): array;
+
+    /**
+     * Set an extension attributes object.
+     *
+     * @param array $customAttributes
+     *
+     * @return void
+     */
+    public function setCustomAttributes(array $customAttributes): void;
 }

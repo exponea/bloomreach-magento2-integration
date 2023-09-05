@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Service\ExportQueue;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 
 /**
  * Calculates the time (in Unix Timestamp) of next sending attempt using Exponential Backoff with Jitter approach

@@ -86,6 +86,7 @@ class AddEventToExportQueue
             $exportQueue->setEntityType($entityType);
             $exportQueue->setApiType(self::API_TYPE);
             $exportQueue->setRegistered($registered);
+            $exportQueue->setNumberOfItems(1);
             $exportQueue->setBody($this->jsonSerializer->serialize($body));
             $this->saveExportQueue->execute($exportQueue);
         }

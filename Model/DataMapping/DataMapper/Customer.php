@@ -26,11 +26,20 @@ class Customer implements DataMapperInterface
     private $mappingProcessor;
 
     /**
-     * @param MappingProcessor $mappingProcessor
+     * @var RegisteredMapper
      */
-    public function __construct(MappingProcessor $mappingProcessor)
-    {
+    private $registeredMapper;
+
+    /**
+     * @param MappingProcessor $mappingProcessor
+     * @param RegisteredMapper $registeredMapper
+     */
+    public function __construct(
+        MappingProcessor $mappingProcessor,
+        RegisteredMapper $registeredMapper
+    ) {
         $this->mappingProcessor = $mappingProcessor;
+        $this->registeredMapper = $registeredMapper;
     }
 
     /**
@@ -43,6 +52,8 @@ class Customer implements DataMapperInterface
      */
     public function map($entity, array $mapConfig): DataObject
     {
-        return $this->mappingProcessor->map($entity, self::ENTITY_TYPE, $mapConfig);
+        return $this->registeredMapper->map(
+            $this->mappingProcessor->map($entity, self::ENTITY_TYPE, $mapConfig)
+        );
     }
 }

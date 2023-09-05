@@ -14,7 +14,7 @@
             <class>separator-top</class>
             <label>Settings</label>
             <tab>bloomreach_engagement</tab>
-            <resource>Bloomreach_EngagementConnector::config_bloomreach_engagement</resource>
+            <resource>Bloomreach_EngagementConnector::bloomreach_engagement_config</resource>
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1">
                 <label>General</label>
                 <field id="version" translate="label" type="label" sortOrder="0" showInDefault="1">
@@ -32,6 +32,7 @@
                     <depends>
                         <field id="enable">1</field>
                     </depends>
+                    <validate>required-entry validate-url</validate>
                 </field>
                 <field id="api_key_id" translate="label" type="text" sortOrder="30" showInDefault="1">
                     <label>API Key ID</label>
@@ -39,6 +40,7 @@
                     <depends>
                         <field id="enable">1</field>
                     </depends>
+                    <validate>required-entry validate-no-empty</validate>
                 </field>
                 <field id="api_secret" translate="label" type="obscure" sortOrder="40" showInDefault="1">
                     <label>API Secret</label>
@@ -47,6 +49,7 @@
                     <depends>
                         <field id="enable">1</field>
                     </depends>
+                    <validate>required-entry validate-no-empty</validate>
                 </field>
                 <field id="project_token_id" translate="label" type="text" sortOrder="50" showInDefault="1">
                     <label>Project Token</label>
@@ -54,8 +57,17 @@
                     <depends>
                         <field id="enable">1</field>
                     </depends>
+                    <validate>required-entry validate-no-empty</validate>
                 </field>
-                <field id="validate_access_credentials" translate="label" sortOrder="60" showInDefault="1">
+                <field id="use_static_ips" translate="label" type="select" sortOrder="60" showInDefault="1">
+                    <label>Use static IPs</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Check this box if you use a firewall and need a whitelist of IPs allowed to connect. We will limit connections to your server. Check our <a href="https://github.com/exponea/bloomreach-magento2-integration/blob/main/doc/user_guide.pdf" target="_blank">installation guide</a> for more details. Note that it can increase the execution time.]]></comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="validate_access_credentials" translate="label" sortOrder="70" showInDefault="1">
                     <label>Validate Credentials</label>
                     <button_label>Validate Credentials</button_label>
                     <button_url>bloomreach_engagement/validator/AccessCredentials</button_url>
@@ -65,7 +77,7 @@
                         <field id="enable">1</field>
                     </depends>
                 </field>
-                <field id="debug_mode" translate="label" type="select" sortOrder="70" showInDefault="1">
+                <field id="debug_mode" translate="label" type="select" sortOrder="80" showInDefault="1">
                     <label>Enable Debug Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Save logs to "var/log/bloomreach/debug.log".</comment>
@@ -73,7 +85,7 @@
                         <field id="enable">1</field>
                     </depends>
                 </field>
-                <field id="request_timeout" translate="label" type="text" sortOrder="80" showInDefault="1">
+                <field id="request_timeout" translate="label" type="text" sortOrder="90" showInDefault="1">
                     <label>Request timeout</label>
                     <comment>Timeout in seconds for the requests that the plugin sends to Bloomreach API. Use 0 to wait indefinitely.</comment>
                     <depends>
@@ -81,7 +93,7 @@
                     </depends>
                     <validate>required-entry validate-zero-or-greater validate-digits</validate>
                 </field>
-                <field id="retry_base_wait_time" translate="label" type="text" sortOrder="80" showInDefault="1">
+                <field id="retry_base_wait_time" translate="label" type="text" sortOrder="100" showInDefault="1">
                     <label>Base Wait Time</label>
                     <comment>The base time in seconds to wait before retrying a request to the Bloomreach API.</comment>
                     <depends>
@@ -89,7 +101,7 @@
                     </depends>
                     <validate>required-entry validate-greater-than-zero validate-digits</validate>
                 </field>
-                <field id="retry_max_wait_time" translate="label" type="text" sortOrder="90" showInDefault="1">
+                <field id="retry_max_wait_time" translate="label" type="text" sortOrder="110" showInDefault="1">
                     <label>Max Wait Time</label>
                     <comment>The max time in seconds to wait before retrying a request to the Bloomreach API.</comment>
                     <depends>
@@ -98,96 +110,173 @@
                     <validate>required-entry validate-zero-or-greater validate-digits</validate>
                 </field>
             </group>
-            <group id="imports" translate="label" type="text" sortOrder="300" showInDefault="1">
-                <label>Imports</label>
+            <group id="http_basic_auth" translate="label" type="text" sortOrder="20" showInDefault="1">
+                <label>HTTP Basic Authentication</label>
                 <depends>
                     <field id="bloomreach_engagement/general/enable">1</field>
                 </depends>
-                <field id="preconfigurate_initial_import" translate="label" sortOrder="305" showInDefault="1">
-                    <label>Generate dummy import files</label>
-                    <button_label>Generate dummy import files</button_label>
-                    <button_url>bloomreach_engagement/import/RunInitialImportReconfiguration</button_url>
-                    <frontend_model>Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\PreconfigurateImportButton</frontend_model>
-                    <comment>Generates a list of dummy CSV files that can be used for setting up Imports and Catalogs with data mapping in the Engagement project. It contains one row for each import type. We recommend to secure the folder with HTTP Basic Auth and/or firewall with IP whitelist on the web server level as additional security measures.</comment>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enable HTTP Basic Authentication</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables HTTP Basic Authentication for Initial import</comment>
+                </field>
+                <field id="username" translate="label" type="text" sortOrder="20" showInDefault="1">
+                    <label>Username</label>
                     <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
+                        <field id="enabled">1</field>
                     </depends>
                 </field>
-                <field id="customer_import_id" translate="label" type="text" sortOrder="310" showInDefault="1">
-                    <label>Customer import id</label>
-                    <comment>Import ID for Customer data can be found in your Engagement project in the Customer import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
-                    <config_path>bloomreach_engagement/general/customer_import_id</config_path>
+                <field id="password" translate="label" type="obscure" sortOrder="30" showInDefault="1">
+                    <label>Password</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
-                    </depends>
-                </field>
-                <field id="order_import_id" translate="label" type="text" sortOrder="320" showInDefault="1">
-                    <label>Purchase Feed Import ID</label>
-                    <comment>Import ID for Purchase feed can be found in your Engagement project in the Purchase feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
-                    <config_path>bloomreach_engagement/general/order_import_id</config_path>
-                    <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
-                    </depends>
-                </field>
-                <field id="order_importline_item_id" translate="label" type="text" sortOrder="330" showInDefault="1">
-                    <label>Purchase Item Import ID</label>
-                    <comment>Import ID for Purchase Item feed can be found in your Engagement project in the Purchase Item feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
-                    <config_path>bloomreach_engagement/general/order_importline_item_id</config_path>
-                    <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
-                    </depends>
-                </field>
-                <field id="catalog_import_id" translate="label" type="text" sortOrder="340" showInDefault="1">
-                    <label>Products Feed Import ID</label>
-                    <comment>Import ID for Products feed can be found in your Engagement project in the Products feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
-                    <config_path>bloomreach_engagement/general/catalog_import_id</config_path>
-                    <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
-                    </depends>
-                </field>
-                <field id="variants_import_id" translate="label" type="text" sortOrder="350" showInDefault="1">
-                    <label>Variants Feed Import ID</label>
-                    <comment>Import ID for Variants feed can be found in your Engagement project in the Variants feed import URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
-                    <config_path>bloomreach_engagement/general/variants_import_id</config_path>
-                    <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
-                    </depends>
-                </field>
-                <field id="runinitial_import" translate="label" sortOrder="360" showInDefault="1">
-                    <label>Run Initial imports</label>
-                    <button_label>Run Initial imports</button_label>
-                    <button_url>bloomreach_engagement/import/RunInitialImport</button_url>
-                    <frontend_model>Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\RunInitialImportButton</frontend_model>
-                    <comment>By clicking on this button initial imports for all data feeds will be started. Check import status on the Engagement import page.</comment>
-                    <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
+                        <field id="enabled">1</field>
                     </depends>
                 </field>
             </group>
-            <group id="catalog" translate="label" type="text" sortOrder="400" showInDefault="1">
-                <label>Catalogs</label>
+            <group id="registered_mapping" translate="label" type="text" sortOrder="30" showInDefault="1">
+                <label>Registered Mapping</label>
                 <depends>
                     <field id="bloomreach_engagement/general/enable">1</field>
                 </depends>
-                <field id="catalog_id" translate="label" type="text" sortOrder="410" showInDefault="1">
-                    <label>Products Catalog ID</label>
-                    <comment>Catalog ID for Products catalog can be found in your Engagement project on the Products catalog page in the URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
-                    <config_path>bloomreach_engagement/general/catalog_id</config_path>
+                <field id="customer_id" translate="label" type="text" sortOrder="10" showInDefault="1" canRestore="1">
+                    <label>Customer ID</label>
+                    <comment><![CDATA[The name of the <strong>Customer ID</strong> field on the Bloomreach side]]></comment>
+                    <depends>
+                        <field id="bloomreach_engagement/general/enable">1</field>
+                    </depends>
+                    <validate>required-entry validate-no-empty</validate>
+                </field>
+                <field id="email" translate="label" type="text" sortOrder="10" showInDefault="1" canRestore="1">
+                    <label>Email</label>
+                    <comment><![CDATA[The name of the <strong>Email</strong> field on the Bloomreach side]]></comment>
+                    <depends>
+                        <field id="bloomreach_engagement/general/enable">1</field>
+                    </depends>
+                    <validate>required-entry validate-no-empty</validate>
+                </field>
+            </group>
+            <group id="catalog_product_feed" translate="label" type="text" sortOrder="40" showInDefault="1">
+                <label>Products Feed</label>
+                <depends>
+                    <field id="bloomreach_engagement/general/enable">1</field>
+                </depends>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables Products Feed</comment>
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
                 </field>
-                <field id="variants_id" translate="label" type="text" sortOrder="420" showInDefault="1">
-                    <label>Variants Catalog ID</label>
-                    <comment>Catalog ID for Variants catalog can be found in your Engagement project on the Variants catalog page in the URL. e.g. 617b858bf6ee43cce4ba0e5c</comment>
-                    <config_path>bloomreach_engagement/general/variants_id</config_path>
+                <field id="real_time_updates" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Real Time Updates</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <backend_model>Bloomreach\EngagementConnector\Model\Config\Backend\ValidateCatalog</backend_model>
+                    <comment>Enables Real Time Updates</comment>
                     <depends>
-                        <field id="bloomreach_engagement/general/enable">1</field>
+                        <field id="enabled">1</field>
                     </depends>
                 </field>
             </group>
-            <group id="frontend_tracking" translate="label" type="text" sortOrder="500" showInDefault="1">
+            <group id="catalog_product_variants_feed" translate="label" type="text" sortOrder="50" showInDefault="1">
+                <label>Variants Feed</label>
+                <depends>
+                    <field id="bloomreach_engagement/general/enable">1</field>
+                </depends>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables Variants Feed</comment>
+                    <depends>
+                        <field id="bloomreach_engagement/general/enable">1</field>
+                    </depends>
+                </field>
+                <field id="real_time_updates" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Real Time Updates</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <backend_model>Bloomreach\EngagementConnector\Model\Config\Backend\ValidateCatalog</backend_model>
+                    <comment>Enables Real Time Updates</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="customer_feed" translate="label" type="text" sortOrder="60" showInDefault="1">
+                <label>Customers Feed</label>
+                <depends>
+                    <field id="bloomreach_engagement/general/enable">1</field>
+                </depends>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables Customers Feed</comment>
+                    <depends>
+                        <field id="bloomreach_engagement/general/enable">1</field>
+                    </depends>
+                </field>
+                <field id="real_time_updates" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Real Time Updates</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables Real Time Updates</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="purchase_feed" translate="label" type="text" sortOrder="70" showInDefault="1">
+                <label>Purchase Feed</label>
+                <depends>
+                    <field id="bloomreach_engagement/general/enable">1</field>
+                </depends>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables Purchase Feed</comment>
+                    <depends>
+                        <field id="bloomreach_engagement/general/enable">1</field>
+                    </depends>
+                </field>
+                <field id="real_time_updates" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Real Time Updates</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables Real Time Updates</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="purchase_item_feed" translate="label" type="text" sortOrder="80" showInDefault="1">
+                <label>Purchase Items Feed</label>
+                <depends>
+                    <field id="bloomreach_engagement/general/enable">1</field>
+                </depends>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables Purchase Items Feed</comment>
+                    <depends>
+                        <field id="bloomreach_engagement/general/enable">1</field>
+                    </depends>
+                </field>
+                <field id="real_time_updates" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Real Time Updates</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables Real Time Updates</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="frontend_tracking" translate="label" type="text" sortOrder="90" showInDefault="1">
                 <label>Frontend Tracking</label>
+                <depends>
+                    <field id="bloomreach_engagement/general/enable">1</field>
+                </depends>
+                <field id="enable_datalayer" translate="label" type="select" sortOrder="140" showInDefault="1">
+                    <label>Enable Pushing Tracking Information To DataLayer</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <field id="enable_js_sdk" translate="label" type="select" sortOrder="140" showInDefault="1">
                     <label>Enable JS SDK</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -197,29 +286,23 @@
                     <label>Order Tracking</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Enable event order and order_item tracking on Thank you page.</comment>
-                    <depends>
-                        <field id="enable_js_sdk">1</field>
-                    </depends>
                 </field>
                 <field id="enable_product_view" translate="label" type="select" sortOrder="140" showInDefault="1">
                     <label>View Item Tracking</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Enable event view_item tracking on product detail page.</comment>
-                    <depends>
-                        <field id="enable_js_sdk">1</field>
-                    </depends>
                 </field>
                 <field id="enable_cart_update" translate="label" type="select" sortOrder="140" showInDefault="1">
                     <label>Cart Update Tracking</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Enable event cart_update tracking on any shopping cart contents changes.</comment>
-                    <depends>
-                        <field id="enable_js_sdk">1</field>
-                    </depends>
                 </field>
             </group>
-            <group id="bloomreach_engagement_cron" translate="label" type="text" sortOrder="600" showInDefault="1">
+            <group id="bloomreach_engagement_cron" translate="label" type="text" sortOrder="100" showInDefault="1">
                 <label>Cron Settings</label>
+                <depends>
+                    <field id="bloomreach_engagement/general/enable">1</field>
+                </depends>
                 <field id="bloomreach_add_to_export_queue_cron" translate="label" type="text" sortOrder="10" showInDefault="1">
                     <label>Cron job settings to export queue</label>
                     <comment>Fill the value in the cron string format ex. */15 * * * *</comment>
@@ -263,6 +346,46 @@
                     <depends>
                         <field id="bloomreach_engagement/general/enable">1</field>
                     </depends>
+                </field>
+            </group>
+            <group id="notification" translate="label" type="text" sortOrder="110" showInDefault="1">
+                <label>Notification</label>
+                <depends>
+                    <field id="bloomreach_engagement/general/enable">1</field>
+                </depends>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="sender" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Notification Sender</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                    <depends>
+                        <field id="bloomreach_engagement/notification/enabled">1</field>
+                    </depends>
+                </field>
+                <field id="recipients" translate="label comment" type="text" sortOrder="30" showInDefault="1">
+                    <label>Notification Recipients</label>
+                    <comment><![CDATA[Multiple email addresses separated by a comma are allowed.]]></comment>
+                    <depends>
+                        <field id="bloomreach_engagement/notification/enabled">1</field>
+                        <!--
+                            The following depends field is needed to avoid incorrect field validation
+                            for the 'recipients' field.
+                            Case: first module configuration saving, general/enable -> yes, notification/enabled -> no,
+                            the 'recipients' field is hidden, but validating.
+                        -->
+                        <field id="bloomreach_engagement/general/enable">1</field>
+                    </depends>
+                    <validate>required-entry validate-emails</validate>
+                </field>
+                <field id="allowed_error_percentage" translate="label" type="text" sortOrder="40" showInDefault="1">
+                    <label>Percent of errors</label>
+                    <depends>
+                        <field id="bloomreach_engagement/notification/enabled">1</field>
+                    </depends>
+                    <comment><![CDATA[Valid range: 0 - 99]]></comment>
+                    <validate>validate-no-empty validate-digits-range digits-range-0-99</validate>
                 </field>
             </group>
         </section>

@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @author Bloomreach
+ * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
+ */
 declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Exception;
@@ -9,7 +12,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 
 /**
- * An exception that is thrown when the request to the Bloomreach API is unsuccessful
+ * An exception that is thrown when the export request to the Bloomreach API is unsuccessful
  */
 class ExportRequestException extends LocalizedException
 {

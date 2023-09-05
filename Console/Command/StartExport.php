@@ -83,6 +83,7 @@ class StartExport extends Command
                 $output->writeln('Message: ' . $result->getReasonPhrase());
             } catch (Exception $e) {
                 $output->writeln($e->getMessage());
+                return Cli::RETURN_FAILURE;
             }
         } else {
             $this->appState->emulateAreaCode(
@@ -96,7 +97,6 @@ class StartExport extends Command
         }
 
         $output->writeln('Data export to Bloomreach has complete');
-
         return Cli::RETURN_SUCCESS;
     }
 

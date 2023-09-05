@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Observer;
 
-use Bloomreach\EngagementConnector\Model\DataMapping\Config\ConfigProvider;
+use Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\Product\ProductVariantsType;
+use Bloomreach\EngagementConnector\Model\Export\Condition\IsRealTimeUpdateAllowed;
 use Bloomreach\EngagementConnector\Model\Product\ChildIdsDataProvider;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -29,15 +31,23 @@ class CollectChildIdsBeforeDeleteProduct implements ObserverInterface
     private $configProvider;
 
     /**
+     * @var IsRealTimeUpdateAllowed
+     */
+    private $isRealTimeUpdateAllowed;
+
+    /**
      * @param ChildIdsDataProvider $childIdsDataProvider
      * @param ConfigProvider $configProvider
+     * @param IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed
      */
     public function __construct(
         ChildIdsDataProvider $childIdsDataProvider,
-        ConfigProvider $configProvider
+        ConfigProvider $configProvider,
+        IsRealTimeUpdateAllowed $isRealTimeUpdateAllowed
     ) {
         $this->childIdsDataProvider = $childIdsDataProvider;
         $this->configProvider = $configProvider;
+        $this->isRealTimeUpdateAllowed = $isRealTimeUpdateAllowed;
     }
 
     /**
@@ -49,15 +59,16 @@ class CollectChildIdsBeforeDeleteProduct implements ObserverInterface
      */
     public function execute(Observer $observer): void
     {
-        if ($this->configProvider->isEnabled()
-            && $this->configProvider->getCatalogId()
-            && $this->configProvider->getCatalogVariantsId()
+        if (!$this->configProvider->isEnabled()
+            || !$this->isRealTimeUpdateAllowed->execute(ProductVariantsType::ENTITY_TYPE)
         ) {
-            $event = $observer->getEvent();
-            /** @var $product Product */
-            $product = $event->getProduct();
-
-            $this->childIdsDataProvider->collectIds($product);
+            return;
         }
+
+        $event = $observer->getEvent();
+        /** @var $product Product */
+        $product = $event->getProduct();
+
+        $this->childIdsDataProvider->collectIds($product);
     }
 }

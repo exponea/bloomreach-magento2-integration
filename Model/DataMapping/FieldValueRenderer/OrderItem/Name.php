@@ -52,7 +52,10 @@ class Name implements RenderInterface
         $childrenItems = $entity->getChildrenItems();
 
         if (!$childrenItems) {
-            $childName = $this->childItems->getChildName((int) $entity->getItemId());
+            $childName = $this->childItems->getChildName(
+                (int) $entity->getOrderId(),
+                (int) $entity->getItemId()
+            );
 
             return $childName ?: $name;
         }
