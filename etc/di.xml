@@ -541,4 +541,8 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Framework\Model\ResourceModel\Db\VersionControl\Snapshot">
+        <plugin name="bloomreach_engagement_prevent_db_snapshot"
+                type="Bloomreach\EngagementConnector\Plugin\Framework\Model\ResourceModel\Db\VersionControl\DisableSnapshot" />
+    </type>
 </config>

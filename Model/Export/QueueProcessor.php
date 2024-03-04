@@ -11,6 +11,7 @@ use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterfaceFactory;
 use Bloomreach\EngagementConnector\Api\Data\InitialExportStatusInterface;
 use Bloomreach\EngagementConnector\Api\SaveInitialExportStatusInterface;
 use Bloomreach\EngagementConnector\Model\DataMapping\DataMapperResolver;
+use Bloomreach\EngagementConnector\Model\DataProvider\DB\SnapshotSettings;
 use Bloomreach\EngagementConnector\Model\DataProvider\EntityType;
 use Bloomreach\EngagementConnector\Model\Export\Condition\IsInitialExportAllowed;
 use Bloomreach\EngagementConnector\Model\Export\Entity\CollectionFactory as EntityCollectionFactory;
@@ -115,6 +116,11 @@ class QueueProcessor
     private $exportQueueRegistry;
 
     /**
+     * @var SnapshotSettings
+     */
+    private $snapshotSettings;
+
+    /**
      * @param EntityType $entityType
      * @param EntityCollectionFactory $entityCollectionFactory
      * @param DataMapperResolver $dataMapperResolver
@@ -127,6 +133,7 @@ class QueueProcessor
      * @param AddNewErrorMessage $addNewErrorMessage
      * @param LoggerInterface $logger
      * @param ExportQueueRegistry $exportQueueRegistry
+     * @param SnapshotSettings $snapshotSettings
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -141,7 +148,8 @@ class QueueProcessor
         AddInitialExportDataToExportQueue $addInitialExportDataToExportQueue,
         AddNewErrorMessage $addNewErrorMessage,
         LoggerInterface $logger,
-        ExportQueueRegistry $exportQueueRegistry
+        ExportQueueRegistry $exportQueueRegistry,
+        SnapshotSettings $snapshotSettings
     ) {
         $this->entityType = $entityType;
         $this->entityCollectionFactory = $entityCollectionFactory;
@@ -155,6 +163,7 @@ class QueueProcessor
         $this->addNewErrorMessage = $addNewErrorMessage;
         $this->logger = $logger;
         $this->exportQueueRegistry = $exportQueueRegistry;
+        $this->snapshotSettings = $snapshotSettings;
     }
 
     /**
@@ -164,6 +173,10 @@ class QueueProcessor
      */
     public function process(): void
     {
+        //Disable db snapshot for all entities except ExportQueue and InitialExportStatus to prevent issue with memory
+        //A snapshot is not required as entities other than ExportQueue and InitialExportStatus are not updated
+        $this->snapshotSettings->setEnabled(false);
+
         //Retrieve each entity separately to prevent it from being processed by another cron process
         foreach ($this->entityType->getAllTypes() as $entityType) {
             $initialExportStatus = $this->initialExportStatusGetter->execute($entityType);
@@ -172,8 +185,14 @@ class QueueProcessor
                 && $this->isInitialExportAllowed->execute($initialExportStatus->getEntityType())
             ) {
                 $this->addEntityTypeToExportQueue($initialExportStatus);
+
+                //Handle only one entity type per execution to avoid memory issues
+                return;
             }
         }
+
+        //Enable db snapshot
+        $this->snapshotSettings->setEnabled(true);
     }
 
     /**
