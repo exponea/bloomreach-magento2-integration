@@ -58,6 +58,6 @@ class TriggerCartUpdateEventAfterCartTruncate
             $this->cartUpdateEventSettings->setIsCartUpdated(CartUpdateEventSettings::UPDATE_ACTION);
         }
 
-        return [$subject];
+        return [$quote];
     }
 }
