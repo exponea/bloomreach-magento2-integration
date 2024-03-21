@@ -1,3 +1,8 @@
+# v1.1.0
+
+- Fixed guest cart merging after logging in as customer
+- Improved the performance for processing large amount of orders
+
 # v1.0.0
 
 - Implemented new UI for Initial Import configuration
