@@ -9,6 +9,7 @@ namespace Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Im
 
 use Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\BuilderInterface;
 use Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Import\Request\IdMappingGetter;
+use stdClass;
 
 /**
  * The class is responsible for building request body for Customer entity type
@@ -39,7 +40,7 @@ class Customer implements BuilderInterface
      */
     public function build(string $entityType, array $body = []): array
     {
-        $body['destination'] = ['customer_destination' => []];
+        $body['destination'] = ['customer_destination' => new stdClass()];
         $body['mapping']['column_mapping']['id_mappings'] = $this->idMappingGetter->execute();
 
         return $body;
