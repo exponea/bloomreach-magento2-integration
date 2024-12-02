@@ -43,7 +43,7 @@ class GetCountryName
     {
         if (!array_key_exists($countryCode, $this->countryCache)) {
             $country = $this->countryFactory->create()->loadByCode($countryCode);
-            $this->countryCache[$countryCode] = $country ? (string) $country->getName() : '';
+            $this->countryCache[$countryCode] = $country ? (string) $country->getName('en_US') : '';
         }
 
         return $this->countryCache[$countryCode];

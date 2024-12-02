@@ -70,7 +70,7 @@ class ProgressLog extends Column
         }
 
         foreach ($dataSource['data']['items'] as &$item) {
-            if ($item[InitialExportStatus::STATUS] === StatusSource::PROCESSING) {
+            if (in_array($item[InitialExportStatus::STATUS], StatusSource::PROGRESS_LOG_VISIBLE_STATUSES)) {
                 $item[$this->getData('name')]['view_progress'] = [
                     'label' => __('View Progress'),
                     'url' => $this->urlBuilder->getUrl('bloomreach_engagement/initialImport/loadProgress'),
@@ -78,6 +78,7 @@ class ProgressLog extends Column
                     'entityName' => $this->entityType->getEntityName($item[InitialExportStatus::ENTITY_TYPE])
                 ];
             }
+
             if ($item[InitialExportStatus::ERRORS]) {
                 $item[$this->getData('name')][InitialExportStatus::ERRORS] = [
                     'label' => __('View Errors')

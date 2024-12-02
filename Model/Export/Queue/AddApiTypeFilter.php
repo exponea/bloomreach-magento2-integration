@@ -18,16 +18,6 @@ use Bloomreach\EngagementConnector\Service\InitialExportStatus\ItemsGetter;
  */
 class AddApiTypeFilter
 {
-    private const IN_PROGRESS_STATUSES = [
-        StatusSource::SCHEDULED,
-        StatusSource::PROCESSING
-    ];
-
-    private const FINISHED_STATUSES = [
-        StatusSource::ERROR,
-        StatusSource::SUCCESS
-    ];
-
     /**
      * @var EntityType
      */
@@ -72,7 +62,7 @@ class AddApiTypeFilter
                     ExportQueueModel::ENTITY_TYPE,
                     $item->getEntityType()
                 );
-            } elseif (in_array($item->getStatus(), self::FINISHED_STATUSES)) {
+            } elseif (in_array($item->getStatus(), StatusSource::FINISHED_STATUSES)) {
                 $result[] = sprintf(
                     '(%s = \'%s\' AND %s != \'%s\')',
                     ExportQueueModel::ENTITY_TYPE,
@@ -80,7 +70,7 @@ class AddApiTypeFilter
                     ExportQueueModel::API_TYPE,
                     AddInitialExportDataToExportQueue::API_TYPE
                 );
-            } elseif (in_array($item->getStatus(), self::IN_PROGRESS_STATUSES)) {
+            } elseif (in_array($item->getStatus(), StatusSource::IN_PROGRESS_STATUSES)) {
                 $result[] = sprintf(
                     '(%s = \'%s\' AND %s = \'%s\')',
                     ExportQueueModel::ENTITY_TYPE,

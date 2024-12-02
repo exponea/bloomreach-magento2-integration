@@ -4,8 +4,8 @@ This is a module for integration with the [Bloomreach service](https://www.bloom
 
 ## Prerequisites
 
-- Magento 2.3, 2.4
-- PHP 7.3, 7.4, 8.1, 8.2
+- Magento 2.4
+- PHP 7.3, 7.4, 8.1, 8.2, 8.3
 
 ## Installation
 
@@ -235,9 +235,7 @@ If the module was installed manually, then you need to do the following steps to
 <type name="Bloomreach\EngagementConnector\Model\DataMapping\DataMapperFactory">
     <arguments>
         <argument name="dataMappers" xsi:type="array">
-            <item name="custom_entity" xsi:type="string">
-                Vendor\Name\Model\DataMapping\DataMapper\Custom
-            </item>
+            <item name="custom_entity" xsi:type="string">Vendor\Name\Model\DataMapping\DataMapper\Custom</item>
         </argument>
     </arguments>
 </type>
@@ -250,9 +248,7 @@ If the module was installed manually, then you need to do the following steps to
     <arguments>
         <argument name="fieldValueRenderers" xsi:type="array">
             <item name="custom_entity" xsi:type="array">
-                <item name="entity_id" xsi:type="object">
-                    Vendor\Name\Model\DataMapping\FieldValueRenderer\CustomRenderer\EntityIdRenderer
-                </item>
+                <item name="entity_id" xsi:type="object">Vendor\Name\Model\DataMapping\FieldValueRenderer\CustomRenderer\EntityIdRenderer</item>
             </item>
         </argument>
     </arguments>
@@ -268,9 +264,7 @@ If the module was installed manually, then you need to do the following steps to
 <type name="Bloomreach\EngagementConnector\Model\DataMapping\DataMapper\ProductMapperResolver">
     <arguments>
         <argument name="dataMappers" xsi:type="array">
-            <item name="configurable" xsi:type="object">
-                Vendor\Name\Model\DataMapping\DataMapper\Product\Configurable
-            </item>
+            <item name="configurable" xsi:type="object">Vendor\Name\Model\DataMapping\DataMapper\Product\Configurable</item>
         </argument>
     </arguments>
 </type>
@@ -285,9 +279,7 @@ If the module was installed manually, then you need to do the following steps to
     <arguments>
         <argument name="fieldValueRenderers" xsi:type="array">
             <item name="catalog_product" xsi:type="array">
-                <item name="custom_field" xsi:type="object">
-                    Vendor\Name\Model\DataMapping\FieldValueRenderer\Product\CustomRenderer
-                </item>
+                <item name="custom_field" xsi:type="object">Vendor\Name\Model\DataMapping\FieldValueRenderer\Product\CustomRenderer</item>
             </item>
         </argument>
     </arguments>
@@ -303,9 +295,7 @@ If the module was installed manually, then you need to do the following steps to
     <arguments>
         <argument name="fieldValueRenderers" xsi:type="array">
             <item name="simple" xsi:type="array">
-                <item name="entity_id" xsi:type="object">
-                    Vendor\Name\Model\DataMapping\FieldValueRenderer\Product\Simple\EntityIdRenderer
-                </item>
+                <item name="entity_id" xsi:type="object">Vendor\Name\Model\DataMapping\FieldValueRenderer\Product\Simple\EntityIdRenderer</item>
             </item>
         </argument>
     </arguments>
@@ -321,9 +311,7 @@ If the module was installed manually, then you need to do the following steps to
     <arguments>
         <argument name="fieldValueRenderers" xsi:type="array">
             <item name="catalog_product" xsi:type="array">
-                <item name="entity_id" xsi:type="object">
-                    Vendor\Name\Model\DataMapping\FieldValueRenderer\Product\\EntityIdRenderer
-                </item>
+                <item name="entity_id" xsi:type="object">Vendor\Name\Model\DataMapping\FieldValueRenderer\Product\EntityIdRenderer</item>
             </item>
         </argument>
     </arguments>
@@ -416,9 +404,7 @@ If the module was installed manually, then you need to do the following steps to
 <type name="Bloomreach\EngagementConnector\Model\Export\Entity\CollectionFactory">
     <arguments>
         <argument name="collections" xsi:type="array">
-            <item name="catalog_product" xsi:type="string">
-                Magento\Catalog\Model\ResourceModel\Product\Collection
-            </item>
+            <item name="catalog_product" xsi:type="string">Magento\Catalog\Model\ResourceModel\Product\Collection</item>
         </argument>
     </arguments>
 </type>
@@ -459,9 +445,7 @@ If the module was installed manually, then you need to do the following steps to
     <arguments>
         <argument name="transporters" xsi:type="array">
             <item name="csv_export" xsi:type="array">
-                <item name="default" xsi:type="object">
-                    Bloomreach\EngagementConnector\Model\Export\Transporter\InitialExport\DefaultTransporter
-                </item>
+                <item name="default" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\Transporter\InitialExport\DefaultTransporter</item>
             </item>
         </argument>
     </arguments>
@@ -478,9 +462,7 @@ If the module was installed manually, then you need to do the following steps to
     <arguments>
         <argument name="transporters" xsi:type="array">
             <item name="event" xsi:type="array">
-                <item name="custom_entity" xsi:type="object">
-                    Bloomreach\EngagementConnector\Model\Export\Transporter\Event\CustomEntityTransporter
-                </item>
+                <item name="custom_entity" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\Transporter\Event\CustomEntityTransporter</item>
             </item>
         </argument>
     </arguments>
@@ -533,7 +515,7 @@ If the module was installed manually, then you need to do the following steps to
 2. Create child block for `bloomreach.engagement.connector.tracking` in the layout. 
 3. Use `Bloomreach\EngagementConnector\Block\Tracking\Event` class for event block. 
 4. Pass your event class to event block via arguments with name `events`.
-5. Use `Bloomreach_EngagementConnector::tracking/event/default.phtml` template for send event
+5. Use `Bloomreach_EngagementConnector::tracking/event/default.phtml` template for send event.
 ```xml
 <referenceBlock name="bloomreach.engagement.connector.tracking">
     <block class="Bloomreach\EngagementConnector\Block\Tracking\Event"
@@ -541,9 +523,7 @@ If the module was installed manually, then you need to do the following steps to
            after="-"
            template="Bloomreach_EngagementConnector::tracking/event/default.phtml">
         <arguments>
-            <argument name="events" xsi:type="object">
-                Bloomreach\EngagementConnector\Model\Tracking\Event\ProductPage\ViewItem
-            </argument>
+            <argument name="events" xsi:type="object">Bloomreach\EngagementConnector\Model\Tracking\Event\ProductPage\ViewItem</argument>
         </arguments>
     </block>
 </referenceBlock>

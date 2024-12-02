@@ -5,9 +5,11 @@
  */
 
 use Bloomreach\EngagementConnector\ViewModel\Tracking\Config as ConfigViewModel;
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
 /** @var Template $block */
+/** @var Escaper $escaper */
 $ajaxUrl = $block->getUrl('bloomreach_engagement/event_viewitem/configurable');
 /** @var ConfigViewModel $configViewModel */
 $configViewModel = $block->getData('config_view_model');
@@ -17,7 +19,7 @@ $configViewModel = $block->getData('config_view_model');
         {
             "*": {
                 "Bloomreach_EngagementConnector/js/tracking/product/configurable": {
-                    "ajaxUrl": "<?= $block->escapeUrl($ajaxUrl); ?>",
+                    "ajaxUrl": "<?= $escaper->escapeUrl($ajaxUrl); ?>",
                     "trackingProvider": "<?= /* @noEscape */ $configViewModel->getTrackingProvider(); ?>"
                 }
             }

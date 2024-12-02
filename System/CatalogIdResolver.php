@@ -11,7 +11,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
- * The class is responsible for returning import id for entity type
+ * The class is responsible for returning catalog id for entity type
  */
 class CatalogIdResolver
 {

@@ -33,15 +33,23 @@ class IsEntityTypeFeedEnabled
     private $cache = [];
 
     /**
+     * @var bool
+     */
+    private $useCache;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
      * @param ConfigPathGetter $configPathGetter
+     * @param bool $useCache
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        ConfigPathGetter $configPathGetter
+        ConfigPathGetter $configPathGetter,
+        bool $useCache = true
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->configPathGetter = $configPathGetter;
+        $this->useCache = $useCache;
     }
 
     /**
@@ -59,7 +67,7 @@ class IsEntityTypeFeedEnabled
         string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
         $scopeCode = null
     ): bool {
-        if (!array_key_exists($entityType, $this->cache)) {
+        if (!array_key_exists($entityType, $this->cache) || !$this->useCache) {
             $this->cache[$entityType] = $this->isAllowed($entityType, $scopeType, $scopeCode);
         }
 

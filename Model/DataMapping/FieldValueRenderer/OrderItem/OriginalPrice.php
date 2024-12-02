@@ -38,17 +38,13 @@ class OriginalPrice implements RenderInterface
      * @param AbstractSimpleObject|AbstractModel $entity
      * @param string $fieldCode
      *
-     * @return string
+     * @return float
      */
     public function render($entity, string $fieldCode)
     {
-        $price = $this->roundPrice((float) $entity->getData($fieldCode));
-
-        if ($entity->getProductType() === BundleType::TYPE_CODE) {
-            $price = $this->getBundleProductPrice($entity, $fieldCode);
-        }
-
-        return number_format($price, 2, ',', '');
+        return $entity->getProductType() === BundleType::TYPE_CODE
+            ? $this->getBundleProductPrice($entity, $fieldCode)
+            : $this->roundPrice((float) $entity->getData($fieldCode));
     }
 
     /**

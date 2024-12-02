@@ -30,15 +30,23 @@ class IsRealTimeUpdateAllowed
     private $cache = [];
 
     /**
+     * @var bool
+     */
+    private $useCache;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
      * @param array $configPool
+     * @param bool $useCache
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        array $configPool = []
+        array $configPool = [],
+        bool $useCache = true
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->configPool = $configPool;
+        $this->useCache = $useCache;
     }
 
     /**
@@ -55,7 +63,7 @@ class IsRealTimeUpdateAllowed
         string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
         $scopeCode = null
     ): bool {
-        if (!array_key_exists($entityType, $this->cache)) {
+        if (!array_key_exists($entityType, $this->cache) || !$this->useCache) {
             $this->cache[$entityType] = $this->isAllowed($entityType, $scopeType, $scopeCode);
         }
 

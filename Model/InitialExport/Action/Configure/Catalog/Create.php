@@ -128,7 +128,8 @@ class Create
         }
 
         return $this->fieldsMapper->map(
-            $this->dataMapperResolver->map($collection->getFirstItem(), $entityType)->toArray()
+            $this->dataMapperResolver->map($collection->getFirstItem(), $entityType)->toArray(),
+            $entityType
         );
     }
 }

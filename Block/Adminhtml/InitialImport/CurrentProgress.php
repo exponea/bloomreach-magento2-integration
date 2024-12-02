@@ -14,7 +14,7 @@ use Bloomreach\EngagementConnector\Model\Export\File\MediaUrlGenerator;
 use Bloomreach\EngagementConnector\Model\Export\Queue\AddInitialExportDataToExportQueue;
 use Bloomreach\EngagementConnector\Model\Export\Queue\Source\StatusSource as ExportQueueStatusSource;
 use Bloomreach\EngagementConnector\Model\ExportQueueModel;
-use Bloomreach\EngagementConnector\Model\InitialExportStatus\Source\StatusSource as InitialExportStatusSource;
+use Bloomreach\EngagementConnector\Model\InitialExportStatus\Source\StatusSource;
 use Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue\Collection as ExportQueueCollection;
 use Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue\CollectionFactory as ExportQueueCollectionFactory;
 use Bloomreach\EngagementConnector\Service\InitialExportStatus\ItemGetter as InitialExportStatusGetter;
@@ -180,7 +180,10 @@ class CurrentProgress extends Template
      */
     public function isStarted(): bool
     {
-        return $this->getInitialExportStatus()->getStatus() === InitialExportStatusSource::PROCESSING;
+        return in_array(
+            $this->getInitialExportStatus()->getStatus(),
+            StatusSource::PROGRESS_LOG_VISIBLE_STATUSES
+        );
     }
 
     /**
@@ -305,6 +308,42 @@ class CurrentProgress extends Template
             $rowClass,
             $this->exportQueueStatusSource->getStatusLabel($exportQueue->getStatus())
         );
+    }
+
+    /**
+     * Checks whether import is finished
+     *
+     * @return bool
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function isFinished(): bool
+    {
+        return in_array($this->getInitialExportStatus()->getStatus(), StatusSource::FINISHED_STATUSES);
+    }
+
+    /**
+     * Get total error items
+     *
+     * @return int
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function getTotalErrorItems(): int
+    {
+        return $this->getInitialExportStatus()->getTotalErrorItems();
+    }
+
+    /**
+     * Get total exported items
+     *
+     * @return int
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function getTotalExportedItems(): int
+    {
+        return $this->getInitialExportStatus()->getTotalExported();
     }
 
     /**

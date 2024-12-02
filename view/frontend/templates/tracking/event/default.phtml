@@ -7,21 +7,26 @@
 // phpcs:disable Generic.Files.LineLength.TooLong
 use Bloomreach\EngagementConnector\Block\Tracking\Event;
 use Bloomreach\EngagementConnector\ViewModel\Tracking\Config as ConfigViewModel;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
 
 /** @var Event $block */
+/** @var Escaper $escaper */
+/** @var SecureHtmlRenderer $secureRenderer */
 /** @var ConfigViewModel $configViewModel */
 $configViewModel = $block->getData('config_view_model');
-?>
-<?php if ($configViewModel): ?>
-    <script>
-        require([
-            'Bloomreach_EngagementConnector/js/tracking/event-sender'
-        ], function(eventSender) {
-            'use strict';
-            var trackingProvider = "<?= $block->escapeHtml($configViewModel->getTrackingProvider()); ?>";
-            var eventList = <?= $block->getJsLayout(); ?>;
-            eventSender.sendListOfEvents(eventList, trackingProvider);
-        });
-    </script>
-    <?= $block->getChildHtml(); ?>
-<?php endif; ?>
+if ($configViewModel) {
+    $scriptString = <<<script
+    require([
+        'Bloomreach_EngagementConnector/js/tracking/event-sender'
+    ], function(eventSender) {
+        'use strict';
+        var trackingProvider = "{$escaper->escapeHtml($configViewModel->getTrackingProvider())}";
+        var eventList = {$block->getJsLayout()};
+        eventSender.sendListOfEvents(eventList, trackingProvider);
+    });
+    script;
+    // phpcs:ignore
+    echo /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false);
+    echo $block->getChildHtml();
+}

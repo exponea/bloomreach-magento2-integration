@@ -22,10 +22,10 @@ class FinalPrice implements RenderInterface
      * @param AbstractSimpleObject|AbstractModel $entity
      * @param string $fieldCode
      *
-     * @return string
+     * @return float
      */
     public function render($entity, string $fieldCode)
     {
-        return number_format(round((float) $entity->getFinalPrice(), 2), 4, '.', '');
+        return round((float) $entity->getFinalPrice(), 2);
     }
 }

@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\Export\Queue\Batch\Command\Data\Builder;
 
 use Bloomreach\EngagementConnector\Api\Data\ExportQueueInterface;
-use Bloomreach\EngagementConnector\Model\DataMapping\Event\RegisteredGenerator;
 use InvalidArgumentException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -24,20 +23,11 @@ class CustomerUpdate implements BuilderInterface
     private $jsonSerializer;
 
     /**
-     * @var RegisteredGenerator
-     */
-    private $registeredGenerator;
-
-    /**
      * @param SerializerInterface $jsonSerializer
-     * @param RegisteredGenerator $registeredGenerator
      */
-    public function __construct(
-        SerializerInterface $jsonSerializer,
-        RegisteredGenerator $registeredGenerator
-    ) {
+    public function __construct(SerializerInterface $jsonSerializer)
+    {
         $this->jsonSerializer = $jsonSerializer;
-        $this->registeredGenerator = $registeredGenerator;
     }
 
     /**
@@ -51,10 +41,6 @@ class CustomerUpdate implements BuilderInterface
     public function build(ExportQueueInterface $exportQueue): array
     {
         $properties = $this->unserializeData($exportQueue->getBody());
-
-        if (is_array($properties)) {
-            $this->registeredGenerator->deleteRegisteredData($properties);
-        }
 
         return [
             'customer_ids' => $this->jsonSerializer->unserialize($exportQueue->getRegistered()),

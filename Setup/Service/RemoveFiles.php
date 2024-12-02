@@ -9,6 +9,7 @@ namespace Bloomreach\EngagementConnector\Setup\Service;
 
 use Bloomreach\EngagementConnector\Model\Export\File\DirectoryProvider;
 use Exception;
+use Magento\Framework\App\Filesystem\DirectoryList as AppDirectoryList;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Driver\File as DriverFile;
@@ -57,9 +58,38 @@ class RemoveFiles
      */
     public function execute(): void
     {
-        $directory = DIRECTORY_SEPARATOR . DirectoryProvider::DEFAULT_BASE_DIRECTORY . DIRECTORY_SEPARATOR;
-        $mediaPath = $this->directoryList->getPath('media') . $directory;
-        $this->deleteDirectoryRecursively($mediaPath);
+        $this->deleteImportFiles();
+        $this->deleteLogFiles();
+    }
+
+    /**
+     * Delete log files
+     *
+     * @return void
+     * @throws FileSystemException
+     */
+    private function deleteLogFiles(): void
+    {
+        $this->deleteDirectoryRecursively(
+            $this->directoryList->getPath(AppDirectoryList::LOG)
+            . DIRECTORY_SEPARATOR
+            . DirectoryProvider::DEFAULT_BASE_DIRECTORY
+        );
+    }
+
+    /**
+     * Delete import files
+     *
+     * @return void
+     * @throws FileSystemException
+     */
+    private function deleteImportFiles(): void
+    {
+        $this->deleteDirectoryRecursively(
+            $this->directoryList->getPath(AppDirectoryList::MEDIA)
+            . DIRECTORY_SEPARATOR
+            . DirectoryProvider::DEFAULT_BASE_DIRECTORY
+        );
     }
 
     /**

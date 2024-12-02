@@ -47,6 +47,6 @@ class TotalPriceWithoutTax implements RenderInterface
             $totalWithoutTax = $quoteTotals->getBaseGrandTotal() - $quoteTotals->getBaseTaxAmount();
         }
 
-        return number_format($totalWithoutTax ?: (float) $entity->getBaseGrandTotal(), 2, '.', '');
+        return $totalWithoutTax ? (float) round((float) $entity->getBaseGrandTotal(), 2) : 0.0;
     }
 }

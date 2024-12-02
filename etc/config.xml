@@ -28,10 +28,12 @@
             <catalog_product_feed>
                 <enabled>0</enabled>
                 <real_time_updates>0</real_time_updates>
+                <searchable_fields><![CDATA[active,title,supplier,gender,rating,ratings_count,category_level_1,category_level_2,category_level_3,categories_path,categories_ids,color,size,price,original_price,discount_percentage,discount_value,on_sale,date_added,stock_level]]></searchable_fields>
             </catalog_product_feed>
             <catalog_product_variants_feed>
                 <enabled>0</enabled>
                 <real_time_updates>0</real_time_updates>
+                <searchable_fields><![CDATA[active,title,supplier,gender,rating,ratings_count,category_level_1,category_level_2,category_level_3,categories_path,categories_ids,color,size,price,original_price,discount_percentage,discount_value,on_sale,date_added,stock_level]]></searchable_fields>
             </catalog_product_variants_feed>
             <customer_feed>
                 <enabled>0</enabled>
