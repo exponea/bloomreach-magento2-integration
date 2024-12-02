@@ -42,11 +42,9 @@ class TotalPrice implements RenderInterface
     {
         $quoteTotals = $this->getQuoteTotals->execute($entity);
 
-        return number_format(
+        return (float) round(
             (float) ($quoteTotals ? $quoteTotals->getBaseGrandTotal() : $entity->getBaseGrandTotal()),
-            2,
-            ',',
-            ''
+            2
         );
     }
 }

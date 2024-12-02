@@ -103,7 +103,7 @@ class SourceGenerator
             $entityType
         )->toArray();
         $source->setFileUrl($this->sampleFileGenerator->execute(array_keys($data), $entityType));
-        $source->setPropertyMappings($this->propertyMapper->map($data));
+        $source->setPropertyMappings($this->propertyMapper->map($data, $entityType));
 
         return $source;
     }
@@ -132,7 +132,7 @@ class SourceGenerator
         }
 
         $source->setFileUrl($this->sampleFileGenerator->execute($data, $entityType));
-        $source->setPropertyMappings($this->propertyMapper->map(current($data)));
+        $source->setPropertyMappings($this->propertyMapper->map(current($data), $entityType));
 
         return $source;
     }

@@ -178,6 +178,15 @@
                         <field id="enabled">1</field>
                     </depends>
                 </field>
+                <field id="searchable_fields" translate="label" type="multiselect" sortOrder="30" showInDefault="1" canRestore="1">
+                    <label>Searchable Fields</label>
+                    <source_model>Bloomreach\EngagementConnector\Model\Config\Source\CatalogProductFields</source_model>
+                    <backend_model>Bloomreach\EngagementConnector\Model\Config\Backend\ValidateSearchableFields</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                    <validate>required-entry</validate>
+                </field>
             </group>
             <group id="catalog_product_variants_feed" translate="label" type="text" sortOrder="50" showInDefault="1">
                 <label>Variants Feed</label>
@@ -200,6 +209,15 @@
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
+                </field>
+                <field id="searchable_fields" translate="label" type="multiselect" sortOrder="30" showInDefault="1" canRestore="1">
+                    <label>Searchable Fields</label>
+                    <source_model>Bloomreach\EngagementConnector\Model\Config\Source\CatalogProductVariantsFields</source_model>
+                    <backend_model>Bloomreach\EngagementConnector\Model\Config\Backend\ValidateSearchableFields</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                    <validate>required-entry</validate>
                 </field>
             </group>
             <group id="customer_feed" translate="label" type="text" sortOrder="60" showInDefault="1">

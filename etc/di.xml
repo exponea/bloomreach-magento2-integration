@@ -43,8 +43,10 @@
     </virtualType>
     <virtualType name="Bloomreach\EngagementConnector\Logger\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
+            <argument name="name" xsi:type="string">BloomreachErrorLogger</argument>
             <argument name="handlers" xsi:type="array">
-                <item name="error" xsi:type="object">Bloomreach\EngagementConnector\Logger\Handler</item>
+                <item name="system" xsi:type="object">Bloomreach\EngagementConnector\Logger\Handler</item>
+                <item name="debug" xsi:type="object">Monolog\Handler\NullHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -97,6 +99,7 @@
                     <item name="discount_value" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Discount</item>
                     <item name="sale" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\OnSale</item>
                     <item name="stock_level" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\StockLevel</item>
+                    <item name="price" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\FloatValue</item>
                 </item>
                 <item name="catalog_product_variants" xsi:type="array">
                     <item name="default" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductTypeRendererResolver</item>
@@ -124,6 +127,7 @@
                     <item name="short_description" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Text</item>
                     <item name="description" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Text</item>
                     <item name="url" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Url</item>
+                    <item name="price" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\FloatValue</item>
                 </item>
                 <item name="customer" xsi:type="array">
                     <item name="default" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Customer\DefaultRenderer</item>
@@ -144,8 +148,9 @@
                     <item name="shipping_country" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ShippingCountry</item>
                     <item name="region" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ShippingAddressField</item>
                     <item name="city" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ShippingAddressField</item>
-                    <item name="base_grand_total" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue</item>
-                    <item name="grand_total" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\FloatValue</item>
+                    <item name="base_grand_total" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultFloatValueRenderer</item>
+                    <item name="grand_total" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultFloatValueRenderer</item>
+                    <item name="total_qty_ordered" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultFloatValueRenderer</item>
                     <item name="base_discount_amount" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\PositiveFloatValue</item>
                 </item>
                 <item name="purchase_item" xsi:type="array">
@@ -170,6 +175,7 @@
                     <item name="category_level_2" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Category</item>
                     <item name="category_level_3" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Category</item>
                     <item name="categories_path" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem\Category</item>
+                    <item name="qty_ordered" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultFloatValueRenderer</item>
                 </item>
                 <item name="view_item" xsi:type="array">
                     <item name="default" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\ProductTypeRendererResolver</item>
@@ -183,6 +189,7 @@
                     <item name="total_price" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Quote\TotalPrice</item>
                     <item name="total_price_local_currency" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Quote\TotalPriceLocalCurrency</item>
                     <item name="total_price_without_tax" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Quote\TotalPriceWithoutTax</item>
+                    <item name="items_qty" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultFloatValueRenderer</item>
                 </item>
             </argument>
         </arguments>
@@ -219,6 +226,7 @@
                     <item name="discount_percentage" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\DiscountPercentage</item>
                     <item name="discount_value" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\DiscountValue</item>
                     <item name="stock_level" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\StockLevel</item>
+                    <item name="price" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\FloatValue</item>
                 </item>
             </argument>
         </arguments>
@@ -360,11 +368,6 @@
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
         </arguments>
     </type>
-    <type name="Bloomreach\EngagementConnector\Model\Export\QueueProcessor">
-        <arguments>
-            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
-        </arguments>
-    </type>
     <type name="Bloomreach\EngagementConnector\Service\Export\ExportGuestCustomer">
         <arguments>
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
@@ -413,8 +416,10 @@
     </virtualType>
     <virtualType name="Bloomreach\EngagementConnector\Logger\DebugLogger" type="Magento\Framework\Logger\Monolog">
         <arguments>
+            <argument name="name" xsi:type="string">BloomreachDebugLogger</argument>
             <argument name="handlers" xsi:type="array">
-                <item name="error" xsi:type="object">Bloomreach\EngagementConnector\Logger\Handler\Debugger</item>
+                <item name="system" xsi:type="object">Bloomreach\EngagementConnector\Logger\Handler\Debugger</item>
+                <item name="debug" xsi:type="object">Monolog\Handler\NullHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -469,12 +474,14 @@
                     <item name="import_id" xsi:type="string">bloomreach_engagement/catalog_product_feed/import_id</item>
                     <item name="catalog_id" xsi:type="string">bloomreach_engagement/catalog_product_feed/catalog_id</item>
                     <item name="realtime_update" xsi:type="string">bloomreach_engagement/catalog_product_feed/real_time_updates</item>
+                    <item name="searchable_fields" xsi:type="string">bloomreach_engagement/catalog_product_feed/searchable_fields</item>
                 </item>
                 <item name="catalog_product_variants" xsi:type="array">
                     <item name="feed_enabled" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/enabled</item>
                     <item name="import_id" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/import_id</item>
                     <item name="catalog_id" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/catalog_id</item>
                     <item name="realtime_update" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/real_time_updates</item>
+                    <item name="searchable_fields" xsi:type="string">bloomreach_engagement/catalog_product_variants_feed/searchable_fields</item>
                 </item>
                 <item name="customer" xsi:type="array">
                     <item name="feed_enabled" xsi:type="string">bloomreach_engagement/customer_feed/enabled</item>
@@ -500,6 +507,7 @@
             <argument name="initialExportStatusList" xsi:type="object">Bloomreach\EngagementConnector\Service\InitialExportStatus\ItemsGetter\Proxy</argument>
             <argument name="addInitialExportDataToExportQueue" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\Queue\AddInitialExportDataToExportQueue\Proxy</argument>
             <argument name="saveInitialExportStatus" xsi:type="object">Bloomreach\EngagementConnector\Api\SaveInitialExportStatusInterface\Proxy</argument>
+            <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>
         </arguments>
     </type>
     <type name="Bloomreach\EngagementConnector\Model\Export\Queue\Batch\Command\Data\Builder\BuilderResolver">

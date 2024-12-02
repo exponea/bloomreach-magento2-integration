@@ -1,3 +1,23 @@
+# v1.1.1
+
+- Fixes
+  - Resolved issues with configuring the `Customers Feed` import
+  - Corrected the order of category levels
+  - Fixed incorrect value types for fields such as price, qty, and others
+  - Resolved an issue where `customer_id` and `email_id` were not tracked when a new customer was created
+- Additions
+  - Added compatibility with `PHP 8.3`
+  - Added compatibility with Magento `2.4.7-p3`
+  - Introduced the ability to configure searchable fields for `Products Feed` and `Variants Feed`
+  - Added the `sku` field to the `Purchase Items Feed`
+- Improvements
+  - Enhanced the `Export Queue Clean Up` cron job
+  - Enhanced the `Progress Log` in the Initial Import Grid
+  - Improved the module uninstallation process by ensuring module log files are deleted
+- Changes
+  - Discontinued compatibility with Magento versions lower than `2.4.0`
+  - Country names are now tracked in English instead of being translated
+
 # v1.1.0
 
 - Fixed guest cart merging after logging in as customer

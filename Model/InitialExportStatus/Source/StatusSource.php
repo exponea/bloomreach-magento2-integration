@@ -16,18 +16,25 @@ use Magento\Framework\Phrase;
 class StatusSource implements OptionSourceInterface
 {
     public const DISABLED = 1;
-
     public const NOT_READY = 2;
-
     public const READY = 3;
-
     public const SCHEDULED = 4;
-
     public const PROCESSING = 5;
-
     public const ERROR = 6;
-
     public const SUCCESS = 7;
+    public const IN_PROGRESS_STATUSES = [
+        StatusSource::SCHEDULED,
+        StatusSource::PROCESSING
+    ];
+    public const FINISHED_STATUSES = [
+        StatusSource::ERROR,
+        StatusSource::SUCCESS
+    ];
+    public const PROGRESS_LOG_VISIBLE_STATUSES = [
+        StatusSource::PROCESSING,
+        StatusSource::ERROR,
+        StatusSource::SUCCESS
+    ];
 
     /**
      * Get Statuses Source

@@ -94,7 +94,7 @@ class VariantList implements RenderInterface
         return [
             'variant_id' => $productId,
             'sku' => $orderItem->getSku(),
-            'quantity' => $orderItem->getQtyOrdered()
+            'quantity' => (int) $orderItem->getQtyOrdered()
         ];
     }
 }

@@ -244,6 +244,11 @@ class ConfigProvider
     public const REALTIME_UPDATE_TYPE = 'realtime_update';
 
     /**
+     * Searchable fields type
+     */
+    public const SEARCHABLE_FIELDS = 'searchable_fields';
+
+    /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;

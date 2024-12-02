@@ -47,6 +47,6 @@ class TotalPriceLocalCurrency implements RenderInterface
             $grandTotal = $quoteTotals->getGrandTotal() + $quoteTotals->getTaxAmount();
         }
 
-        return number_format((float) ($grandTotal ?: $entity->getGrandTotal()), 2, '.', '');
+        return round((float) ($grandTotal ?: $entity->getGrandTotal()), 2);
     }
 }

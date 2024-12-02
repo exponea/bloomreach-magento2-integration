@@ -315,8 +315,8 @@
         <bloomreach_code code="brand">
             <field code="manufacturer"/>
         </bloomreach_code>
-        <bloomreach_code code="variant_id">
-            <field code="variant_id"/>
+        <bloomreach_code code="sku">
+            <field code="sku"/>
         </bloomreach_code>
         <bloomreach_code code="category_level_1">
             <field code="category_level_1"/>

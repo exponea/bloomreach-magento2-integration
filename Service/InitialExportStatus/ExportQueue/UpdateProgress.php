@@ -100,7 +100,6 @@ class UpdateProgress
         }
 
         $tempTotal = $initialExportStatus->getTotalExported() + $initialExportStatus->getTotalErrorItems();
-
         if ($initialExportStatus->getTotalItems() <= $tempTotal) {
             if ($initialExportStatus->getTotalErrorItems() === 0) {
                 $initialExportStatus->setStatus(StatusSource::SUCCESS);

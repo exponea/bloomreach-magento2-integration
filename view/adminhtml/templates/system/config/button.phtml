@@ -3,37 +3,41 @@
  * @author Bloomreach
  * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
  */
-/** @var \Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\Button $block */
 
+use Bloomreach\EngagementConnector\Block\Adminhtml\System\Config\Button;
+use Magento\Framework\Escaper;
+
+/** @var Button $block */
+/** @var Escaper $escaper */
 $isInProgress = $block->getIsImportInProgress();
 $isEnabled = $block->getIsEnabled() && !$isInProgress;
-$messageContainer = $block->escapeHtmlAttr($block->getHtmlId() . '_message');
+$messageContainer = $escaper->escapeHtmlAttr($block->getHtmlId() . '_message');
 ?>
 <div class="actions">
     <div class="<?= /* @noEscape */ $messageContainer; ?>">
         <?php if ($isInProgress):?>
         <div class="messages">
             <div class="message message-progress">
-                <strong><?= $block->escapeHtml(__('Disabled.')) ?></strong>
-                <?= $block->escapeHtml(
+                <strong><?= $escaper->escapeHtml(__('Disabled.')) ?></strong>
+                <?= $escaper->escapeHtml(
                     __('Run initial imports is currently disabled, because there are imports already in progress.')
                 ); ?>
             </div>
         </div>
         <?php endif; ?>
     </div>
-    <button type="button" id="<?= $block->escapeHtmlAttr($block->getHtmlId()); ?>"
+    <button type="button" id="<?= $escaper->escapeHtmlAttr($block->getHtmlId()); ?>"
         <?= !$isEnabled ? 'disabled' : ''; ?>>
-        <span><?= $block->escapeHtml($block->getButtonLabel()); ?></span>
+        <span><?= $escaper->escapeHtml($block->getButtonLabel()); ?></span>
     </button>
 </div>
 <script type="text/x-magento-init">
     {
-        "#<?= $block->escapeHtml($block->getHtmlId()) ?>": {
+        "#<?= $escaper->escapeHtml($block->getHtmlId()) ?>": {
             "Bloomreach_EngagementConnector/js/system/config/button/send-ajax-request": {
-                "ajaxUrl": "<?= $block->escapeUrl($block->getButtonUrl()); ?>",
+                "ajaxUrl": "<?= $escaper->escapeUrl($block->getButtonUrl()); ?>",
                 "isEnabled": "<?= /* @noEscape */ $isEnabled; ?>",
-                "buttonId": "#<?= $block->escapeHtml($block->getHtmlId()); ?>",
+                "buttonId": "#<?= $escaper->escapeHtml($block->getHtmlId()); ?>",
                 "messageContainer": ".<?= /* @noEscape */ $messageContainer; ?>",
                 "requiredFieldsSelectors": "<?= /* @noEscape */ $block->getRequiredFieldsSelectors(); ?>",
                 "disableButtonAfterClick": "<?= /* @noEscape */ $block->getDisableButtonAfterClick(); ?>"

@@ -147,7 +147,7 @@ class CategoryDataResolver
             $this->categoryCache[$categoryId][self::CATEGORY_PATH] = $category->getName();
             $this->categoryCache[$categoryId][self::CATEGORY_LEVEL_1] = $category->getName();
             $this->categoryCache[$categoryId][self::CATEGORY_URL_1] = $this->removeBaseRoot($category->getUrl());
-            $this->categoryCache[$categoryId][self::CATEGORY_IDS] = [$category->getId()];
+            $this->categoryCache[$categoryId][self::CATEGORY_IDS] = [$category->getUrlKey()];
             return;
         }
 
@@ -216,15 +216,13 @@ class CategoryDataResolver
                 $parentCategory->getUrl()
             );
             $path[] = $parentCategory->getName();
-            $ids[] = $parentCategory->getId();
         }
 
         $this->categoryCache[$categoryId][self::CATEGORY_LEVEL_2] = $category->getName();
         $this->categoryCache[$categoryId][self::CATEGORY_URL_2] = $this->removeBaseRoot($category->getUrl());
         $path[] = $category->getName();
-        $ids[] = $category->getId();
         $this->categoryCache[$categoryId][self::CATEGORY_PATH] = $this->generatePath($path);
-        $this->categoryCache[$categoryId][self::CATEGORY_IDS] = $ids;
+        $this->categoryCache[$categoryId][self::CATEGORY_IDS] = [$category->getUrlKey()];
     }
 
     /**
@@ -236,7 +234,7 @@ class CategoryDataResolver
      */
     private function generatePath(array $path): string
     {
-        return implode('>', $path);
+        return implode('|', $path);
     }
 
     /**
@@ -251,11 +249,16 @@ class CategoryDataResolver
     {
         $categoryId = $category->getId();
         $parentCategories = $category->getParentCategories();
+        $this->sortByLevel($parentCategories);
         $this->categoryCache[$categoryId][self::CATEGORY_LEVEL_3] = $category->getName();
         $this->categoryCache[$categoryId][self::CATEGORY_URL_3] = $this->removeBaseRoot($category->getUrl());
 
         $iterator = 1;
         foreach ($parentCategories as $parentCategory) {
+            if ($parentCategory->getLevel() < 2) {
+                continue;
+            }
+
             if ($iterator > 2) {
                 break;
             }
@@ -266,16 +269,29 @@ class CategoryDataResolver
             }
 
             $path[] = $parentCategory->getName();
-            $ids[] = $parentCategory->getId();
             $this->categoryCache[$categoryId][self::CATEGORY_LEVEL . $iterator] = $parentCategory->getName();
             $this->categoryCache[$categoryId]['category_' . $iterator . '_url'] = $this->removeBaseRoot(
                 $parentCategory->getUrl()
             );
             $iterator++;
         }
-        $ids[] = $category->getId();
+
         $path[] = $category->getName();
         $this->categoryCache[$categoryId][self::CATEGORY_PATH] = $this->generatePath($path);
-        $this->categoryCache[$categoryId][self::CATEGORY_IDS] = $ids;
+        $this->categoryCache[$categoryId][self::CATEGORY_IDS] = [$category->getUrlKey()];
+    }
+
+    /**
+     * Sort categories by level
+     *
+     * @param array $categories
+     *
+     * @return void
+     */
+    private function sortByLevel(array &$categories): void
+    {
+        usort($categories, function ($a, $b) {
+            return $a->getLevel() <=> $b->getLevel();
+        });
     }
 }

@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Catalog;
 
 use Bloomreach\EngagementConnector\Service\ValueTypeGetter;
+use Bloomreach\EngagementConnector\System\SearchableFieldsResolver;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * The class is responsible for mapping fields
@@ -24,36 +26,58 @@ class FieldsMapper
     private $valueTypeGetter;
 
     /**
-     * @param ValueTypeGetter $valueTypeGetter
+     * @var SearchableFieldsResolver
      */
-    public function __construct(ValueTypeGetter $valueTypeGetter)
-    {
+    private $searchableFieldsResolver;
+
+    /**
+     * @param ValueTypeGetter $valueTypeGetter
+     * @param SearchableFieldsResolver $searchableFieldsResolver
+     */
+    public function __construct(
+        ValueTypeGetter $valueTypeGetter,
+        SearchableFieldsResolver $searchableFieldsResolver
+    ) {
         $this->valueTypeGetter = $valueTypeGetter;
+        $this->searchableFieldsResolver = $searchableFieldsResolver;
     }
 
     /**
      * Maps data
      *
      * @param array $data
+     * @param string|null $entityType
      *
      * @return array
+     * @throws LocalizedException
      */
-    public function map(array $data): array
+    public function map(array $data, ?string $entityType = null): array
     {
         $result = [];
-        $iterator = 1;
+        $searchableFields = $entityType ? $this->searchableFieldsResolver->get($entityType) : [];
+        $searchableFieldsNumber = count($searchableFields);
+        $searchableNumber = 1;
 
         foreach ($data as $column => $value) {
             if ($column === self::PRIMARY_ID) {
                 continue;
             }
 
+            $isSearchable = $searchableFieldsNumber > 0
+                ? in_array($column, $searchableFields) && self::MAX_SEARCHABLE >= $searchableNumber
+                : self::MAX_SEARCHABLE >= $searchableNumber;
+
             $result[] = [
                 'name' => $column,
                 'type' => $this->valueTypeGetter->execute($value),
-                'searchable' => self::MAX_SEARCHABLE >= $iterator,
+                'searchable' => $isSearchable
             ];
-            $iterator++;
+
+            if (!$isSearchable) {
+                continue;
+            }
+
+            $searchableNumber++;
         }
 
         return $result;

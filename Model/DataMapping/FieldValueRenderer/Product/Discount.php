@@ -37,10 +37,10 @@ class Discount implements RenderInterface
      * @param AbstractSimpleObject|AbstractModel $entity
      * @param string $fieldCode
      *
-     * @return string
+     * @return float
      */
     public function render($entity, string $fieldCode)
     {
-        return number_format($this->getDiscountService->execute($entity), 2, '.', '');
+        return $this->getDiscountService->execute($entity);
     }
 }
