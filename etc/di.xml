@@ -140,7 +140,7 @@
                 <item name="purchase" xsi:type="array">
                     <item name="default" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultRenderer</item>
                     <item name="timestamp" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Timestamp</item>
-                    <item name="status" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\Status</item>
+                    <item name="status" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\DefaultRenderer</item>
                     <item name="product_ids" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ProductIds</item>
                     <item name="product_list" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\ProductList</item>
                     <item name="variant_ids" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Order\VariantIds</item>
