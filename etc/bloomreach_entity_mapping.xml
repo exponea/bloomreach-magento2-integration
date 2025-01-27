@@ -7,445 +7,445 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Bloomreach_EngagementConnector:etc/bloomreach_entity_mapping.xsd">
     <entity_type entity="catalog_product">
-        <bloomreach_code code="item_id">
+        <bloomreach_code code="item_id" type="number">
             <field code="entity_id"/>
         </bloomreach_code>
-        <bloomreach_code code="sku">
+        <bloomreach_code code="sku" type="string">
             <field code="sku"/>
         </bloomreach_code>
-        <bloomreach_code code="active">
+        <bloomreach_code code="active" type="boolean">
             <field code="status"/>
         </bloomreach_code>
-        <bloomreach_code code="image">
+        <bloomreach_code code="image" type="string">
             <field code="image"/>
         </bloomreach_code>
-        <bloomreach_code code="title">
+        <bloomreach_code code="title" type="string">
             <field code="name"/>
         </bloomreach_code>
-        <bloomreach_code code="description">
+        <bloomreach_code code="description" type="long text">
             <field code="short_description"/>
         </bloomreach_code>
-        <bloomreach_code code="description_long">
+        <bloomreach_code code="description_long" type="long text">
             <field code="description"/>
         </bloomreach_code>
-        <bloomreach_code code="url">
+        <bloomreach_code code="url" type="string">
             <field code="url"/>
         </bloomreach_code>
-        <bloomreach_code code="supplier">
+        <bloomreach_code code="supplier" type="string">
             <field code="manufacturer"/>
         </bloomreach_code>
-        <bloomreach_code code="gender">
+        <bloomreach_code code="gender" type="string">
             <field code="gender"/>
         </bloomreach_code>
-        <bloomreach_code code="rating">
+        <bloomreach_code code="rating" type="number">
             <field code="rating"/>
         </bloomreach_code>
-        <bloomreach_code code="ratings_count">
+        <bloomreach_code code="ratings_count" type="number">
             <field code="ratings_count"/>
         </bloomreach_code>
-        <bloomreach_code code="category_level_1">
+        <bloomreach_code code="category_level_1" type="string">
             <field code="category_level_1"/>
         </bloomreach_code>
-        <bloomreach_code code="category_1_url">
+        <bloomreach_code code="category_1_url" type="string">
             <field code="category_1_url"/>
         </bloomreach_code>
-        <bloomreach_code code="category_level_2">
+        <bloomreach_code code="category_level_2" type="string">
             <field code="category_level_2"/>
         </bloomreach_code>
-        <bloomreach_code code="category_2_url">
+        <bloomreach_code code="category_2_url" type="string">
             <field code="category_2_url"/>
         </bloomreach_code>
-        <bloomreach_code code="category_level_3">
+        <bloomreach_code code="category_level_3" type="string">
             <field code="category_level_3"/>
         </bloomreach_code>
-        <bloomreach_code code="category_3_url">
+        <bloomreach_code code="category_3_url" type="string">
             <field code="category_3_url"/>
         </bloomreach_code>
-        <bloomreach_code code="categories_path">
+        <bloomreach_code code="categories_path" type="string">
             <field code="categories_path"/>
         </bloomreach_code>
-        <bloomreach_code code="categories_ids">
+        <bloomreach_code code="categories_ids" type="list">
             <field code="categories_ids"/>
         </bloomreach_code>
-        <bloomreach_code code="color">
+        <bloomreach_code code="color" type="string">
             <field code="color"/>
         </bloomreach_code>
-        <bloomreach_code code="size">
+        <bloomreach_code code="size" type="string">
             <field code="size"/>
         </bloomreach_code>
-        <bloomreach_code code="price">
+        <bloomreach_code code="price" type="number">
             <field code="final_price"/>
         </bloomreach_code>
-        <bloomreach_code code="original_price">
+        <bloomreach_code code="original_price" type="number">
             <field code="price"/>
         </bloomreach_code>
-        <bloomreach_code code="discount_percentage">
+        <bloomreach_code code="discount_percentage" type="number">
             <field code="discount_percentage"/>
         </bloomreach_code>
-        <bloomreach_code code="discount_value">
+        <bloomreach_code code="discount_value" type="number">
             <field code="discount_value"/>
         </bloomreach_code>
-        <bloomreach_code code="on_sale">
+        <bloomreach_code code="on_sale" type="boolean">
             <field code="sale"/>
         </bloomreach_code>
-        <bloomreach_code code="date_added">
+        <bloomreach_code code="date_added" type="number">
             <field code="created_at"/>
         </bloomreach_code>
-        <bloomreach_code code="stock_level">
+        <bloomreach_code code="stock_level" type="number">
             <field code="stock_level"/>
         </bloomreach_code>
-        <bloomreach_code code="image_fullsize">
+        <bloomreach_code code="image_fullsize" type="string">
             <field code="image"/>
         </bloomreach_code>
     </entity_type>
     <entity_type entity="catalog_product_variants">
-        <bloomreach_code code="item_id">
+        <bloomreach_code code="item_id" type="number">
             <field code="entity_id"/>
         </bloomreach_code>
-        <bloomreach_code code="sku">
+        <bloomreach_code code="sku" type="string">
             <field code="sku"/>
         </bloomreach_code>
-        <bloomreach_code code="product_id">
+        <bloomreach_code code="product_id" type="number">
             <field code="product_id"/>
         </bloomreach_code>
-        <bloomreach_code code="active">
+        <bloomreach_code code="active" type="boolean">
             <field code="status"/>
         </bloomreach_code>
-        <bloomreach_code code="product_active">
+        <bloomreach_code code="product_active" type="boolean">
             <field code="product_active"/>
         </bloomreach_code>
-        <bloomreach_code code="stock_level">
+        <bloomreach_code code="stock_level" type="number">
             <field code="stock_level"/>
         </bloomreach_code>
-        <bloomreach_code code="product_sku">
+        <bloomreach_code code="product_sku" type="string">
             <field code="product_sku"/>
         </bloomreach_code>
-        <bloomreach_code code="title">
+        <bloomreach_code code="title" type="string">
             <field code="name"/>
         </bloomreach_code>
-        <bloomreach_code code="description">
+        <bloomreach_code code="description" type="long text">
             <field code="short_description"/>
         </bloomreach_code>
-        <bloomreach_code code="description_long">
+        <bloomreach_code code="description_long" type="long text">
             <field code="description"/>
         </bloomreach_code>
-        <bloomreach_code code="url">
+        <bloomreach_code code="url" type="string">
             <field code="url"/>
         </bloomreach_code>
-        <bloomreach_code code="supplier">
+        <bloomreach_code code="supplier" type="string">
             <field code="manufacturer"/>
         </bloomreach_code>
-        <bloomreach_code code="rating">
+        <bloomreach_code code="rating" type="number">
             <field code="rating"/>
         </bloomreach_code>
-        <bloomreach_code code="ratings_count">
+        <bloomreach_code code="ratings_count" type="number">
             <field code="ratings_count"/>
         </bloomreach_code>
-        <bloomreach_code code="category_level_1">
+        <bloomreach_code code="category_level_1" type="string">
             <field code="category_level_1"/>
         </bloomreach_code>
-        <bloomreach_code code="category_1_url">
+        <bloomreach_code code="category_1_url" type="string">
             <field code="category_1_url"/>
         </bloomreach_code>
-        <bloomreach_code code="category_level_2">
+        <bloomreach_code code="category_level_2" type="string">
             <field code="category_level_2"/>
         </bloomreach_code>
-        <bloomreach_code code="category_2_url">
+        <bloomreach_code code="category_2_url" type="string">
             <field code="category_2_url"/>
         </bloomreach_code>
-        <bloomreach_code code="category_level_3">
+        <bloomreach_code code="category_level_3" type="string">
             <field code="category_level_3"/>
         </bloomreach_code>
-        <bloomreach_code code="category_3_url">
+        <bloomreach_code code="category_3_url" type="string">
             <field code="category_3_url"/>
         </bloomreach_code>
-        <bloomreach_code code="categories_path">
+        <bloomreach_code code="categories_path" type="string">
             <field code="categories_path"/>
         </bloomreach_code>
-        <bloomreach_code code="categories_ids">
+        <bloomreach_code code="categories_ids" type="list">
             <field code="categories_ids"/>
         </bloomreach_code>
-        <bloomreach_code code="size">
+        <bloomreach_code code="size" type="string">
             <field code="size"/>
         </bloomreach_code>
-        <bloomreach_code code="color">
+        <bloomreach_code code="color" type="string">
             <field code="color"/>
         </bloomreach_code>
-        <bloomreach_code code="price">
+        <bloomreach_code code="price" type="number">
             <field code="final_price"/>
         </bloomreach_code>
-        <bloomreach_code code="original_price">
+        <bloomreach_code code="original_price" type="number">
             <field code="price"/>
         </bloomreach_code>
-        <bloomreach_code code="discount_percentage">
+        <bloomreach_code code="discount_percentage" type="number">
             <field code="discount_percentage"/>
         </bloomreach_code>
-        <bloomreach_code code="discount_value">
+        <bloomreach_code code="discount_value" type="number">
             <field code="discount_value"/>
         </bloomreach_code>
-        <bloomreach_code code="on_sale">
+        <bloomreach_code code="on_sale" type="boolean">
             <field code="sale"/>
         </bloomreach_code>
-        <bloomreach_code code="date_added">
+        <bloomreach_code code="date_added" type="number">
             <field code="created_at"/>
         </bloomreach_code>
-        <bloomreach_code code="image">
+        <bloomreach_code code="image" type="string">
             <field code="image"/>
         </bloomreach_code>
-        <bloomreach_code code="gender">
+        <bloomreach_code code="gender" type="string">
             <field code="gender"/>
         </bloomreach_code>
-        <bloomreach_code code="image_fullsize">
+        <bloomreach_code code="image_fullsize" type="string">
             <field code="image"/>
         </bloomreach_code>
     </entity_type>
     <entity_type entity="customer">
-        <bloomreach_code code="email_id">
+        <bloomreach_code code="email_id" type="string">
             <field code="email"/>
         </bloomreach_code>
-        <bloomreach_code code="customer_id">
+        <bloomreach_code code="customer_id" type="number">
             <field code="entity_id"/>
         </bloomreach_code>
-        <bloomreach_code code="email">
+        <bloomreach_code code="email" type="string">
             <field code="email"/>
         </bloomreach_code>
-        <bloomreach_code code="first_name">
+        <bloomreach_code code="first_name" type="string">
             <field code="firstname"/>
         </bloomreach_code>
-        <bloomreach_code code="last_name">
+        <bloomreach_code code="last_name" type="string">
             <field code="lastname"/>
         </bloomreach_code>
-        <bloomreach_code code="gender">
+        <bloomreach_code code="gender" type="string">
             <field code="gender"/>
         </bloomreach_code>
-        <bloomreach_code code="company">
+        <bloomreach_code code="company" type="string">
             <field code="company"/>
         </bloomreach_code>
-        <bloomreach_code code="phone">
+        <bloomreach_code code="phone" type="string">
             <field code="telephone"/>
         </bloomreach_code>
-        <bloomreach_code code="birth_date">
+        <bloomreach_code code="birth_date" type="number">
             <field code="dob"/>
         </bloomreach_code>
-        <bloomreach_code code="country">
+        <bloomreach_code code="country" type="string">
             <field code="country"/>
         </bloomreach_code>
-        <bloomreach_code code="state">
+        <bloomreach_code code="state" type="string">
             <field code="region"/>
         </bloomreach_code>
     </entity_type>
     <entity_type entity="purchase">
-        <bloomreach_code code="email_id">
+        <bloomreach_code code="email_id" type="string">
             <field code="customer_email"/>
         </bloomreach_code>
-        <bloomreach_code code="customer_id">
+        <bloomreach_code code="customer_id" type="number">
             <field code="customer_id"/>
         </bloomreach_code>
-        <bloomreach_code code="timestamp">
+        <bloomreach_code code="timestamp" type="number">
             <field code="timestamp"/>
         </bloomreach_code>
-        <bloomreach_code code="purchase_id">
+        <bloomreach_code code="purchase_id" type="string">
             <field code="increment_id"/>
         </bloomreach_code>
-        <bloomreach_code code="purchase_status">
+        <bloomreach_code code="purchase_status" type="string">
             <field code="status"/>
         </bloomreach_code>
-        <bloomreach_code code="product_list">
+        <bloomreach_code code="product_list" type="list">
             <field code="product_list"/>
         </bloomreach_code>
-        <bloomreach_code code="product_ids">
+        <bloomreach_code code="product_ids" type="list">
             <field code="product_ids"/>
         </bloomreach_code>
-        <bloomreach_code code="variant_list">
+        <bloomreach_code code="variant_list" type="list">
             <field code="variant_list"/>
         </bloomreach_code>
-        <bloomreach_code code="variant_ids">
+        <bloomreach_code code="variant_ids" type="list">
             <field code="variant_ids"/>
         </bloomreach_code>
-        <bloomreach_code code="total_quantity">
+        <bloomreach_code code="total_quantity" type="number">
             <field code="total_qty_ordered"/>
         </bloomreach_code>
-        <bloomreach_code code="total_price">
+        <bloomreach_code code="total_price" type="number">
             <field code="base_grand_total"/>
         </bloomreach_code>
-        <bloomreach_code code="total_price_local_currency">
+        <bloomreach_code code="total_price_local_currency" type="number">
             <field code="grand_total"/>
         </bloomreach_code>
-        <bloomreach_code code="local_currency">
+        <bloomreach_code code="local_currency" type="string">
             <field code="order_currency_code"/>
         </bloomreach_code>
-        <bloomreach_code code="voucher_value">
+        <bloomreach_code code="voucher_value" type="number">
             <field code="base_discount_amount"/>
         </bloomreach_code>
-        <bloomreach_code code="shipping_country">
+        <bloomreach_code code="shipping_country" type="string">
             <field code="shipping_country"/>
         </bloomreach_code>
-        <bloomreach_code code="shipping_state">
+        <bloomreach_code code="shipping_state" type="string">
             <field code="region"/>
         </bloomreach_code>
-        <bloomreach_code code="shipping_city">
+        <bloomreach_code code="shipping_city" type="string">
             <field code="city"/>
         </bloomreach_code>
     </entity_type>
     <entity_type entity="purchase_item">
-        <bloomreach_code code="email_id">
+        <bloomreach_code code="email_id" type="string">
             <field code="customer_email"/>
         </bloomreach_code>
-        <bloomreach_code code="customer_id">
+        <bloomreach_code code="customer_id" type="number">
             <field code="customer_id"/>
         </bloomreach_code>
-        <bloomreach_code code="timestamp">
+        <bloomreach_code code="timestamp" type="number">
             <field code="timestamp"/>
         </bloomreach_code>
-        <bloomreach_code code="purchase_id">
+        <bloomreach_code code="purchase_id" type="string">
             <field code="increment_id"/>
         </bloomreach_code>
-        <bloomreach_code code="purchase_status">
+        <bloomreach_code code="purchase_status" type="string">
             <field code="status"/>
         </bloomreach_code>
-        <bloomreach_code code="product_id">
+        <bloomreach_code code="product_id" type="number">
             <field code="product_id"/>
         </bloomreach_code>
-        <bloomreach_code code="variant_id">
+        <bloomreach_code code="variant_id" type="list">
             <field code="variant_id"/>
         </bloomreach_code>
-        <bloomreach_code code="title">
+        <bloomreach_code code="title" type="string">
             <field code="name"/>
         </bloomreach_code>
-        <bloomreach_code code="brand">
+        <bloomreach_code code="brand" type="string">
             <field code="manufacturer"/>
         </bloomreach_code>
-        <bloomreach_code code="sku">
+        <bloomreach_code code="sku" type="string">
             <field code="sku"/>
         </bloomreach_code>
-        <bloomreach_code code="category_level_1">
+        <bloomreach_code code="category_level_1" type="string">
             <field code="category_level_1"/>
         </bloomreach_code>
-        <bloomreach_code code="category_level_2">
+        <bloomreach_code code="category_level_2" type="string">
             <field code="category_level_2"/>
         </bloomreach_code>
-        <bloomreach_code code="category_level_3">
+        <bloomreach_code code="category_level_3" type="string">
             <field code="category_level_3"/>
         </bloomreach_code>
-        <bloomreach_code code="categories_path">
+        <bloomreach_code code="categories_path" type="string">
             <field code="categories_path"/>
         </bloomreach_code>
-        <bloomreach_code code="price">
+        <bloomreach_code code="price" type="number">
             <field code="item_price"/>
         </bloomreach_code>
-        <bloomreach_code code="price_local_currency">
+        <bloomreach_code code="price_local_currency" type="number">
             <field code="item_price_local_currency"/>
         </bloomreach_code>
-        <bloomreach_code code="original_price">
+        <bloomreach_code code="original_price" type="number">
             <field code="base_original_price"/>
         </bloomreach_code>
-        <bloomreach_code code="original_price_local_currency">
+        <bloomreach_code code="original_price_local_currency" type="number">
             <field code="original_price"/>
         </bloomreach_code>
-        <bloomreach_code code="local_currency">
+        <bloomreach_code code="local_currency" type="string">
             <field code="order_currency_code"/>
         </bloomreach_code>
-        <bloomreach_code code="quantity">
+        <bloomreach_code code="quantity" type="number">
             <field code="qty_ordered"/>
         </bloomreach_code>
-        <bloomreach_code code="discount_value">
+        <bloomreach_code code="discount_value" type="number">
             <field code="base_discount_amount"/>
         </bloomreach_code>
-        <bloomreach_code code="total_price">
+        <bloomreach_code code="total_price" type="number">
             <field code="total_price"/>
         </bloomreach_code>
-        <bloomreach_code code="total_price_local_currency">
+        <bloomreach_code code="total_price_local_currency" type="number">
             <field code="total_price_local_currency"/>
         </bloomreach_code>
     </entity_type>
     <entity_type entity="view_item">
-        <bloomreach_code code="product_id">
+        <bloomreach_code code="product_id" type="number">
             <field code="entity_id" />
         </bloomreach_code>
-        <bloomreach_code code="variant_id">
+        <bloomreach_code code="variant_id" type="number">
             <field code="variant_id" />
         </bloomreach_code>
-        <bloomreach_code code="title">
+        <bloomreach_code code="title" type="string">
             <field code="name" />
         </bloomreach_code>
-        <bloomreach_code code="brand">
+        <bloomreach_code code="brand" type="string">
             <field code="manufacturer" />
         </bloomreach_code>
-        <bloomreach_code code="category_level_1">
+        <bloomreach_code code="category_level_1" type="string">
             <field code="category_level_1" />
         </bloomreach_code>
-        <bloomreach_code code="category_level_2">
+        <bloomreach_code code="category_level_2" type="string">
             <field code="category_level_2" />
         </bloomreach_code>
-        <bloomreach_code code="category_level_3">
+        <bloomreach_code code="category_level_3" type="string">
             <field code="category_level_3" />
         </bloomreach_code>
-        <bloomreach_code code="categories_path">
+        <bloomreach_code code="categories_path" type="string">
             <field code="categories_path" />
         </bloomreach_code>
-        <bloomreach_code code="categories_ids">
+        <bloomreach_code code="categories_ids" type="list">
             <field code="categories_ids" />
         </bloomreach_code>
-        <bloomreach_code code="category_id">
+        <bloomreach_code code="category_id" type="number">
             <field code="category_id" />
         </bloomreach_code>
-        <bloomreach_code code="price">
+        <bloomreach_code code="price" type="number">
             <field code="base_final_price" />
         </bloomreach_code>
-        <bloomreach_code code="price_local_currency">
+        <bloomreach_code code="price_local_currency" type="number">
             <field code="price_local_currency" />
         </bloomreach_code>
-        <bloomreach_code code="discount_percentage">
+        <bloomreach_code code="discount_percentage" type="number">
             <field code="discount_percentage" />
         </bloomreach_code>
-        <bloomreach_code code="discount_value">
+        <bloomreach_code code="discount_value" type="number">
             <field code="discount_value" />
         </bloomreach_code>
-        <bloomreach_code code="original_price">
+        <bloomreach_code code="original_price" type="number">
             <field code="price" />
         </bloomreach_code>
-        <bloomreach_code code="original_price_local_currency">
+        <bloomreach_code code="original_price_local_currency" type="number">
             <field code="original_price_local_currency" />
         </bloomreach_code>
-        <bloomreach_code code="location">
+        <bloomreach_code code="location" type="string">
             <field code="location" />
         </bloomreach_code>
-        <bloomreach_code code="local_currency">
+        <bloomreach_code code="local_currency" type="string">
             <field code="local_currency" />
         </bloomreach_code>
-        <bloomreach_code code="domain">
+        <bloomreach_code code="domain" type="string">
             <field code="domain" />
         </bloomreach_code>
-        <bloomreach_code code="language">
+        <bloomreach_code code="language" type="string">
             <field code="language" />
         </bloomreach_code>
-        <bloomreach_code code="stock_level">
+        <bloomreach_code code="stock_level" type="number">
             <field code="stock_level" />
         </bloomreach_code>
     </entity_type>
     <entity_type entity="cart_update">
-        <bloomreach_code code="product_list">
+        <bloomreach_code code="product_list" type="list">
             <field code="product_list" />
         </bloomreach_code>
-        <bloomreach_code code="product_ids">
+        <bloomreach_code code="product_ids" type="list">
             <field code="product_ids" />
         </bloomreach_code>
-        <bloomreach_code code="variant_list">
+        <bloomreach_code code="variant_list" type="list">
             <field code="variant_list" />
         </bloomreach_code>
-        <bloomreach_code code="variant_ids">
+        <bloomreach_code code="variant_ids" type="list">
             <field code="variant_ids" />
         </bloomreach_code>
-        <bloomreach_code code="total_quantity">
+        <bloomreach_code code="total_quantity" type="number">
             <field code="items_qty" />
         </bloomreach_code>
-        <bloomreach_code code="total_price">
+        <bloomreach_code code="total_price" type="number">
             <field code="total_price" />
         </bloomreach_code>
-        <bloomreach_code code="total_price_without_tax">
+        <bloomreach_code code="total_price_without_tax" type="number">
             <field code="total_price_without_tax" />
         </bloomreach_code>
-        <bloomreach_code code="total_price_local_currency">
+        <bloomreach_code code="total_price_local_currency" type="number">
             <field code="total_price_local_currency" />
         </bloomreach_code>
     </entity_type>

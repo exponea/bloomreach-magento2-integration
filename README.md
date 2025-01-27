@@ -218,14 +218,20 @@ If the module was installed manually, then you need to do the following steps to
 1. Add entity configuration to the `bloomreach_entity_mapping.xml`.
 ```xml
 <entity_type entity="custom_entity">
-    <bloomreach_code code="entity_id">
+    <bloomreach_code code="entity_id" type="number">
         <field code="entity_id" />
     </bloomreach_code>
-    <bloomreach_code code="created_at">
+    <bloomreach_code code="active" type="boolean">
+      <field code="status"/>
+    </bloomreach_code>
+    <bloomreach_code code="description" type="long text">
+      <field code="short_description"/>
+    </bloomreach_code>
+    <bloomreach_code code="created_at" type="string">
         <field code="created_at" />
     </bloomreach_code>
-    <bloomreach_code code="updated_at">
-        <field code="updated_at" />
+    <bloomreach_code code="categories_ids" type="list">
+      <field code="categories_ids"/>
     </bloomreach_code>
 </entity_type>
 ```
@@ -324,7 +330,7 @@ If the module was installed manually, then you need to do the following steps to
 2. Add a new `bloomreach_code` node to `entity_type` that you want to extend
 ```xml
 <entity_type entity="catalog_product">
-    <bloomreach_code code="custom_code">
+    <bloomreach_code code="custom_code" type="string">
         <field code="custom_field" />
     </bloomreach_code>
 </entity_type>
@@ -349,6 +355,16 @@ If the module was installed manually, then you need to do the following steps to
     <bloomreach_code code="title">
         <field code="custom_field" />
     </bloomreach_code>
+</entity_type>
+```
+
+#### How to change a field type:
+
+1. Create `bloomreach_entity_mapping.xml` in file in your module.
+2. Add `type` attribute to `bloomreach_code` that you want to update
+```xml
+<entity_type entity="catalog_product">
+    <bloomreach_code code="title" type="long text" />
 </entity_type>
 ```
 

@@ -77,7 +77,7 @@ class ConfigResolver
         if (!$configData) {
             throw new NotFoundException(
                 __(
-                    'There are not registered mapping config for "%1" entity type',
+                    'There is no registered mapping config for "%1" entity type',
                     $entityType
                 )
             );
@@ -100,16 +100,18 @@ class ConfigResolver
         foreach ($configData as $configField) {
             $bloomreachCode = $configField['bloomreach_code'] ?? '';
             $field = $configField['field'] ?? '';
+            $type = $configField['type'] ?? '';
 
             if (!$bloomreachCode || !$field) {
                 continue;
             }
 
-            $result[] = $this->fieldMappingConfigDataInterfaceFactory->create(
+            $result[$bloomreachCode] = $this->fieldMappingConfigDataInterfaceFactory->create(
                 [
                     'data' => [
                         FieldMappingConfigData::BLOOMREACH_CODE => $bloomreachCode,
-                        FieldMappingConfigData::FIELD => $field
+                        FieldMappingConfigData::FIELD => $field,
+                        FieldMappingConfigData::TYPE => $type
                     ]
                 ]
             );

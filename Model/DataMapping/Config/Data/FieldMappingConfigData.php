@@ -15,8 +15,8 @@ use Magento\Framework\Api\AbstractSimpleObject;
 class FieldMappingConfigData extends AbstractSimpleObject implements FieldMappingConfigDataInterface
 {
     public const BLOOMREACH_CODE = 'bloomreach_code';
-
     public const FIELD = 'field';
+    public const TYPE = 'type';
 
     /**
      * Return Bloomreach code
@@ -36,5 +36,15 @@ class FieldMappingConfigData extends AbstractSimpleObject implements FieldMappin
     public function getField(): string
     {
         return $this->_get(self::FIELD);
+    }
+
+    /**
+     * Returns field type
+     *
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->_get(self::TYPE);
     }
 }

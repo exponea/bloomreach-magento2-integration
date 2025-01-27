@@ -37,9 +37,9 @@ class Rating implements RenderInterface
      * @param AbstractSimpleObject|AbstractModel $entity
      * @param string $fieldCode
      *
-     * @return string
+     * @return float
      */
-    public function render($entity, string $fieldCode): string
+    public function render($entity, string $fieldCode)
     {
         $rating = 0;
         $storeId = (int) $entity->getStoreId();
@@ -53,6 +53,6 @@ class Rating implements RenderInterface
             $rating = $entity->getRatingSummary()->getReviewsCount();
         }
 
-        return (string) $rating;
+        return (float) $rating;
     }
 }

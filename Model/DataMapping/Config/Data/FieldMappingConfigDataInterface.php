@@ -23,4 +23,11 @@ interface FieldMappingConfigDataInterface
      * @return string
      */
     public function getField(): string;
+
+    /**
+     * Returns field type
+     *
+     * @return string
+     */
+    public function getType(): string;
 }
