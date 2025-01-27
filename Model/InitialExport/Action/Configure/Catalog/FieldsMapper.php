@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Model\InitialExport\Action\Configure\Catalog;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\FieldTypeResolver;
 use Bloomreach\EngagementConnector\Service\ValueTypeGetter;
 use Bloomreach\EngagementConnector\System\SearchableFieldsResolver;
 use Magento\Framework\Exception\LocalizedException;
@@ -21,9 +22,9 @@ class FieldsMapper
     public const PRIMARY_ID = 'item_id';
 
     /**
-     * @var ValueTypeGetter
+     * @var FieldTypeResolver
      */
-    private $valueTypeGetter;
+    private $fieldTypeResolver;
 
     /**
      * @var SearchableFieldsResolver
@@ -31,14 +32,14 @@ class FieldsMapper
     private $searchableFieldsResolver;
 
     /**
-     * @param ValueTypeGetter $valueTypeGetter
+     * @param FieldTypeResolver $fieldTypeResolver
      * @param SearchableFieldsResolver $searchableFieldsResolver
      */
     public function __construct(
-        ValueTypeGetter $valueTypeGetter,
+        FieldTypeResolver $fieldTypeResolver,
         SearchableFieldsResolver $searchableFieldsResolver
     ) {
-        $this->valueTypeGetter = $valueTypeGetter;
+        $this->fieldTypeResolver = $fieldTypeResolver;
         $this->searchableFieldsResolver = $searchableFieldsResolver;
     }
 
@@ -51,7 +52,7 @@ class FieldsMapper
      * @return array
      * @throws LocalizedException
      */
-    public function map(array $data, ?string $entityType = null): array
+    public function map(array $data, string $entityType): array
     {
         $result = [];
         $searchableFields = $entityType ? $this->searchableFieldsResolver->get($entityType) : [];
@@ -69,7 +70,7 @@ class FieldsMapper
 
             $result[] = [
                 'name' => $column,
-                'type' => $this->valueTypeGetter->execute($value),
+                'type' => $this->fieldTypeResolver->get($entityType, $column, $value),
                 'searchable' => $isSearchable
             ];
 

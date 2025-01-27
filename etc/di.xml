@@ -210,12 +210,13 @@
             <argument name="fieldValueRenderers" xsi:type="array">
                 <item name="default" xsi:type="array">
                     <item name="default" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\DefaultRenderer</item>
-                    <item name="category_level_1" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category</item>
-                    <item name="category_level_2" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category</item>
-                    <item name="category_level_3" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category</item>
-                    <item name="categories_path" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category</item>
-                    <item name="categories_ids" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category</item>
-                    <item name="category_id" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Category</item>
+                    <item name="name" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\Name</item>
+                    <item name="category_level_1" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\Category</item>
+                    <item name="category_level_2" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\Category</item>
+                    <item name="category_level_3" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\Category</item>
+                    <item name="categories_path" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\Category</item>
+                    <item name="categories_ids" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\Category</item>
+                    <item name="category_id" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem\Category</item>
                     <item name="domain" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Event\Domain</item>
                     <item name="language" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Event\Language</item>
                     <item name="local_currency" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Event\LocalCurrency</item>

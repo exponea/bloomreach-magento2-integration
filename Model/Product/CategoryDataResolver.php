@@ -53,6 +53,11 @@ class CategoryDataResolver
     private $storeManager;
 
     /**
+     * @var int|null
+     */
+    private $storeId;
+
+    /**
      * @param CategoryRepositoryInterface $categoryRepository
      * @param StoreManagerInterface $storeManager
      */
@@ -69,11 +74,13 @@ class CategoryDataResolver
      *
      * @param ProductInterface $product
      * @param string $code
+     * @param int|null $storeId
      *
      * @return string|array
      */
-    public function getDataByCode(ProductInterface $product, string $code)
+    public function getDataByCode(ProductInterface $product, string $code, ?int $storeId = null)
     {
+        $this->setStoreId($storeId);
         $categoryId = $this->getProductFirstCategoryId($product);
 
         if (!$categoryId) {
@@ -96,7 +103,7 @@ class CategoryDataResolver
      */
     private function getProductFirstCategoryId(ProductInterface $product): ?int
     {
-        $defaultStoreId = $this->storeManager->getDefaultStoreView()->getId();
+        $defaultStoreId = $this->getDefaultStoreId();
         $categoryIds = array_diff(
             $product->getCategoryIds(),
             [
@@ -135,7 +142,7 @@ class CategoryDataResolver
             return;
         }
 
-        $defaultStoreId = (int) $this->storeManager->getDefaultStoreView()->getId();
+        $defaultStoreId = $this->getDefaultStoreId();
 
         if ($category->getStoreId() === 0) {
             // This workaround is required to correctly render the frontend URL for the current active store
@@ -171,7 +178,7 @@ class CategoryDataResolver
     private function getCategory(int $categoryId): ?CategoryInterface
     {
         try {
-            return $this->categoryRepository->get($categoryId);
+            return $this->categoryRepository->get($categoryId, $this->getStoreId());
         } catch (\Exception $e) {
             return null;
         }
@@ -293,5 +300,39 @@ class CategoryDataResolver
         usort($categories, function ($a, $b) {
             return $a->getLevel() <=> $b->getLevel();
         });
+    }
+
+    /**
+     * Get default store ID
+     *
+     * @return int|null
+     */
+    private function getDefaultStoreId(): ?int
+    {
+        return $this->getStoreId() === null
+            ? (int) $this->storeManager->getDefaultStoreView()->getId()
+            : $this->getStoreId();
+    }
+
+    /**
+     * Get store ID
+     *
+     * @return int|null
+     */
+    private function getStoreId(): ?int
+    {
+        return $this->storeId;
+    }
+
+    /**
+     * Set store ID
+     *
+     * @param int|null $storeId
+     *
+     * @return void
+     */
+    private function setStoreId(?int $storeId): void
+    {
+        $this->storeId = $storeId;
     }
 }

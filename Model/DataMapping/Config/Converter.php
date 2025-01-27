@@ -63,7 +63,8 @@ class Converter implements ConverterInterface
 
                 $entityTypeData[] = [
                     'bloomreach_code' => $bloomreachCode->getAttribute('code'),
-                    'field' => $fieldCode
+                    'field' => $fieldCode,
+                    'type' => $bloomreachCode->getAttribute('type'),
                 ];
             }
             $output[$entityType->getAttribute('entity')] = $entityTypeData;

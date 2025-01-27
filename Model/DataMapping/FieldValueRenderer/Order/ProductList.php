@@ -59,6 +59,6 @@ class ProductList implements RenderInterface
             $product = $orderItem->getProduct();
         }
 
-        return $product ? $product->getSku() : $orderItem->getSku();
+        return (string) ($product ? $product->getSku() : $orderItem->getSku());
     }
 }

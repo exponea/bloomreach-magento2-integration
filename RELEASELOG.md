@@ -1,3 +1,11 @@
+# v1.1.2
+
+- Changes
+  - The default store view value is now used for category and product names in tracking, ensuring consistent and accurate data representation across reports
+  - Introduced the ability to set field types in `bloomreach_entity_mapping.xml`. All fields now have predefined types, enabling better standardization and control over entity mapping
+- Fixes
+  - Fixed an issue where an error occurred when the SKU was missing for order items
+
 # v1.1.1
 
 - Fixes

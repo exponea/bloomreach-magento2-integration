@@ -5,18 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\OrderItem;
+namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ViewItem;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface;
 use Bloomreach\EngagementConnector\Model\Product\Store\CategoryDataResolver;
 use Exception;
 use Magento\Catalog\Model\Product;
-use Magento\Framework\Api\AbstractSimpleObject;
-use Magento\Framework\Model\AbstractModel;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * The class is responsible for rendering the value of order item product category field
+ * The class is responsible for rendering the value of product field related to the category
  */
 class Category implements RenderInterface
 {
@@ -43,34 +41,27 @@ class Category implements RenderInterface
     }
 
     /**
-     * Render the value of order item product category field
+     * Render the value of product field
      *
-     * @param AbstractSimpleObject|AbstractModel $entity
+     * @param Product $entity
      * @param string $fieldCode
      *
      * @return string
      */
     public function render($entity, string $fieldCode)
     {
-        /** @var Product $product */
-        $product = $entity->getProduct();
-
-        if (!$product) {
-            return '';
-        }
-
         if ($this->storeManager->isSingleStoreMode()) {
-            return $this->categoryDataResolver->execute($product, $fieldCode);
+            return $this->categoryDataResolver->execute($entity, $fieldCode);
         }
 
         try {
             $defaultStoreId = (int) $this->storeManager->getDefaultStoreView()->getId();
 
             return (int) $entity->getStoreId() === $defaultStoreId
-                ? $this->categoryDataResolver->execute($product, $fieldCode)
-                : $this->categoryDataResolver->execute($product, $fieldCode, $defaultStoreId);
+                ? $this->categoryDataResolver->execute($entity, $fieldCode)
+                : $this->categoryDataResolver->execute($entity, $fieldCode, $defaultStoreId);
         } catch (Exception $e) {
-            return $this->categoryDataResolver->execute($product, $fieldCode);
+            return $this->categoryDataResolver->execute($entity, $fieldCode);
         }
     }
 }

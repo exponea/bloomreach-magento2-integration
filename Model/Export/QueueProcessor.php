@@ -177,22 +177,24 @@ class QueueProcessor
         //A snapshot is not required as entities other than ExportQueue and InitialExportStatus are not updated
         $this->snapshotSettings->setEnabled(false);
 
-        //Retrieve each entity separately to prevent it from being processed by another cron process
-        foreach ($this->entityType->getAllTypes() as $entityType) {
-            $initialExportStatus = $this->initialExportStatusGetter->execute($entityType);
-            if ($initialExportStatus->getStatus() === StatusSource::SCHEDULED
-                && !$initialExportStatus->isLocked()
-                && $this->isInitialExportAllowed->execute($initialExportStatus->getEntityType())
-            ) {
-                $this->addEntityTypeToExportQueue($initialExportStatus);
+        try {
+            //Retrieve each entity separately to prevent it from being processed by another cron process
+            foreach ($this->entityType->getAllTypes() as $entityType) {
+                $initialExportStatus = $this->initialExportStatusGetter->execute($entityType);
+                if ($initialExportStatus->getStatus() === StatusSource::SCHEDULED
+                    && !$initialExportStatus->isLocked()
+                    && $this->isInitialExportAllowed->execute($initialExportStatus->getEntityType())
+                ) {
+                    $this->addEntityTypeToExportQueue($initialExportStatus);
 
-                //Handle only one entity type per execution to avoid memory issues
-                return;
+                    //Handle only one entity type per execution to avoid memory issues
+                    break;
+                }
             }
+        } finally {
+            //Enable db snapshot
+            $this->snapshotSettings->setEnabled(true);
         }
-
-        //Enable db snapshot
-        $this->snapshotSettings->setEnabled(true);
     }
 
     /**

@@ -21,10 +21,10 @@ class Timestamp implements RenderInterface
      * @param AbstractSimpleObject|AbstractModel $entity
      * @param string $fieldCode
      *
-     * @return string
+     * @return int
      */
     public function render($entity, string $fieldCode)
     {
-        return (string) strtotime((string) $entity->getData($fieldCode));
+        return (int) strtotime((string) $entity->getData($fieldCode));
     }
 }
