@@ -224,6 +224,11 @@ class ConfigProvider
     public const XPATH_USE_STATIC_IPS = 'bloomreach_engagement/general/use_static_ips';
 
     /**
+     * System notification enabled
+     */
+    public const XPATH_SYSTEM_NOTIFICATIONS_ENABLED = 'bloomreach_engagement/general/system_notifications_enabled';
+
+    /**
      * Feed enabled config type
      */
     public const FEED_ENABLED_TYPE = 'feed_enabled';
@@ -809,5 +814,15 @@ class ConfigProvider
         $scopeCode = null
     ): bool {
         return $this->scopeConfig->isSetFlag(self::XPATH_USE_STATIC_IPS, $scopeType, $scopeCode);
+    }
+
+    /**
+     * Get system notifications enabled config
+     *
+     * @return bool
+     */
+    public function isSystemNotificationEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::XPATH_SYSTEM_NOTIFICATIONS_ENABLED);
     }
 }

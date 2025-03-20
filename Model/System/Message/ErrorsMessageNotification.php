@@ -9,6 +9,8 @@ namespace Bloomreach\EngagementConnector\Model\System\Message;
 
 use Bloomreach\EngagementConnector\Model\ExportQueueModel;
 use Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue\CollectionFactory;
+use Bloomreach\EngagementConnector\System\ConfigProvider;
+use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Notification\MessageInterface;
 use Magento\Framework\Phrase;
 
@@ -21,6 +23,9 @@ class ErrorsMessageNotification implements MessageInterface
      * Message identity
      */
     private const MESSAGE_IDENTITY = 'bloomreach_errors_system_notification';
+    private const HAS_ERRORS_CACHE_VALUE = 'has_errors';
+    private const NO_ERRORS_CACHE_VALUE = 'no_errors';
+    private const CACHE_LIFETIME = 600;
 
     /**
      * @var CollectionFactory
@@ -28,12 +33,28 @@ class ErrorsMessageNotification implements MessageInterface
     private $exportQueueCollectionFactory;
 
     /**
+     * @var ConfigProvider
+     */
+    private $configProvider;
+
+    /**
+     * @var CacheInterface
+     */
+    private $cacheManagement;
+
+    /**
      * @param CollectionFactory $exportQueueCollectionFactory
+     * @param ConfigProvider $configProvider
+     * @param CacheInterface $cacheManagement
      */
     public function __construct(
-        CollectionFactory $exportQueueCollectionFactory
+        CollectionFactory $exportQueueCollectionFactory,
+        ConfigProvider $configProvider,
+        CacheInterface $cacheManagement
     ) {
+        $this->configProvider = $configProvider;
         $this->exportQueueCollectionFactory = $exportQueueCollectionFactory;
+        $this->cacheManagement = $cacheManagement;
     }
 
     /**
@@ -53,7 +74,9 @@ class ErrorsMessageNotification implements MessageInterface
      */
     public function isDisplayed(): bool
     {
-        return $this->isNeedToShow();
+        return $this->configProvider->isEnabled()
+            && $this->configProvider->isSystemNotificationEnabled()
+            && $this->isNeedToShow();
     }
 
     /**
@@ -84,10 +107,35 @@ class ErrorsMessageNotification implements MessageInterface
 
     /**
      * Show the error message if need it
+     * - save data to cache
      *
      * @return bool
      */
     private function isNeedToShow(): bool
+    {
+        $result = $this->cacheManagement->load($this->getIdentity());
+
+        if (is_string($result) && $result) {
+            return $result === self::HAS_ERRORS_CACHE_VALUE;
+        }
+
+        $hasErrors = $this->hasRecentErrorRecords();
+        $this->cacheManagement->save(
+            $hasErrors ? self::HAS_ERRORS_CACHE_VALUE : self::NO_ERRORS_CACHE_VALUE,
+            $this->getIdentity(),
+            ['BLOCK_HTML'],
+            self::CACHE_LIFETIME
+        );
+
+        return $hasErrors;
+    }
+
+    /**
+     * Has recent error records
+     *
+     * @return bool
+     */
+    private function hasRecentErrorRecords(): bool
     {
         $periodOfTime = date('Y-m-d H:i:s', strtotime('-24 hours'));
         return (bool) $this->exportQueueCollectionFactory->create()
