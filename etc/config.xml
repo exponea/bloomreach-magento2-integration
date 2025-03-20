@@ -16,6 +16,7 @@
                 <request_timeout>60</request_timeout>
                 <retry_base_wait_time>60</retry_base_wait_time>
                 <retry_max_wait_time>240</retry_max_wait_time>
+                <system_notifications_enabled>1</system_notifications_enabled>
             </general>
             <http_basic_auth>
                 <enabled>0</enabled>

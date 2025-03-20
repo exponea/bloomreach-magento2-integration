@@ -1,3 +1,12 @@
+# v1.1.3
+
+- Fixes
+  - Resolved an issue where system notifications were still displayed when the extension was disabled
+- Additions
+  - Added a new setting to enable or disable system notifications. This setting is enabled by default
+- Improvements
+  - Optimized system notification logic by implementing a 10-minute caching mechanism to reduce redundant executions when admin panel pages are loaded
+  - 
 # v1.1.2
 
 - Changes
