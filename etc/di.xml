@@ -78,7 +78,7 @@
             <argument name="fieldValueRenderers" xsi:type="array">
                 <item name="catalog_product" xsi:type="array">
                     <item name="default" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductTypeRendererResolver</item>
-                    <item name="status" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Boolean</item>
+                    <item name="status" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Status</item>
                     <item name="image" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Image</item>
                     <item name="url" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Url</item>
                     <item name="short_description" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Text</item>
@@ -103,7 +103,7 @@
                 </item>
                 <item name="catalog_product_variants" xsi:type="array">
                     <item name="default" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\ProductTypeRendererResolver</item>
-                    <item name="status" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Boolean</item>
+                    <item name="status" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Status</item>
                     <item name="product_active" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ProductVariants\ProductActive</item>
                     <item name="rating" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Rating</item>
                     <item name="ratings_count" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Rating</item>

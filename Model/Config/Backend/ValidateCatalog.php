@@ -72,8 +72,8 @@ class ValidateCatalog extends Value
         EntityType $entityType,
         ConfigProvider $configProvider,
         LoggerInterface $logger,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         $this->configProvider = $configProvider;

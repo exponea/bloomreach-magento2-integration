@@ -39,7 +39,7 @@ class AddToExportQueue extends Command
     public function __construct(
         QueueProcessor $queueProcessor,
         State $appState,
-        string $name = null
+        ?string $name = null
     ) {
         parent::__construct($name);
         $this->queueProcessor = $queueProcessor;

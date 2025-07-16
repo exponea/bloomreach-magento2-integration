@@ -48,7 +48,7 @@ class StartExport extends Command
         ExportProcessor $exportProcessor,
         State $appState,
         StartApiImportService $startApiImportService,
-        string $name = null
+        ?string $name = null
     ) {
         parent::__construct($name);
         $this->exportProcessor = $exportProcessor;
@@ -80,7 +80,12 @@ class StartExport extends Command
                 );
 
                 $output->writeln('Status: ' . $result->getStatusCode());
-                $output->writeln('Message: ' . $result->getReasonPhrase());
+
+                if ($result->getStatusCode() !== 200) {
+                    $output->writeln('Message: ' . $result->getErrorMessage());
+                } else {
+                    $output->writeln('Message: Successful');
+                }
             } catch (Exception $e) {
                 $output->writeln($e->getMessage());
                 return Cli::RETURN_FAILURE;

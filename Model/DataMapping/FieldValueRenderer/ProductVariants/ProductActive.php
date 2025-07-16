@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\ProductVariants;
 
 use Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface;
+use Bloomreach\EngagementConnector\Service\BooleanConverter;
 use Bloomreach\EngagementConnector\Service\Product\GetProductActiveStatus;
 use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\Model\AbstractModel;
@@ -23,11 +24,20 @@ class ProductActive implements RenderInterface
     private $getProductActiveStatus;
 
     /**
-     * @param GetProductActiveStatus $getProductActiveStatus
+     * @var BooleanConverter
      */
-    public function __construct(GetProductActiveStatus $getProductActiveStatus)
-    {
+    private $booleanConverter;
+
+    /**
+     * @param GetProductActiveStatus $getProductActiveStatus
+     * @param BooleanConverter $booleanConverter
+     */
+    public function __construct(
+        GetProductActiveStatus $getProductActiveStatus,
+        BooleanConverter $booleanConverter
+    ) {
         $this->getProductActiveStatus = $getProductActiveStatus;
+        $this->booleanConverter = $booleanConverter;
     }
 
     /**
@@ -40,6 +50,6 @@ class ProductActive implements RenderInterface
      */
     public function render($entity, string $fieldCode): string
     {
-        return $this->getProductActiveStatus->execute($entity);
+        return $this->booleanConverter->toString($this->getProductActiveStatus->execute($entity));
     }
 }

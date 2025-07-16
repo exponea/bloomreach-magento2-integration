@@ -1,3 +1,12 @@
+# v1.2.0
+
+- Additions
+  - PHP 8.4 Support: Added compatibility with `PHP 8.4`. 
+  - Magento 2.4.8 Support: Added compatibility with `Magento 2.4.8`
+- Fixes
+  - Product Status Update: Resolved an issue where the product status was not properly updated after changes
+  - Division by Zero Error: Fixed a potential division by zero error that could occur when an order item had a quantity of zero
+
 # v1.1.3
 
 - Fixes
@@ -6,7 +15,7 @@
   - Added a new setting to enable or disable system notifications. This setting is enabled by default
 - Improvements
   - Optimized system notification logic by implementing a 10-minute caching mechanism to reduce redundant executions when admin panel pages are loaded
-  - 
+
 # v1.1.2
 
 - Changes

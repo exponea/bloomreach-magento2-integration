@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product;
 
+use Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Product\Status as StatusRenderer;
 use Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Framework\Api\AbstractSimpleObject;
@@ -14,6 +15,8 @@ use Magento\Framework\Model\AbstractModel;
 
 /**
  * The class is responsible to render boolean field
+ * @deprecated
+ * @see StatusRenderer
  */
 class Boolean implements RenderInterface
 {
