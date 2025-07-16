@@ -26,6 +26,7 @@ use Bloomreach\EngagementConnector\Service\Integration\Response\ResponseValidato
 use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Exception;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Cover flush import action with integration tests
@@ -142,6 +143,18 @@ class FlushTest extends AbstractActionTestCase
     public function testValidationException(string $statusLabel, int $status): void
     {
         $this->assertIsInt($status);
+    }
+
+    /**
+     * Test invalid entity type exception
+     *
+     * @return void
+     * @depends testSuccess
+     * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod
+     */
+    public function testInvalidEntityTypeException(): void
+    {
+        parent::testInvalidEntityTypeException();
     }
 
     /**

@@ -22,10 +22,6 @@ use Magento\GroupedProduct\Model\Product\Type\Grouped;
  */
 class GetProductActiveStatus
 {
-    private const TRUE = 'true';
-
-    private const FALSE = 'false';
-
     /**
      * @var Configurable
      */
@@ -82,23 +78,23 @@ class GetProductActiveStatus
      *
      * @param ProductInterface $product
      *
-     * @return string
+     * @return bool
      */
-    public function execute(ProductInterface $product): string
+    public function execute(ProductInterface $product): bool
     {
         if ((int) $product->getStatus() === Status::STATUS_DISABLED) {
-            return $this->getBoolValue();
+            return false;
         } elseif ((int) $product->getVisibility() !== Visibility::VISIBILITY_NOT_VISIBLE) {
-            return $this->getBoolValue((int) $product->getStatus() === Status::STATUS_ENABLED);
+            return (int) $product->getStatus() === Status::STATUS_ENABLED;
         }
 
         $parentIds = $this->getParentIds((int) $product->getId());
 
         if (!count($parentIds)) {
-            return $this->getBoolValue();
+            return false;
         }
 
-        return $this->getActiveStatus($parentIds);
+        return $this->isActive($parentIds);
     }
 
     /**
@@ -118,25 +114,13 @@ class GetProductActiveStatus
     }
 
     /**
-     * Convert boolean value to string
-     *
-     * @param bool $value
-     *
-     * @return string
-     */
-    private function getBoolValue(bool $value = false): string
-    {
-        return strtoupper($value ? self::TRUE : self::FALSE);
-    }
-
-    /**
      * Returns active status
      *
      * @param array $parentIds
      *
-     * @return string
+     * @return bool
      */
-    private function getActiveStatus(array $parentIds): string
+    private function isActive(array $parentIds): bool
     {
         $hashedKey = $this->getHashedKey($parentIds);
 
@@ -149,7 +133,7 @@ class GetProductActiveStatus
             $collection->addAttributeToFilter(ProductInterface::STATUS, Status::STATUS_ENABLED);
             $collection->addFieldToFilter('entity_id', ['in' => $parentIds]);
             $collection->setPageSize(1);
-            $this->resultCache[$hashedKey] = $this->getBoolValue((bool) $collection->getFirstItem()->getId());
+            $this->resultCache[$hashedKey] = (bool) $collection->getFirstItem()->getId();
         }
 
         return $this->resultCache[$hashedKey];

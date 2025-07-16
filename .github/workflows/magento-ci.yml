@@ -6,8 +6,9 @@ env:
   DB_DATABASE: magento
   DB_USER: root
   DB_PASSWORD: root
-  ES_VERSION: 7.10.0
-  PHP_VERSION: 8.3
+  OS_VERSION: 2.19.0
+  PHP_VERSION: 8.4
+  COMPOSER_VERSION: 2.8.9
 
 
 on: [pull_request]
@@ -23,7 +24,7 @@ jobs:
         uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
         with:
           php-version: ${{ env.PHP_VERSION }}
-          tools: composer
+          tools: composer:${{ env.COMPOSER_VERSION }}, symfony-cli
           extensions: mbstring, gd, bcmath, soap, dom, xml, json, tokenizer, mysql, zip, xdebug
 
       # Use composer cache
@@ -31,7 +32,7 @@ jobs:
         id: composer-cache
         run: |
           echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -48,17 +49,17 @@ jobs:
         run: |
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
-        # Set Up ElasticSearch
+        # Set Up OpenSearch
       - name: Setup - Configure sysctl limits
         run: |
           sudo swapoff -a
           sudo sysctl -w vm.swappiness=1
           sudo sysctl -w fs.file-max=262144
           sudo sysctl -w vm.max_map_count=262144
-      - name: Setup - ElasticSearch
-        uses: elastic/elastic-github-actions/elasticsearch@master
+      - name: Setup - OpenSearch
+        uses: ankane/setup-opensearch@v1
         with:
-          stack-version: ${{ env.ES_VERSION }}
+          opensearch-version: ${{ env.OS_VERSION }}
 
         # Install the latest Magento Open Source via composer
       - name: Setup - Install Magento Codebase
@@ -73,6 +74,12 @@ jobs:
       # Copy config file for integrations tests
       - name: Setup - Copy `install-config-mysql` file
         run: cp ./vendor/bloomreach/bloomreach-engagement-connector-magento/.github/config/mysql-config.php ./dev/tests/integration/etc/install-config-mysql.php
+
+      # Security checks
+      - name: "[Security Check] Composer Audit"
+        run: COMPOSER_AUDIT_ABANDONED=ignore composer audit
+      - name: "[Security Check] Security Check"
+        run: symfony check:security
 
       # Run tests
       - name: Test - Magento Coding Standart

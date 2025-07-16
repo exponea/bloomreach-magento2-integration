@@ -11,6 +11,7 @@ use Magento\TestFramework\TestCase\AbstractBackendController;
 
 /**
  * Credential validator test
+ * @SuppressWarnings(PHPMD)
  */
 class AccessCredentialsValidatorTest extends AbstractBackendController
 {

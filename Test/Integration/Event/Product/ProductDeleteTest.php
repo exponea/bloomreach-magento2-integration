@@ -335,7 +335,7 @@ class ProductDeleteTest extends TestCase
         $body = $this->jsonSerializer->unserialize($exportQueueItem->getBody());
         $expectedBody = [
             'item_id' => $product->getId(),
-            'product_active' => 'FALSE'
+            'product_active' => false
         ];
         $this->assertEquals(ExportQueueModel::STATUS_NEW, $exportQueueItem->getStatus());
         $this->assertEquals('catalog_product_variants', $exportQueueItem->getEntityType());

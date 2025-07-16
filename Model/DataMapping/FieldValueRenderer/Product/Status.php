@@ -9,49 +9,30 @@ namespace Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\Pr
 
 use Bloomreach\EngagementConnector\Model\DataMapping\FieldValueRenderer\RenderInterface;
 use Bloomreach\EngagementConnector\Service\BooleanConverter;
-use Bloomreach\EngagementConnector\Service\Product\GetDiscountService;
+use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\Model\AbstractModel;
 
 /**
- * The class is responsible to render on_sale field
+ * The class is responsible to render the product status field
  */
-class OnSale implements RenderInterface
+class Status implements RenderInterface
 {
-    /**
-     * @deprecated
-     */
-    public const TRUE = 'true';
-
-    /**
-     * @Deprecated
-     */
-    public const FALSE = 'false';
-
-    /**
-     * @var GetDiscountService
-     */
-    private $getDiscountService;
-
     /**
      * @var BooleanConverter
      */
     private $booleanConverter;
 
     /**
-     * @param GetDiscountService $getDiscountService
      * @param BooleanConverter $booleanConverter
      */
-    public function __construct(
-        GetDiscountService $getDiscountService,
-        BooleanConverter $booleanConverter
-    ) {
-        $this->getDiscountService = $getDiscountService;
+    public function __construct(BooleanConverter $booleanConverter)
+    {
         $this->booleanConverter = $booleanConverter;
     }
 
     /**
-     * Render the boolean product value
+     * Render the product status value
      *
      * @param AbstractSimpleObject|AbstractModel $entity
      * @param string $fieldCode
@@ -60,6 +41,8 @@ class OnSale implements RenderInterface
      */
     public function render($entity, string $fieldCode)
     {
-        return $this->booleanConverter->toString($this->getDiscountService->execute($entity) > 0);
+        return $this->booleanConverter->toString(
+            (int) $entity->getData($fieldCode) === ProductStatus::STATUS_ENABLED
+        );
     }
 }

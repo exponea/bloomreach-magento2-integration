@@ -266,8 +266,8 @@ class ProductUpdateTest extends TestCase
 
         /** @var ExportQueueModel[] $items */
         $items = $exportQueueCollection->getItems();
-        $this->assertPartialUpdateExportQueueItem(array_shift($items), $firstChild, 'FALSE');
-        $this->assertPartialUpdateExportQueueItem(array_shift($items), $secondChild, 'TRUE');
+        $this->assertPartialUpdateExportQueueItem(array_shift($items), $firstChild, false);
+        $this->assertPartialUpdateExportQueueItem(array_shift($items), $secondChild, true);
     }
 
     /**
@@ -308,8 +308,8 @@ class ProductUpdateTest extends TestCase
         /** @var ExportQueueModel[] $items */
         $items = $exportQueueCollection->getItems();
         $this->assertEventExportQueueItem(array_shift($items), $product, 'catalog_product');
-        $this->assertPartialUpdateExportQueueItem(array_shift($items), $firstChild, 'FALSE');
-        $this->assertPartialUpdateExportQueueItem(array_shift($items), $secondChild, 'TRUE');
+        $this->assertPartialUpdateExportQueueItem(array_shift($items), $firstChild, false);
+        $this->assertPartialUpdateExportQueueItem(array_shift($items), $secondChild, true);
     }
 
     /**
@@ -340,14 +340,14 @@ class ProductUpdateTest extends TestCase
      *
      * @param ExportQueueModel $exportQueueItem
      * @param ProductInterface $product
-     * @param string $productActive
+     * @param bool $productActive
      *
      * @return void
      */
     private function assertPartialUpdateExportQueueItem(
         ExportQueueModel $exportQueueItem,
         ProductInterface $product,
-        string $productActive
+        bool $productActive
     ): void {
         $body = $this->jsonSerializer->unserialize($exportQueueItem->getBody());
         $expectedBody = [

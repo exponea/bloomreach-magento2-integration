@@ -5,7 +5,7 @@ This is a module for integration with the [Bloomreach service](https://www.bloom
 ## Prerequisites
 
 - Magento 2.4
-- PHP 7.3, 7.4, 8.1, 8.2, 8.3
+- PHP 7.3, 7.4, 8.1, 8.2, 8.3, 8.4
 
 ## Installation
 

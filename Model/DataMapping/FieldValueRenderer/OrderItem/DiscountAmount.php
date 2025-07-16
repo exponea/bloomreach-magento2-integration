@@ -40,6 +40,8 @@ class DiscountAmount implements RenderInterface
      */
     public function render($entity, string $fieldCode)
     {
-        return $this->discountAmount->getBaseDiscountAmountPerUnit($entity);
+        return (float) $entity->getQtyOrdered() !== 0.0
+            ? $this->discountAmount->getBaseDiscountAmountPerUnit($entity)
+            : 0.0;
     }
 }

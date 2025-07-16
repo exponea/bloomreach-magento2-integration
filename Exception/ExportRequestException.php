@@ -30,7 +30,7 @@ class ExportRequestException extends LocalizedException
     public function __construct(
         Phrase $phrase,
         bool $isNeedUpdateRetryCounter = true,
-        Exception $cause = null,
+        ?Exception $cause = null,
         $code = 0
     ) {
         $this->isNeedUpdateRetryCounter = $isNeedUpdateRetryCounter;

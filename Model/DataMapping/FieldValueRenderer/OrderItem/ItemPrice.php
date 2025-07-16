@@ -40,6 +40,10 @@ class ItemPrice implements RenderInterface
      */
     public function render($entity, string $fieldCode)
     {
+        if ((float) $entity->getQtyOrdered() === 0.0) {
+            return 0.0;
+        }
+
         return round($this->orderItemTotalPrice->getTotalPriceBaseCurrency($entity) / $entity->getQtyOrdered(), 2);
     }
 }

@@ -12,21 +12,17 @@ namespace Bloomreach\EngagementConnector\Service;
  */
 class ValueTypeGetter
 {
+    public const TRUE = 'TRUE';
+    public const FALSE = 'FALSE';
+    public const BOOLEAN_TYPE = 'boolean';
     private const STRING_LENGTH = 255;
-
     private const LIST_TYPE = 'list';
-
-    private const BOOLEAN_TYPE = 'boolean';
-
     private const NUMBER_TYPE = 'number';
-
     private const STRING_TYPE = 'string';
-
     private const LONG_TEXT_TYPE = 'long text';
-
     private const BOOLEAN_VALUES = [
-        'true',
-        'false'
+        self::TRUE,
+        self::FALSE
     ];
 
     /**
@@ -43,7 +39,7 @@ class ValueTypeGetter
         } elseif (is_numeric($value)) {
             return self::NUMBER_TYPE;
         } elseif (is_bool($value)
-            || (is_string($value) && in_array(strtolower($value), self::BOOLEAN_VALUES))
+            || (is_string($value) && in_array(strtoupper($value), self::BOOLEAN_VALUES))
         ) {
             return self::BOOLEAN_TYPE;
         }
