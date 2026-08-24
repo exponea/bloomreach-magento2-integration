@@ -1,3 +1,13 @@
+# v1.3.0
+
+- Additions
+  - PHP 8.5 Support: Added compatibility with `PHP 8.5`
+  - Magento 2.4.9 Support: Added compatibility with `Magento 2.4.9`
+- Fixes
+  - Searchable Fields: Fixed an issue where the `Searchable Fields` value could be saved as empty and overwrite the stored selection when the corresponding feed was disabled
+- Changes
+  - Dropped support for PHP versions below `8.1`. The minimum required PHP version is now `8.1`. Stores running Magento below `2.4.4` (or older PHP) should keep using the previous version of the module
+
 # v1.2.0
 
 - Additions

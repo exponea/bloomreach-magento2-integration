@@ -24,31 +24,29 @@ class ValidateSearchableFields extends Value
      */
     public function beforeSave()
     {
+        $value = array_filter((array)$this->getValue());
+
         if ($this->getFieldsetDataValue('enabled') !== '1') {
+            if (!$value) {
+                $this->_dataSaveAllowed = false;
+            }
+
             return parent::beforeSave();
         }
 
-        $value = $this->getValue();
-
         if (!$value) {
+            throw new LocalizedException(__('Searchable fields cannot be empty.'));
+        }
+
+        if (count($value) > FieldsMapper::MAX_SEARCHABLE) {
             throw new LocalizedException(
                 __(
-                    'Searchable fields cannot be empty.',
+                    'Maximum number of searchable fields exceeded. Max number: "%1"',
                     FieldsMapper::MAX_SEARCHABLE
                 )
             );
         }
 
-        if (count($value) <= FieldsMapper::MAX_SEARCHABLE) {
-            return parent::beforeSave();
-
-        }
-
-        throw new LocalizedException(
-            __(
-                'Maximum number of searchable fields exceeded. Max number: "%1"',
-                FieldsMapper::MAX_SEARCHABLE
-            )
-        );
+        return parent::beforeSave();
     }
 }
