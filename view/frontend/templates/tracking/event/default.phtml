@@ -3,8 +3,7 @@
  * @author Bloomreach
  * @copyright Copyright (c) Bloomreach (https://www.bloomreach.com/)
  */
-
-// phpcs:disable Generic.Files.LineLength.TooLong
+// phpcs:ignoreFile
 use Bloomreach\EngagementConnector\Block\Tracking\Event;
 use Bloomreach\EngagementConnector\ViewModel\Tracking\Config as ConfigViewModel;
 use Magento\Framework\Escaper;
@@ -15,7 +14,9 @@ use Magento\Framework\View\Helper\SecureHtmlRenderer;
 /** @var SecureHtmlRenderer $secureRenderer */
 /** @var ConfigViewModel $configViewModel */
 $configViewModel = $block->getData('config_view_model');
-if ($configViewModel) {
+?>
+<?php if ($configViewModel): ?>
+    <?php
     $scriptString = <<<script
     require([
         'Bloomreach_EngagementConnector/js/tracking/event-sender'
@@ -26,7 +27,7 @@ if ($configViewModel) {
         eventSender.sendListOfEvents(eventList, trackingProvider);
     });
     script;
-    // phpcs:ignore
-    echo /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false);
-    echo $block->getChildHtml();
-}
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false); ?>
+    <?= $block->getChildHtml(); ?>
+<?php endif; ?>

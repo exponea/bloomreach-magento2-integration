@@ -17,6 +17,7 @@ use Bloomreach\EngagementConnector\Model\Export\QueueProcessor;
 use Bloomreach\EngagementConnector\Model\ExportQueueModel;
 use Bloomreach\EngagementConnector\Model\InitialExportStatus\Source\StatusSource;
 use Magento\Framework\Exception\LocalizedException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Covers Queue processor
@@ -101,11 +102,11 @@ class QueueProcessorTest extends AbstractProcessorTestCase
      *
      * @magentoConfigFixture default/bloomreach_engagement/purchase_item_feed/enabled 1
      * @magentoConfigFixture default/bloomreach_engagement/purchase_item_feed/import_id test_import_id
-     * @dataProvider initialExportStatusesDataProvider
      *
      * @return void
      * @throws LocalizedException
      */
+    #[DataProvider('initialExportStatusesDataProvider')]
     public function testSkipNotAllowedStatuses(int $status): void
     {
         $this->createInitialExportStatus(OrderItem::ENTITY_TYPE, $status);
@@ -119,7 +120,7 @@ class QueueProcessorTest extends AbstractProcessorTestCase
      *
      * @return array[]
      */
-    public function initialExportStatusesDataProvider(): array
+    public static function initialExportStatusesDataProvider(): array
     {
         return [
             [

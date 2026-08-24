@@ -9,9 +9,8 @@
     <body>
         <referenceBlock name="bloomreach.engagement.connector.customer.identification">
             <arguments>
-                <argument name="registered_data" xsi:type="object">
-                    Bloomreach\EngagementConnector\ViewModel\Tracking\CheckoutSuccess\RegisteredData
-                </argument>
+                <argument name="registered_data"
+                          xsi:type="object">Bloomreach\EngagementConnector\ViewModel\Tracking\CheckoutSuccess\RegisteredData</argument>
             </arguments>
         </referenceBlock>
         <referenceBlock name="bloomreach.engagement.connector.tracking">
@@ -21,12 +20,11 @@
                    template="Bloomreach_EngagementConnector::tracking/event/default.phtml"
                    ifconfig="bloomreach_engagement/frontend_tracking/enable_purchase">
             <arguments>
-                    <argument name="events" xsi:type="object">
-                        Bloomreach\EngagementConnector\Model\Tracking\Event\CheckoutSuccess\Purchase
+                    <argument name="events"
+                              xsi:type="object">Bloomreach\EngagementConnector\Model\Tracking\Event\CheckoutSuccess\Purchase
                     </argument>
-                    <argument name="config_view_model" xsi:type="object">
-                        Bloomreach\EngagementConnector\ViewModel\Tracking\Config
-                    </argument>
+                    <argument name="config_view_model"
+                              xsi:type="object">Bloomreach\EngagementConnector\ViewModel\Tracking\Config</argument>
                 </arguments>
             </block>
         </referenceBlock>

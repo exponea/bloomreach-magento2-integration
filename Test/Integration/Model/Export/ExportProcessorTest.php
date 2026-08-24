@@ -19,6 +19,7 @@ use Bloomreach\EngagementConnector\Model\InitialExportStatus\Source\StatusSource
 use Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue\Collection;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Covers Export processor
@@ -205,13 +206,13 @@ class ExportProcessorTest extends AbstractProcessorTestCase
      * @magentoConfigFixture default/bloomreach_engagement/catalog_product_feed/import_id test_import_id
      * @magentoConfigFixture default/bloomreach_engagement/catalog_product_feed/catalog_id test_import_id
      * @magentoConfigFixture default/bloomreach_engagement/catalog_product_feed/real_time_updates 1
-     * @dataProvider notAllowedStatusesDataProvider
      *
      * @param int $status
      *
      * @return void
      * @throws LocalizedException
      */
+    #[DataProvider('notAllowedStatusesDataProvider')]
     public function testSkipIfStatusIsNotAllowed(int $status): void
     {
         $this->createInitialExportStatus(DefaultType::ENTITY_TYPE, StatusSource::SUCCESS);
@@ -325,7 +326,7 @@ class ExportProcessorTest extends AbstractProcessorTestCase
      *
      * @return array[]
      */
-    public function notAllowedStatusesDataProvider(): array
+    public static function notAllowedStatusesDataProvider(): array
     {
         return [
             [

@@ -17,6 +17,7 @@ use Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue as ExportQueu
 use Bloomreach\EngagementConnector\Model\ResourceModel\ExportQueue\Collection as ExportQueueCollection;
 use Exception;
 use Magento\Framework\Exception\LocalizedException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Cover enable import action with integration tests
@@ -47,8 +48,8 @@ class StopTest extends AbstractActionTestCase
      * @return void
      * @magentoConfigFixture default/bloomreach_engagement/catalog_product_feed/enabled 1
      * @magentoConfigFixture default/bloomreach_engagement/catalog_product_feed/import_id test_import_id
-     * @dataProvider inProgressStatusDataProvider
      */
+    #[DataProvider('inProgressStatusDataProvider')]
     public function testSuccess(int $status): void
     {
         $entityType = DefaultType::ENTITY_TYPE;
@@ -124,7 +125,7 @@ class StopTest extends AbstractActionTestCase
      *
      * @return array[]
      */
-    public function initialImportStatusDataProvider(): array
+    public static function initialImportStatusDataProvider(): array
     {
         return [
             [
@@ -143,7 +144,7 @@ class StopTest extends AbstractActionTestCase
      *
      * @return array[]
      */
-    public function inProgressStatusDataProvider(): array
+    public static function inProgressStatusDataProvider(): array
     {
         return [
             [

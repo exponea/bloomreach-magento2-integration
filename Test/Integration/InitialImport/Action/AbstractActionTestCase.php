@@ -24,6 +24,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -80,7 +81,6 @@ abstract class AbstractActionTestCase extends TestCase
      *
      * @magentoConfigFixture default/bloomreach_engagement/catalog_product_feed/enabled 1
      * @magentoConfigFixture default/bloomreach_engagement/catalog_product_feed/import_id test_import_id
-     * @dataProvider initialImportStatusDataProvider
      *
      * @param string $statusLabel
      * @param int $status
@@ -88,6 +88,7 @@ abstract class AbstractActionTestCase extends TestCase
      * @return void
      * @throws LocalizedException
      */
+    #[DataProvider('initialImportStatusDataProvider')]
     public function testValidationException(string $statusLabel, int $status): void
     {
         $initialExportStatus = $this->initialExportStatusGetter->execute(DefaultType::ENTITY_TYPE);
@@ -101,7 +102,7 @@ abstract class AbstractActionTestCase extends TestCase
      *
      * @return array[]
      */
-    public function initialImportStatusDataProvider(): array
+    public static function initialImportStatusDataProvider(): array
     {
         return [
             [
@@ -128,28 +129,23 @@ abstract class AbstractActionTestCase extends TestCase
      *
      * @return array[]
      */
-    public function entityDataProvider(): array
+    public static function entityDataProvider(): array
     {
         return [
-            [
-                'entityType' => DefaultType::ENTITY_TYPE,
-                'label' => 'Product Feed'
+            'Product Feed' => [
+                'entityType' => DefaultType::ENTITY_TYPE
             ],
-            [
-                'entityType' => ProductVariantsType::ENTITY_TYPE,
-                'label' => 'Product Variants Feed'
+            'Product Variants Feed' => [
+                'entityType' => ProductVariantsType::ENTITY_TYPE
             ],
-            [
-                'entityType' => Customer::ENTITY_TYPE,
-                'label' => 'Customer Feed'
+            'Customer Feed' => [
+                'entityType' => Customer::ENTITY_TYPE
             ],
-            [
-                'entityType' => Order::ENTITY_TYPE,
-                'label' => 'Purchase Feed'
+            'Purchase Feed' => [
+                'entityType' => Order::ENTITY_TYPE
             ],
-            [
-                'entityType' => OrderItem::ENTITY_TYPE,
-                'label' => 'Purchase Items Feed'
+            'Purchase Items Feed' => [
+                'entityType' => OrderItem::ENTITY_TYPE
             ]
         ];
     }

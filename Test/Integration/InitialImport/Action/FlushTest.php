@@ -27,6 +27,7 @@ use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Exception;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Cover flush import action with integration tests
@@ -133,13 +134,12 @@ class FlushTest extends AbstractActionTestCase
     /**
      * Skip test execution
      *
-     * @dataProvider initialImportStatusDataProvider
-     *
      * @param string $statusLabel
      * @param int $status
      *
      * @return void
      */
+    #[DataProvider('initialImportStatusDataProvider')]
     public function testValidationException(string $statusLabel, int $status): void
     {
         $this->assertIsInt($status);

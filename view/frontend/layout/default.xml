@@ -11,18 +11,16 @@
             <block class="Magento\Framework\View\Element\Template" name="bloomreach.engagement.connector.tracking"
                    before="-" template="Bloomreach_EngagementConnector::tracking/main.phtml">
                 <arguments>
-                    <argument name="config_view_model" xsi:type="object">
-                        Bloomreach\EngagementConnector\ViewModel\Tracking\Config
-                    </argument>
+                    <argument name="config_view_model"
+                              xsi:type="object">Bloomreach\EngagementConnector\ViewModel\Tracking\Config</argument>
                 </arguments>
                 <block class="Magento\Framework\View\Element\Template" name="bloomreach.engagement.connector.sdk.script"
                        template="Bloomreach_EngagementConnector::tracking/script.phtml" before="-"
                        ifconfig="bloomreach_engagement/frontend_tracking/enable_js_sdk"
                 >
                     <arguments>
-                        <argument name="config_view_model" xsi:type="object">
-                            Bloomreach\EngagementConnector\ViewModel\Tracking\Config
-                        </argument>
+                        <argument name="config_view_model"
+                                  xsi:type="object">Bloomreach\EngagementConnector\ViewModel\Tracking\Config</argument>
                     </arguments>
                     <block class="Magento\Framework\View\Element\Template"
                            name="bloomreach.engagement.connector.customer.identification"
@@ -35,9 +33,8 @@
                        ifconfig="bloomreach_engagement/frontend_tracking/enable_cart_update"
                 >
                     <arguments>
-                        <argument name="config_view_model" xsi:type="object">
-                            Bloomreach\EngagementConnector\ViewModel\Tracking\Config
-                        </argument>
+                        <argument name="config_view_model"
+                                  xsi:type="object">Bloomreach\EngagementConnector\ViewModel\Tracking\Config</argument>
                     </arguments>
                 </block>
             </block>

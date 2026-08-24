@@ -505,7 +505,6 @@
     <type name="Bloomreach\EngagementConnector\Model\Export\QueueProcessor">
         <arguments>
             <argument name="dataMapperResolver" xsi:type="object">Bloomreach\EngagementConnector\Model\DataMapping\DataMapperResolver\Proxy</argument>
-            <argument name="initialExportStatusList" xsi:type="object">Bloomreach\EngagementConnector\Service\InitialExportStatus\ItemsGetter\Proxy</argument>
             <argument name="addInitialExportDataToExportQueue" xsi:type="object">Bloomreach\EngagementConnector\Model\Export\Queue\AddInitialExportDataToExportQueue\Proxy</argument>
             <argument name="saveInitialExportStatus" xsi:type="object">Bloomreach\EngagementConnector\Api\SaveInitialExportStatusInterface\Proxy</argument>
             <argument name="logger" xsi:type="object">Bloomreach\EngagementConnector\Logger\Logger</argument>

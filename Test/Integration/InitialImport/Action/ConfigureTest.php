@@ -21,6 +21,7 @@ use Bloomreach\EngagementConnector\System\CatalogIdResolver;
 use Bloomreach\EngagementConnector\System\ConfigProvider;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Cover configure import action with integration tests
@@ -59,11 +60,11 @@ class ConfigureTest extends AbstractActionTestCase
      *
      * @magentoDataFixture Bloomreach_EngagementConnector::Test/Integration/_files/customer.php
      * @magentoDataFixture Bloomreach_EngagementConnector::Test/Integration/_files/order.php
-     * @dataProvider entityDataProvider
      *
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
+    #[DataProvider('entityDataProvider')]
     public function testSuccess(string $entityType): void
     {
         $this->enableInitialExport->execute($entityType);

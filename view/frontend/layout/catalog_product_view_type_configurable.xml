@@ -12,9 +12,8 @@
                 <block name="bloomreach.engagement.connector.product.configurable.view.tracking"
                        template="Bloomreach_EngagementConnector::tracking/event/view_item/configurable.phtml">
                     <arguments>
-                        <argument name="config_view_model" xsi:type="object">
-                            Bloomreach\EngagementConnector\ViewModel\Tracking\Config
-                        </argument>
+                        <argument name="config_view_model"
+                                  xsi:type="object">Bloomreach\EngagementConnector\ViewModel\Tracking\Config</argument>
                     </arguments>
                 </block>
             </referenceBlock>

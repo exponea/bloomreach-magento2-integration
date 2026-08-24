@@ -14,12 +14,10 @@
                    template="Bloomreach_EngagementConnector::tracking/event/default.phtml"
                    ifconfig="bloomreach_engagement/frontend_tracking/enable_product_view">
                 <arguments>
-                    <argument name="events" xsi:type="object">
-                        Bloomreach\EngagementConnector\Model\Tracking\Event\ProductPage\ViewItem
-                    </argument>
-                    <argument name="config_view_model" xsi:type="object">
-                        Bloomreach\EngagementConnector\ViewModel\Tracking\Config
-                    </argument>
+                    <argument name="events"
+                              xsi:type="object">Bloomreach\EngagementConnector\Model\Tracking\Event\ProductPage\ViewItem</argument>
+                    <argument name="config_view_model"
+                              xsi:type="object">Bloomreach\EngagementConnector\ViewModel\Tracking\Config</argument>
                 </arguments>
             </block>
         </referenceBlock>
