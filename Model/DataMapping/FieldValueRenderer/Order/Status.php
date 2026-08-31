@@ -31,6 +31,6 @@ class Status implements RenderInterface
      */
     public function render($entity, string $fieldCode)
     {
-        return self::DEFAULT_STATUS;
+        return $entity->getState();
     }
 }
